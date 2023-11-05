@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:lead_gen/signup.dart';
-import 'User.dart';
+import 'package:lead_gen/constants/routes.dart';
+import 'package:lead_gen/services/loginService.dart';
+import 'package:lead_gen/view/signup.dart';
+import '../model/Login.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -13,32 +16,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginState extends State<LoginPage> {
- 
-    final _formKey = GlobalKey<FormState>();
-  User user = User("", "");
-  String url = "https://4018-202-47-53-142.ngrok.io/api/user";
- late Uri uri;
- final TextEditingController _usernameController = TextEditingController();
+    final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-
-  Future save() async {
-      uri = Uri.parse(url);
-    var res = await http.post(uri, // Use the Uri object
-    headers: {'Content-Type': 'application/json'},
-    body: json.encode({'name': _usernameController.text, 'password': _passwordController.text}));
-    print(res.body);
-    if (res.body != null) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Signup(),
-          ));
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+    final loginService = Provider.of<LoginService>(context);
+
+  final login = Login(_usernameController.text,_passwordController.text);
+
+  Future<void> handleLogin() async {
+      showDialog(
+    context: context,
+    builder: (context) {
+      return Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Change the color here
+        ),
+      );
+    },
+  );
+      final response = await loginService.login(login);
+
+      if (response.statusCode == 200) {
+        Navigator.pushNamed(context, '/otp');
+        print('Login successful: ${response.body}');
+      } else {
+        // Failed login
+        // Handle the login failure
+        print('Login failed with status: ${response.statusCode}');
+      }
+    }
+
+
     return Form(
       child: Container(
         width: double.infinity, // Set the width to occupy the entire screen
@@ -78,7 +88,7 @@ class LoginState extends State<LoginPage> {
                         return null;
                       },
                       onChanged: (val) {
-                        user.email = val;
+                        login.email = val;
                       },
                       controller: _usernameController,
                       decoration: InputDecoration(
@@ -91,7 +101,7 @@ class LoginState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     TextFormField(
                       onChanged: (val) {
-                        user.password = val;
+                        login.password = val;
                       },
                       controller: _passwordController,
                       validator: (value) {
@@ -124,7 +134,7 @@ class LoginState extends State<LoginPage> {
                           child: IconButton(
                                onPressed: () {
                      
-                          save();
+                          handleLogin();
                         
                       },
                               icon: const Icon(Icons.arrow_forward)),
