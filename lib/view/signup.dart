@@ -118,6 +118,7 @@ class SignupState extends State<Signup> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                              const Text(
+                            
                                 'Sign Up',
                                 style: TextStyle(
                                     color: Colors.white,
@@ -129,7 +130,9 @@ class SignupState extends State<Signup> {
                                 backgroundColor: Color(0xff4c505b),
                                 child: IconButton(
                                     color: Colors.white,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                    
+                                    },
                                     icon:  const Icon(
                                       Icons.arrow_forward,
                                     )),
@@ -144,7 +147,7 @@ class SignupState extends State<Signup> {
                             children: [
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, 'login');
+                                  Navigator.pushNamed(context, '/register');
                                 },
                                 child:  Text(
                                   'Sign In',

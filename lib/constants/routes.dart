@@ -10,6 +10,7 @@ const String loginRoute = '/login';
 const String registerRoute = '/register';
 const String otpRegister  = '/otp';
 const String otpPinEnter  = '/otpEnter';
+const String signnupPage  = '/signup';
 
 
 final Map<String, WidgetBuilder> routes = {
@@ -17,6 +18,7 @@ final Map<String, WidgetBuilder> routes = {
   registerRoute: (context) => const Signup(),
   otpRegister: (context) => const MyPhone(),
   otpPinEnter: (context) => const Verify()
+  
 };
 
 class UrlConfig {
