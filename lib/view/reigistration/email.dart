@@ -3,18 +3,18 @@ import 'package:http/http.dart' as http;
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/services/loginService.dart';
 import 'package:lead_gen/view/signup.dart';
-import '../model/Login.dart';
+import '../../model/Login.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+class EmailPage extends StatefulWidget {
+  EmailPage({super.key});
 
   @override
-  State<LoginPage> createState() => LoginState();
+  State<EmailPage> createState() => EmailState();
 }
 
-class LoginState extends State<LoginPage> {
+class EmailState extends State<EmailPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -64,7 +64,7 @@ class LoginState extends State<LoginPage> {
                 child: const Text(
                   'Enter Your Email',
                   style: TextStyle(
-                    fontFamily: 'UBUNTU',
+                     fontFamily: "UBUNTU",
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                     fontSize: 33,
@@ -97,7 +97,7 @@ class LoginState extends State<LoginPage> {
                           hintText: 'google@mail.com',
                           hintStyle: const TextStyle(
                             fontSize: 20,
-                            fontFamily: 'UBUNTU',
+                            fontFamily: "UBUNTU",
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -106,17 +106,18 @@ class LoginState extends State<LoginPage> {
                       ),
                       SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.only(left: 0, right: 100),
+                        padding: EdgeInsets.only(left: 0, right: 115),
                         child: const Text(
                           "We'll send a confirmation code to your mail",
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.normal),
+                             fontFamily: "UBUNTU",
+                              fontSize: 13, fontWeight: FontWeight.bold),
                         ),
                       ),
                         SizedBox(height: 30),
                       TextButton(
                         onPressed: () {
-                          // Your button press logic
+                      Navigator.pushNamed(context, '/otpEnter');
                         },
                         style: TextButton.styleFrom(
                          

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-
-
 class Verify extends StatefulWidget {
   const Verify({super.key});
 
@@ -11,23 +9,23 @@ class Verify extends StatefulWidget {
 }
 
 class _MyVerifyState extends State<Verify> {
-   @override
+  @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
-      textStyle: TextStyle(
+      textStyle: const TextStyle(
           fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
+          color: Color.fromRGBO(26, 36, 45, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+        border: Border.all(color: Color.fromRGBO(72, 172, 253, 1)),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      border: Border.all(color: Color.fromRGBO(59, 133, 202, 1)),
       borderRadius: BorderRadius.circular(8),
     );
 
@@ -36,7 +34,6 @@ class _MyVerifyState extends State<Verify> {
         color: Color.fromRGBO(234, 239, 243, 1),
       ),
     );
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -45,7 +42,7 @@ class _MyVerifyState extends State<Verify> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
             color: Colors.black,
           ),
@@ -59,40 +56,43 @@ class _MyVerifyState extends State<Verify> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-             Container(
-  width: 150,
-  height: 150,
-  decoration: BoxDecoration(
-    image: DecorationImage(
-      image: AssetImage('assets/otpimage.png'),
-      fit: BoxFit.cover,
-    ),
-  ),
-),
-              SizedBox(
+              Container(
+                width: 150,
+                height: 150,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/otpimage.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(
                 height: 25,
               ),
-              Text(
+              const Text(
                 "Phone Verification",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Text(
+              const Text(
                 "We need to register your phone without getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Pinput(
                 length: 6,
-                // defaultPinTheme: defaultPinTheme,
-                // focusedPinTheme: focusedPinTheme,
+                defaultPinTheme: defaultPinTheme,
+                focusedPinTheme: focusedPinTheme,
                 // submittedPinTheme: submittedPinTheme,
 
                 showCursor: true,
@@ -110,7 +110,7 @@ class _MyVerifyState extends State<Verify> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {},
-                    child: Text("Verify Phone Number")),
+                    child: Text("Verify Email")),
               ),
               Row(
                 children: [
@@ -122,11 +122,35 @@ class _MyVerifyState extends State<Verify> {
                           (route) => false,
                         );
                       },
-                      child: Text(
-                        "Edit Phone Number ?",
+                      child: const Text(
+                        "Edit Email ?",
                         style: TextStyle(color: Colors.black),
                       ))
                 ],
+              ),
+              TextButton(
+                onPressed: () {
+                  // Your button press logic
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 248, 248, 248), // Background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        10), // Adjust the radius as needed
+                    side:
+                        BorderSide(color: Colors.blue), // Set the border color
+                  ),
+                  padding: EdgeInsets.symmetric(
+                      horizontal:
+                          20), // Adjust the horizontal padding to make it wider
+                ),
+                child: const Text(
+                  'Resend ?',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.blue, // Set the text color to blue
+                  ),
+                ),
               )
             ],
           ),

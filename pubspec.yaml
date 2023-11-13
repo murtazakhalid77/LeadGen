@@ -34,10 +34,7 @@ dependencies:
   provider: ^5.0.0
   pinput: ^2.2.12
   flutter_native_splash: ^2.2.4
-  fonts:
-    - family: UBUNTU
-      fonts:
-        - asset: assets/fonts/Ubuntu-Regular.ttf
+  
 
 
 
@@ -66,6 +63,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  fonts:
+    - family: 'UBUNTU'
+      fonts:
+        - asset: assets/fonts/Ubuntu-Regular.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
