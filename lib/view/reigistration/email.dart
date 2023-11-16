@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/services/loginService.dart';
-import 'package:lead_gen/view/signup.dart';
+
 import '../../model/Login.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
@@ -17,37 +17,14 @@ class EmailPage extends StatefulWidget {
 class EmailState extends State<EmailPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     // final loginService = Provider.of<LoginService>(context);
 
     final login = Login(_usernameController.text, _passwordController.text);
-
-    Future<void> handleLogin() async {
-      //     showDialog(
-      //   context: context,
-      //   builder: (context) {
-      //     return Center(
-      //       child: CircularProgressIndicator(
-      //         valueColor: AlwaysStoppedAnimation<Color>(Colors.blue), // Change the color here
-      //       ),
-      //     );
-      //   },
-      // );
-      //     final response = await loginService.login(login);
-
-      //     if (response.statusCode == 200) {
-      //       Navigator.pushNamed(context, '/otp');
-      //       print('Login successful: ${response.body}');
-      //     } else {
-      //       // Failed login
-      //       // Handle the login failure
-      //       print('Login failed with status: ${response.statusCode}');
-      //     }
-    }
-
     return Form(
+      key: _formKey,
       child: Container(
         width: double.infinity,
         height: double.infinity,
@@ -64,7 +41,7 @@ class EmailState extends State<EmailPage> {
                 child: const Text(
                   'Enter Your Email',
                   style: TextStyle(
-                     fontFamily: "UBUNTU",
+                    fontFamily: "UBUNTU",
                     color: Colors.blue,
                     fontWeight: FontWeight.bold,
                     fontSize: 33,
@@ -84,12 +61,22 @@ class EmailState extends State<EmailPage> {
                       TextFormField(
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'email is Empty';
+                            return 'Email is empty';
                           }
-                          return null;
+                          if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
+                              .hasMatch(value)) {
+                            if (login.email.isNotEmpty) {
+                              return 'Enter a valid email';
+                            } else {
+                              return null; // Return null if email is empty and no validation yet
+                            }
+                          }
+                          return null; // Return null for valid email
                         },
                         onChanged: (val) {
-                          login.email = val;
+                          setState(() {
+                            login.email = val;
+                          });
                         },
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -110,26 +97,31 @@ class EmailState extends State<EmailPage> {
                         child: const Text(
                           "We'll send a confirmation code to your mail",
                           style: TextStyle(
-                             fontFamily: "UBUNTU",
-                              fontSize: 13, fontWeight: FontWeight.bold),
+                              fontFamily: "UBUNTU",
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                        SizedBox(height: 30),
-                      TextButton(
+                      SizedBox(height: 30),
+                      ElevatedButton(
                         onPressed: () {
-                      Navigator.pushNamed(context, '/otpEnter');
+                          if (_formKey.currentState!.validate()) {
+
+                            //send otp from java
+                            Navigator.pushNamed(context, "/otpEnter");
+                          }
                         },
                         style: TextButton.styleFrom(
-                         
                           backgroundColor: Colors.blue, // Background color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
                                 10), // Adjust the radius as needed
                           ),
-                           padding: EdgeInsets.symmetric(horizontal: 30), // Adjust the horizontal padding to make it wider
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  30), // Adjust the horizontal padding to make it wider
                         ),
-                      
-                        child:const Text(
+                        child: const Text(
                           'Next',
                           style: TextStyle(
                             fontSize: 18,

@@ -34,6 +34,8 @@ dependencies:
   provider: ^5.0.0
   pinput: ^2.2.12
   flutter_native_splash: ^2.2.4
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1  
   
 
 

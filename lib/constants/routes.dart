@@ -3,21 +3,24 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/view/reigistration/email.dart';
 import 'package:lead_gen/view/otpPhone.dart';
-import 'package:lead_gen/view/signup.dart';
+import 'package:lead_gen/view/reigistration/getlocation.dart';
+import 'package:lead_gen/view/reigistration/password.dart';
+
 import 'package:lead_gen/view/reigistration/verify.dart';
 
 const String email = '/email';
-const String registerRoute = '/register';
 const String otpRegister  = '/otp';
 const String otpPinEnter  = '/otpEnter';
-const String signnupPage  = '/signup';
+const String password  = '/password';
+const String location  = '/location';
 
 
 final Map<String, WidgetBuilder> routes = {
   email: (context) =>  EmailPage(),
-  registerRoute: (context) => const Signup(),
-  otpRegister: (context) => const MyPhone(),
-  otpPinEnter: (context) => const Verify()
+  password :(context) => Password(),
+  otpRegister: (context) => const MyPhone(),  
+  otpPinEnter: (context) => const Verify(),
+  location: (context) => const Location(),
   
 };
 

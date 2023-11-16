@@ -9,6 +9,7 @@ class Verify extends StatefulWidget {
 }
 
 class _MyVerifyState extends State<Verify> {
+  bool isPinFilled = false;
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -96,7 +97,13 @@ class _MyVerifyState extends State<Verify> {
                 // submittedPinTheme: submittedPinTheme,
 
                 showCursor: true,
-                onCompleted: (pin) => print(pin),
+                onCompleted: (pin) {
+                  setState(() {
+                    isPinFilled =
+                        pin.length == 6; // Check if pin is completely filled
+                  });
+                  print(pin);
+                },
               ),
               SizedBox(
                 height: 20,
@@ -105,22 +112,28 @@ class _MyVerifyState extends State<Verify> {
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.blue.shade600,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                    onPressed: () {},
-                    child: Text("Verify Email")),
+                  style: ElevatedButton.styleFrom(
+                    primary: isPinFilled
+                        ? Colors.blue.shade600
+                        : Colors.grey, // Change color based on pin input
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: isPinFilled
+                      ? () {
+                        print(context);
+                        Navigator.pushNamed(context,'/password');
+                      }
+                      : null, // Disable button if pin is not completely filled
+                  child: Text("Verify Email"),
+                ),
               ),
               Row(
                 children: [
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          'phone',
-                          (route) => false,
-                        );
+                      Navigator.pop(context);
                       },
                       child: const Text(
                         "Edit Email ?",
@@ -130,10 +143,11 @@ class _MyVerifyState extends State<Verify> {
               ),
               TextButton(
                 onPressed: () {
-                  // Your button press logic
+             //resend mail logic
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 248, 248, 248), // Background color
+                  backgroundColor: const Color.fromARGB(
+                      255, 248, 248, 248), // Background color
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         10), // Adjust the radius as needed
