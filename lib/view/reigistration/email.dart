@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:lead_gen/constants/routes.dart';
-import 'package:lead_gen/services/loginService.dart';
 
 import '../../model/Login.dart';
-import 'dart:convert';
-import 'package:provider/provider.dart';
 
 class EmailPage extends StatefulWidget {
-  EmailPage({super.key});
+  const EmailPage({super.key});
 
   @override
   State<EmailPage> createState() => EmailState();
@@ -25,18 +20,17 @@ class EmailState extends State<EmailPage> {
     final login = Login(_usernameController.text, _passwordController.text);
     return Form(
       key: _formKey,
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
           body: Stack(
             children: [
               Container(
                 padding: EdgeInsets.only(
                   left: MediaQuery.of(context).size.width * 0.07,
-                  top: MediaQuery.of(context).size.height *
-                      0.25, // Adjusted top padding
+                  top: MediaQuery.of(context).size.height * 0.25,
                 ),
                 child: const Text(
                   'Enter Your Email',
@@ -91,9 +85,9 @@ class EmailState extends State<EmailPage> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: EdgeInsets.only(left: 0, right: 115),
+                        padding: const EdgeInsets.only(left: 0, right: 115),
                         child: const Text(
                           "We'll send a confirmation code to your mail",
                           style: TextStyle(
@@ -102,7 +96,7 @@ class EmailState extends State<EmailPage> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      SizedBox(height: 30),
+                      const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
@@ -117,7 +111,7 @@ class EmailState extends State<EmailPage> {
                             borderRadius: BorderRadius.circular(
                                 10), // Adjust the radius as needed
                           ),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal:
                                   30), // Adjust the horizontal padding to make it wider
                         ),

@@ -43,7 +43,7 @@ Future signIn() async {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_rounded,
             color: Colors.black,
           ),
@@ -85,14 +85,14 @@ Future signIn() async {
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
-                child:  Row(
+                child:  const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
 
-                  const  SizedBox(
+                  SizedBox(
                       width: 10,
                     ),
-                  const  Expanded(
+                  Expanded(
                         child: TextField(
                       keyboardType:  TextInputType.emailAddress,
                       decoration:  InputDecoration(
@@ -111,7 +111,7 @@ Future signIn() async {
                 height: 45,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.blue.shade600,
+                        backgroundColor: Colors.blue.shade600,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () {

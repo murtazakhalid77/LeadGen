@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:lead_gen/constants/routes.dart';
-import 'package:lead_gen/services/loginService.dart';
 
-import '../../model/Login.dart';
-import 'dart:convert';
-import 'package:provider/provider.dart';
 
 class Password extends StatefulWidget {
-  Password({super.key});
+  const Password({super.key});
 
   @override
   State<Password> createState() => PasswordState();
@@ -45,7 +39,7 @@ class PasswordState extends State<Password> {
       body: Form(
         key: _formKey,
         
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           height: double.infinity,
           child: Scaffold(
@@ -133,7 +127,7 @@ class PasswordState extends State<Password> {
                   ),
                 ),
               ),
-                        SizedBox(height: 30),
+                        const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -148,7 +142,7 @@ class PasswordState extends State<Password> {
                               borderRadius: BorderRadius.circular(
                                   10), // Adjust the radius as needed
                             ),
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal:
                                     30), // Adjust the horizontal padding to make it wider
                           ),
