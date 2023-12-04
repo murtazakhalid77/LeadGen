@@ -20,19 +20,19 @@ class _MyVerifyState extends State<Verify> {
           color: Color.fromRGBO(26, 36, 45, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(72, 172, 253, 1)),
+        border: Border.all(color: const Color.fromRGBO(72, 172, 253, 1)),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(59, 133, 202, 1)),
+      border: Border.all(color: const Color.fromRGBO(59, 133, 202, 1)),
       borderRadius: BorderRadius.circular(8),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(234, 239, 243, 1),
+        color: const Color.fromRGBO(234, 239, 243, 1),
       ),
     );
     return Scaffold(
@@ -51,7 +51,7 @@ class _MyVerifyState extends State<Verify> {
         elevation: 0,
       ),
       body: Container(
-        margin: EdgeInsets.only(left: 25, right: 25),
+        margin: const EdgeInsets.only(left: 25, right: 25),
         alignment: Alignment.center,
         child: SingleChildScrollView(
           child: Column(
@@ -105,7 +105,7 @@ class _MyVerifyState extends State<Verify> {
                   print(pin);
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               SizedBox(
@@ -113,7 +113,7 @@ class _MyVerifyState extends State<Verify> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: isPinFilled
+                    backgroundColor: isPinFilled
                         ? Colors.blue.shade600
                         : Colors.grey, // Change color based on pin input
                     shape: RoundedRectangleBorder(
@@ -126,7 +126,7 @@ class _MyVerifyState extends State<Verify> {
                         Navigator.pushNamed(context,'/password');
                       }
                       : null, // Disable button if pin is not completely filled
-                  child: Text("Verify Email"),
+                  child: const Text("Verify Email"),
                 ),
               ),
               Row(
@@ -152,9 +152,9 @@ class _MyVerifyState extends State<Verify> {
                     borderRadius: BorderRadius.circular(
                         10), // Adjust the radius as needed
                     side:
-                        BorderSide(color: Colors.blue), // Set the border color
+                        const BorderSide(color: Colors.blue), // Set the border color
                   ),
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       horizontal:
                           20), // Adjust the horizontal padding to make it wider
                 ),

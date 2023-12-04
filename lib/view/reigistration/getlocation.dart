@@ -33,7 +33,7 @@ class LocationState extends State<Location> {
       print(placemarks);
       setState(() {
         _currentAddress =
-            '${placemarks}';
+            '$placemarks';
       });
     } catch (e) {
       print('Error: $e');
@@ -44,24 +44,24 @@ class LocationState extends State<Location> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Location Example'),
+        title: const Text('Location Example'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
+            const Text(
               'Current Address:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               _currentAddress,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16.0),
+              style: const TextStyle(fontSize: 16.0),
             ),
           ],
         ),
