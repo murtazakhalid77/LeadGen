@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/services/loginService.dart';
+import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/reigistration/email.dart';
+import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
+import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
 
 import 'package:provider/provider.dart';
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home:  const SelectionPage(),
+      home:  const SellerHomePage(),
       routes: routes,
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SellerHomePage extends StatefulWidget {
-  const SellerHomePage({super.key});
+class SellerNavigation extends StatefulWidget {
+  const SellerNavigation({super.key});
 
   @override
-  State<SellerHomePage> createState() => _SellerHomePageState();
+  State<SellerNavigation> createState() => _SellerNavigationState();
 }
 
-class _SellerHomePageState extends State<SellerHomePage> {
+class _SellerNavigationState extends State<SellerNavigation> {
   int currentindex = 0;
   
 

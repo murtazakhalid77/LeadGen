@@ -8,6 +8,8 @@ import 'package:lead_gen/view/reigistration/getlocation.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 
 import 'package:lead_gen/view/reigistration/verify.dart';
+import 'package:lead_gen/view/seller/Seller-All-Request.dart';
+import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:lead_gen/view/seller/seller-home.dart';
 
 const String email = '/email';
@@ -17,6 +19,7 @@ const String password  = '/password';
 const String location  = '/location';
 const String buyer_home  = '/buyer-home';
 const String seller_home  = '/seller-home';
+const String seller_request  = '/seller-request';
 
 
 final Map<String, WidgetBuilder> routes = {
@@ -27,6 +30,7 @@ final Map<String, WidgetBuilder> routes = {
   location: (context) => const Location(),
   buyer_home: (context) => const BuyerHomePage(),
   seller_home: (context) => const SellerHomePage(),
+  seller_request: (context) => const AllRequest(),
   
 };
 
