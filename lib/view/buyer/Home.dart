@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/view/buyer/all_categories.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
+import 'package:lead_gen/view/drawer/drawer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,6 +19,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const NavBar(),
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
@@ -114,26 +116,26 @@ class HomePage extends StatelessWidget {
                           Row(
                             children: [
                               _buildImageWithText(
-                                  'lib/assets/cars.png', 'Vehicles'),
+                                  'assets/cars.png', 'Vehicles'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/bike.jpg', 'Bikes'),
+                                  'assets/bike.jpg', 'Bikes'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/businesses.png', '   Businesses'),
+                                  'assets/businesses.png', '   Businesses'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/property.png', 'Property'),
+                                  'assets/property.png', 'Property'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/mobile.jpg', 'Mobile   '),
+                                  'assets/mobile.jpg', 'Mobile   '),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/homeappliances.png',
+                                  'assets/homeappliances.png',
                                   'Home Appliances \n    & Electronics'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/services.png', 'Services'),
+                                  'assets/services.png', 'Services'),
                                   const SizedBox(width: 15),
                             ],
                           ),
@@ -143,27 +145,27 @@ class HomePage extends StatelessWidget {
                           Row(
                             children: [
                               _buildImageWithText(
-                                  'lib/assets/jobs.png', 'Jobs'),
+                                  'assets/jobs.png', 'Jobs'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/furniture and home decore.png',
+                                  'assets/furniture and home decore.png',
                                   'Furniture & \nHome Decor'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/kids.png', 'Kids'),
+                                  'assets/kids.png', 'Kids'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/fashion and accessories.png',
+                                  'assets/fashion and accessories.png',
                                   'Fashion & \nAccessories'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/hobbies.png', 'Hobbies'),
+                                  'assets/hobbies.png', 'Hobbies'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/books.png', 'Books'),
+                                  'assets/books.png', 'Books'),
                                   const SizedBox(width: 15),
                               _buildImageWithText(
-                                  'lib/assets/animals.png', 'Animals'),
+                                  'assets/animals.png', 'Animals'),
                             ],
                           ),
                         ],

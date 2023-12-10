@@ -19,8 +19,7 @@ void main() {
       ],
       child: const MyApp(),
     ),
-  );
-   
+  );  
 }
 
 class MyApp extends StatelessWidget {
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home:  const SellerHomePage(),
+      home:  const HomePage(),
       routes: routes,
     );
   }

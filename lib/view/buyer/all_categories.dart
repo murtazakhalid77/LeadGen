@@ -93,23 +93,23 @@ class AllCategoriesPage extends StatelessWidget {
                       child: Column(
                         children: [
                           // Rows of images with text and arrows
-                          _buildCategoryRow('lib/assets/cars.png', 'Vehicles', context),
-                          _buildCategoryRow('lib/assets/bike.jpg', '         Bikes', context),
-                          _buildCategoryRow('lib/assets/businesses.png', '        Businesses', context),
-                          _buildCategoryRow('lib/assets/property.png', '        Property', context),
-                          _buildCategoryRow('lib/assets/mobile.jpg', '                 Mobile', context),
+                          _buildCategoryRow('assets/cars.png', 'Vehicles', context),
+                          _buildCategoryRow('assets/bike.jpg', '         Bikes', context),
+                          _buildCategoryRow('assets/businesses.png', '        Businesses', context),
+                          _buildCategoryRow('assets/property.png', '        Property', context),
+                          _buildCategoryRow('assets/mobile.jpg', '                 Mobile', context),
                           _buildCategoryRow(
-                              'lib/assets/homeappliances.png', '      Home Appliances \n       & Electronics', context),
-                          _buildCategoryRow('lib/assets/services.png', '          Services', context),
-                          _buildCategoryRow('lib/assets/jobs.png', '          Jobs', context),
+                              'assets/homeappliances.png', '      Home Appliances \n       & Electronics', context),
+                          _buildCategoryRow('assets/services.png', '          Services', context),
+                          _buildCategoryRow('assets/jobs.png', '          Jobs', context),
                           _buildCategoryRow(
-                              'lib/assets/furniture and home decore.png', '     Furniture & \n     Home Decor', context),
-                          _buildCategoryRow('lib/assets/kids.png', '           Kids', context),
+                              'assets/furniture and home decore.png', '     Furniture & \n     Home Decor', context),
+                          _buildCategoryRow('assets/kids.png', '           Kids', context),
                           _buildCategoryRow(
-                              'lib/assets/fashion and accessories.png', '         Fashion & \n         Accessories', context),
-                          _buildCategoryRow('lib/assets/hobbies.png', '            Hobbies', context),
-                          _buildCategoryRow('lib/assets/books.png', '         Books', context),
-                          _buildCategoryRow('lib/assets/animals.png', '            Animals', context),
+                              'assets/fashion and accessories.png', '         Fashion & \n         Accessories', context),
+                          _buildCategoryRow('assets/hobbies.png', '            Hobbies', context),
+                          _buildCategoryRow('assets/books.png', '         Books', context),
+                          _buildCategoryRow('assets/animals.png', '            Animals', context),
                         ],
                       ),
                     ),
