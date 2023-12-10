@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 
 class Location extends StatefulWidget {
   const Location({Key? key}) : super(key: key);
@@ -35,6 +36,15 @@ class LocationState extends State<Location> {
         _currentAddress =
             '$placemarks';
       });
+
+      // Navigate to the Signup page after fetching the location
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignUpPage(), // Replace with your signup page
+        ),
+      );
+
     } catch (e) {
       print('Error: $e');
     }
@@ -44,7 +54,7 @@ class LocationState extends State<Location> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Location Example'),
+        title: const Text('Location'),
       ),
       body: Center(
         child: Column(

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+  final String userType;
+
+  const NavBar({Key? key, required this.userType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        children:  [
+        children: [
           UserAccountsDrawerHeader(
             accountName: const Text('John'),
             accountEmail: const Text('john345@gmail.com'),
@@ -32,7 +34,18 @@ class NavBar extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.blue,
-            onTap: () => print('Home tapped'),
+            onTap: () {
+              // Handle Home tapped based on user type
+              print('Home tapped for $userType');
+              // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's home page
+                Navigator.pushNamed(context, '/seller_home');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's home page
+                Navigator.pushNamed(context, '/buyer_home');
+              }
+            },
           ),
           ListTile(
             leading: const Icon(
@@ -41,11 +54,22 @@ class NavBar extends StatelessWidget {
               size: 25,
             ),
             title: const Text(
-              'Feed',
+              'Requests',
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.blue,
-            onTap: () => print('Feed tapped'),
+            onTap: () {
+              // Handle Requests tapped based on user type
+              print('Requests tapped for $userType');
+              // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's requests page
+                Navigator.pushNamed(context, '/seller-request');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's requests page
+              //  Navigator.pushNamed(context, '/buyer_makeRequest');
+              }
+            },
           ),
           ListTile(
             leading: const Icon(
@@ -54,11 +78,22 @@ class NavBar extends StatelessWidget {
               size: 25,
             ),
             title: const Text(
-              'Chat',
+              'Chats',
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.blue,
-            onTap: () => print('Chat tapped'),
+            onTap: () {
+              // Handle Requests tapped based on user type
+              print('Chats tapped for $userType');
+              // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's requests page
+            //    Navigator.pushNamed(context, '/sellerRequests');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's requests page
+            //    Navigator.pushNamed(context, '/buyer_makeRequest');
+              }
+            },
           ),
           ListTile(
             leading: const Icon(
@@ -67,11 +102,22 @@ class NavBar extends StatelessWidget {
               size: 25,
             ),
             title: const Text(
-              'User',
+              'Profile',
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.blue,
-            onTap: () => print('User tapped'),
+           onTap: () {
+              // Handle Requests tapped based on user type
+              print('Profile tapped for $userType');
+              // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's requests page
+             //   Navigator.pushNamed(context, '/sellerRequests');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's requests page
+             //   Navigator.pushNamed(context, '/buyer_makeRequest');
+              }
+            },
           ),
         ],
       ),

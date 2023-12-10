@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/view/drawer/drawer.dart';
 
 class SellerHomePage extends StatefulWidget {
   const SellerHomePage({super.key});
@@ -12,9 +13,10 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const NavBar(userType: 'seller'),
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Welcome to Lead Gen"),
+        title: const Text("Welcome to Lead Gen"),
         backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(

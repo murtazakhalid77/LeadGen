@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lead_gen/view/buyer/buyer-home.dart';
+import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
-import 'package:lead_gen/view/seller/seller-home.dart';
 
 class SelectionPage extends StatefulWidget {
   const SelectionPage({super.key});
@@ -63,7 +62,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 onPressed: () => {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const BuyerHomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                   )
                 },
               ),

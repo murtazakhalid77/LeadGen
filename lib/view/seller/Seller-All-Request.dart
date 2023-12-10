@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/view/drawer/drawer.dart';
 
 class AllRequest extends StatefulWidget {
   const AllRequest({super.key});
@@ -11,6 +12,7 @@ class _AllRequestState extends State<AllRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const NavBar(userType: 'seller'),
       appBar: AppBar(
         centerTitle: true,
         title: Text("Welcome to Lead Gen"),

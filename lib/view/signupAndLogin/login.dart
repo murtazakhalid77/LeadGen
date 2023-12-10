@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lead_gen/view/buyer/Home.dart';
+import 'package:lead_gen/view/user-select/selection.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({Key? key}) : super(key: key);
@@ -133,10 +133,10 @@ class _LogInPageState extends State<LogInPage> {
                       // Validation passed, continue with login
                       // Unfocus the current focus node before popping the screen
                       FocusManager.instance.primaryFocus?.unfocus();
-                      // Navigate to the home page
+                      // Navigate to the Usrer Selection
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => const HomePage(),
+                          builder: (context) => const SelectionPage(),
                         ),
                       );
                     }
