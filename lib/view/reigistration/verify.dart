@@ -126,7 +126,7 @@ class _MyVerifyState extends State<Verify> {
                         Navigator.pushNamed(context,'/password');
                       }
                       : null, // Disable button if pin is not completely filled
-                  child: const Text("Verify Email"),
+                  child: const Text("Verify Phone"),
                 ),
               ),
               Row(
@@ -136,7 +136,7 @@ class _MyVerifyState extends State<Verify> {
                       Navigator.pop(context);
                       },
                       child: const Text(
-                        "Edit Email ?",
+                        "Edit Phone ?",
                         style: TextStyle(color: Colors.black),
                       ))
                 ],

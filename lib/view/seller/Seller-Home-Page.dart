@@ -20,7 +20,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
         backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(
-            icon: new Image.asset("assets/leadGen.png"),
+            icon: Image.asset("assets/leadGen.png"),
             onPressed: () {
               // do something
             },
@@ -46,16 +46,16 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(right: 20, left: 20),
+                      padding: const EdgeInsets.only(right: 20, left: 20),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           alignment: Alignment.centerRight,
-                          primary: Colors.blue, // Background color
+                           backgroundColor: Colors.blue, // Background color
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, "/seller-request");
                         },
-                        child: Text(
+                        child: const Text(
                           "See All",
                           textAlign: TextAlign.end,
                           style: TextStyle(
@@ -69,7 +69,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
                       child: Container(
-                        color: Colors.grey.shade300,
+                        color: Colors.blue.shade100,
                         child: Wrap(
                           children: [
                             Row(
@@ -86,7 +86,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                 ),
                                 const Spacer(),
                                 IconButton(
-                                  icon: Icon(Icons.message),
+                                  icon: const Icon(Icons.message),
                                   color: Colors.blue.shade300,
                                   onPressed: () {
                                     // do something
@@ -100,11 +100,11 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                   Padding(
                                     padding: EdgeInsets.only(right: 10, left: 10),
                                     child: Text(
-                                      "I want a teacher for my coaching center he/she should be graduated and must have strong oop and dsa concepts.will give him market competetive salary"
+                                      "I want a teacher for my coaching center he/she should be graduated and must have strong oop and dsa concepts.will give him market competetive salary."
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(right: 10, left: 10),
+                                    padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                     child: Text(
                                       "(4/567 Shah Faisal Colony, Karachi)",
                                       style: TextStyle(
@@ -116,7 +116,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                               )
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(bottom: 10, top: 5, right: 8),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -159,7 +159,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                     ),
                                     onPressed: () => null
                                   ),
-                                  SizedBox(width: 10),
+                                  const SizedBox(width: 10),
                                   ElevatedButton(
                                     child: Text(
                                       "Deny",
@@ -192,9 +192,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(right: 20, left: 20, top: 10),
+                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
                     child: Container(
-                      color: Colors.grey.shade300,
+                      color: Colors.blue.shade100,
                       child: Wrap(
                         children: [
                           Row(
@@ -211,7 +211,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                               ),
                               const Spacer(),
                               IconButton(
-                                icon: Icon(Icons.message),
+                                icon: const Icon(Icons.message),
                                 color: Colors.blue.shade300,
                                 onPressed: () {
                                   // do something
@@ -225,11 +225,11 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10, left: 10),
                                   child: Text(
-                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary"
+                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary."
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10),
+                                  padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                   child: Text(
                                     "(4/567 Shah Faisal Colony, Karachi)",
                                     style: TextStyle(
@@ -241,7 +241,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                             )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: const EdgeInsets.only(bottom: 10, top: 5, right: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -284,7 +284,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                   ),
                                   onPressed: () => null
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 ElevatedButton(
                                   child: Text(
                                     "Deny",
@@ -341,7 +341,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         color: Colors.blue
                       ),
                     ),
-                    SizedBox(width: 60),
+                    SizedBox(width: 63),
                     Text(
                       "4.3",
                       textAlign: TextAlign.center,
@@ -370,27 +370,30 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       "Total Orders Taken",
                       style: TextStyle(
                         fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 29),
                     Text(
                       "Overall Rating",
                       style: TextStyle(
                         fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 50),
+                    SizedBox(width: 46),
                     Text(
                       "Total Earning",
                       style: TextStyle(
                         fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 )
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.only(bottom: 10, left: 5),
                 child: Row(
                   children: [
                     const SizedBox(width: 20),
@@ -412,7 +415,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       ),
                       onPressed: () => null
                     ),
-                    const SizedBox(width: 30),
+                    const SizedBox(width: 40),
                     ElevatedButton(
                       child: Text(
                         "Pending",
@@ -431,7 +434,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       ),
                       onPressed: () => null
                     ),
-                    SizedBox(width: 20),
+                    const SizedBox(width: 38),
                     ElevatedButton(
                       child: Text(
                         "Earnings",

@@ -20,7 +20,7 @@ class NavBar extends StatelessWidget {
               ),
             ),
             decoration: const BoxDecoration(
-              color: Colors.blueAccent,
+              color: Colors.blue,
             ),
           ),
           ListTile(

@@ -3,7 +3,7 @@ import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/buyer/all_categories.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/buyer/vehicles.dart';
-import 'package:lead_gen/view/reigistration/email.dart';
+import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/otpPhone.dart';
 import 'package:lead_gen/view/reigistration/getlocation.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
@@ -15,7 +15,7 @@ import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
 
-const String email = '/email';
+const String phone = '/phone';
 const String otpRegister  = '/otp';
 const String otpPinEnter  = '/otpEnter';
 const String password  = '/password';
@@ -32,7 +32,7 @@ const String user_Selection = '/user_selection';
 
 
 final Map<String, WidgetBuilder> routes = {
-  email: (context) =>  const EmailPage(),
+  phone: (context) =>  const PhonePage(),
   password :(context) => const Password(),
   otpRegister: (context) => const MyPhone(),  
   otpPinEnter: (context) => const Verify(),

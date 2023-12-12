@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
+import 'package:flutter/services.dart';
+
+import '../../model/Login.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -13,10 +16,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
-  final _phoneNumberController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final login = Login(_usernameController.text, _passwordController.text);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
@@ -25,7 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
           'Registration',
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
             // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();
@@ -52,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   children: [
                     // First Name and Last Name in a Row
                     const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // First Name Text
                         Text(
@@ -64,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
 
                         // Spacer between First Name and Last Name Text
-                        SizedBox(width: 10),
+                        SizedBox(width: 70),
 
                         // Last Name Text
                         Text(
@@ -87,7 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: _firstNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your First Name';
+                                return 'Enter your First Name';
                               }
                               return null;
                             },
@@ -118,7 +124,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: _lastNameController,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your Last Name';
+                                return 'Enter your Last Name';
                               }
                               return null;
                             },
@@ -162,9 +168,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     //CNIC input
                     TextFormField(
                       controller: _cnicController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Allow only digits
                       validator: (value) {
-                        if (value == null || value .isEmpty ) {
-                          return 'Please enter a valid CNIC ';
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length != 14) {
+                          return 'Enter a valid CNIC with 14 digits';
                         }
                         return null;
                       },
@@ -185,39 +196,52 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 20),
 
-                    //Text Phone Number
+                   //Email Text
                     const Text(
-                      'Phone Number',
+                      'Enter Your Email',
                       style: TextStyle(
-                        color: Colors.lightBlue,
+                      //  fontFamily: "UBUNTU",
+                        color: Colors.blue,
+                      //  fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
 
                     const SizedBox(height: 10),
 
-                    //Phone Number input
+                    //Email Input
                     TextFormField(
-                      controller: _phoneNumberController,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid Phone Number ';
+                        if (value!.isEmpty) {
+                          return 'Email is empty';
                         }
-                        return null;
+                        if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
+                            .hasMatch(value)) {
+                          if (login.email.isNotEmpty) {
+                            return 'Enter a valid email';
+                          } else {
+                            return null; // Return null if email is empty and no validation yet
+                          }
+                        }
+                        return null; // Return null for valid email
                       },
+                      onChanged: (val) {
+                        setState(() {
+                          login.email = val;
+                        });
+                      },
+                      controller: _usernameController,
                       decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: Colors.lightBlue)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: Colors.lightBlue)),
-                          hintText: '+92 3373927254',
-                          hintStyle: TextStyle(color: Colors.grey[600]),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
+                        focusColor: Colors.blue.shade100,
+                        hintText: 'google@mail.com',
+                        hintStyle: const TextStyle(
+                          fontSize: 18,
+                      //    fontFamily: "UBUNTU",
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
 
                     const SizedBox(height: 20),
@@ -230,11 +254,11 @@ class _SignUpPageState extends State<SignUpPage> {
                           // Unfocus the current focus node before popping the screen
                           FocusManager.instance.primaryFocus?.unfocus();
                           Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) =>
-                               const LogInPage(), // goes to all categories page
-                        ),
-                      );
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const LogInPage(), // goes to all categories page
+                            ),
+                          );
                         }
                       },
                       style: ElevatedButton.styleFrom(

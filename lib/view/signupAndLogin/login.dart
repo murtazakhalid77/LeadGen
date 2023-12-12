@@ -23,7 +23,7 @@ class _LogInPageState extends State<LogInPage> {
           'Login',
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
             // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();
@@ -49,7 +49,7 @@ class _LogInPageState extends State<LogInPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Name/Email',
+                      'UserName',
                       style: TextStyle(
                         color: Colors.lightBlue,
                         fontSize: 20,
@@ -63,7 +63,7 @@ class _LogInPageState extends State<LogInPage> {
                       controller: _nameEmailController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your Name/Email';
+                      return 'Please enter your UserName';
                     }
                     return null;
                   },
@@ -76,7 +76,7 @@ class _LogInPageState extends State<LogInPage> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide:
                                 const BorderSide(color: Colors.lightBlue)),
-                        hintText: 'Name/Email',
+                        hintText: 'UserName',
                         hintStyle: TextStyle(color: Colors.grey[600]),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

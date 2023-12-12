@@ -14,7 +14,7 @@ class MakeRequestPage extends StatelessWidget {
             'Request',
           ),
           leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
             // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();

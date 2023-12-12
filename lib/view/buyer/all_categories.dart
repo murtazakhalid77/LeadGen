@@ -35,7 +35,7 @@ class AllCategoriesPage extends StatelessWidget {
               ],
             ),
             // Forward Arrow
-            const Icon(Icons.arrow_forward, color: Colors.blue),
+            const Icon(Icons.arrow_forward_ios_rounded, color: Colors.blue),
           ],
         ),
       ),
@@ -50,7 +50,7 @@ class AllCategoriesPage extends StatelessWidget {
         elevation: 0.2,
         title: const Text('All Categories'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
             // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();
@@ -93,10 +93,10 @@ class AllCategoriesPage extends StatelessWidget {
                       child: Column(
                         children: [
                           // Rows of images with text and arrows
-                          _buildCategoryRow('assets/cars.png', 'Vehicles', context),
+                          _buildCategoryRow('assets/cars.png', '      Vehicles', context),
                           _buildCategoryRow('assets/bike.jpg', '         Bikes', context),
                           _buildCategoryRow('assets/businesses.png', '        Businesses', context),
-                          _buildCategoryRow('assets/property.png', '        Property', context),
+                          _buildCategoryRow('assets/property.png', '             Property', context),
                           _buildCategoryRow('assets/mobile.jpg', '                 Mobile', context),
                           _buildCategoryRow(
                               'assets/homeappliances.png', '      Home Appliances \n       & Electronics', context),

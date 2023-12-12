@@ -3,7 +3,7 @@ import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 
 class SelectionPage extends StatefulWidget {
-  const SelectionPage({super.key});
+  const SelectionPage({Key? key}) : super(key: key);
 
   @override
   State<SelectionPage> createState() => _SelectionPageState();
@@ -13,62 +13,80 @@ class _SelectionPageState extends State<SelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-             Container(
-              child: const SizedBox(
-                height: 500,
-                child: Image(
-                  image : AssetImage("assets/splashscreen.png"),
-                ),
-              )
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 300, // Adjust the height as needed
+            child: Image(
+              image: AssetImage("assets/splashscreen.png"),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(bottom: 40),
-              child: ElevatedButton.icon(
-                label: const Text("Want to sell something."),
-                icon: const Icon(Icons.shopping_cart_rounded),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SellerHomePage()),
+                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
                   foregroundColor: Colors.black,
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: "UBUNTU"
-                  )
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                  ),
                 ),
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SellerHomePage()),
-                  )
-                },
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10,),
+                    Icon(Icons.shopping_cart_rounded),
+                    SizedBox(height: 15),
+                    Text(
+                      "Want to sell \nsomething",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust the font size as needed
+                        fontFamily: "UBUNTU",
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                  ],
+                ),
               ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              child: ElevatedButton.icon(
-                label: const Text("Looking for something."),
-                icon: const Icon(Icons.search),
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
                   foregroundColor: Colors.black,
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontFamily: "UBUNTU"
-                  )
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+                  ),
                 ),
-                onPressed: () => {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  )
-                },
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 10,),
+                    Icon(Icons.search),
+                    SizedBox(height: 15),
+                    Text(
+                      "Looking for \nsomething",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust the font size as needed
+                        fontFamily: "UBUNTU",
+                      ),
+                    ),
+                    SizedBox(height: 10,),
+                  ],
+                ),
               ),
-            ),
-          ]
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

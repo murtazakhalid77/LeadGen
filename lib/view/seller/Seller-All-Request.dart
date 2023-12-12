@@ -15,11 +15,11 @@ class _AllRequestState extends State<AllRequest> {
       drawer: const NavBar(userType: 'seller'),
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Welcome to Lead Gen"),
+        title: const Text("Welcome to Lead Gen"),
         backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(
-            icon: new Image.asset("assets/leadGen.png"),
+            icon: Image.asset("assets/leadGen.png"),
             onPressed: () {
               // do something
             },
@@ -44,10 +44,13 @@ class _AllRequestState extends State<AllRequest> {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 5),
+
                     Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
                       child: Container(
-                        color: Colors.grey.shade300,
+                        color: Colors.blue.shade100,
                         child: Wrap(
                           children: [
                             Row(
@@ -64,7 +67,7 @@ class _AllRequestState extends State<AllRequest> {
                                 ),
                                 const Spacer(),
                                 IconButton(
-                                  icon: Icon(Icons.message),
+                                  icon: const Icon(Icons.message),
                                   color: Colors.blue.shade300,
                                   onPressed: () {
                                     // do something
@@ -78,11 +81,11 @@ class _AllRequestState extends State<AllRequest> {
                                   Padding(
                                     padding: EdgeInsets.only(right: 10, left: 10),
                                     child: Text(
-                                      "I want a teacher for my coaching center he/she should be graduated and must have strong oop and dsa concepts.will give him market competetive salary"
+                                      "I want a teacher for my coaching center he/she should be graduated and must have strong oop and dsa concepts.will give him market competetive salary."
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(right: 10, left: 10),
+                                    padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                     child: Text(
                                       "(4/567 Shah Faisal Colony, Karachi)",
                                       style: TextStyle(
@@ -94,7 +97,7 @@ class _AllRequestState extends State<AllRequest> {
                               )
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
+                              padding: const EdgeInsets.only(bottom: 10, right: 8, top: 5),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -172,7 +175,7 @@ class _AllRequestState extends State<AllRequest> {
                   Padding(
                     padding: EdgeInsets.only(right: 20, left: 20, top: 10),
                     child: Container(
-                      color: Colors.grey.shade300,
+                      color: Colors.blue.shade100,
                       child: Wrap(
                         children: [
                           Row(
@@ -203,11 +206,11 @@ class _AllRequestState extends State<AllRequest> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10, left: 10),
                                   child: Text(
-                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary"
+                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary."
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10),
+                                  padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                   child: Text(
                                     "(4/567 Shah Faisal Colony, Karachi)",
                                     style: TextStyle(
@@ -219,7 +222,7 @@ class _AllRequestState extends State<AllRequest> {
                             )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.only(bottom: 10, right: 8, top: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -297,7 +300,7 @@ class _AllRequestState extends State<AllRequest> {
                   Padding(
                     padding: EdgeInsets.only(right: 20, left: 20, top: 10),
                     child: Container(
-                      color: Colors.grey.shade300,
+                      color: Colors.blue.shade100,
                       child: Wrap(
                         children: [
                           Row(
@@ -328,11 +331,11 @@ class _AllRequestState extends State<AllRequest> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10, left: 10),
                                   child: Text(
-                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary"
+                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary."
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10),
+                                  padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                   child: Text(
                                     "(4/567 Shah Faisal Colony, Karachi)",
                                     style: TextStyle(
@@ -344,7 +347,7 @@ class _AllRequestState extends State<AllRequest> {
                             )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.only(bottom: 10, right: 8, top: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -422,7 +425,7 @@ class _AllRequestState extends State<AllRequest> {
                   Padding(
                     padding: EdgeInsets.only(right: 20, left: 20, top: 10),
                     child: Container(
-                      color: Colors.grey.shade300,
+                      color: Colors.blue.shade100,
                       child: Wrap(
                         children: [
                           Row(
@@ -453,11 +456,11 @@ class _AllRequestState extends State<AllRequest> {
                                 Padding(
                                   padding: EdgeInsets.only(right: 10, left: 10),
                                   child: Text(
-                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary"
+                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary."
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10),
+                                  padding: EdgeInsets.only(right: 10, left: 10, top: 5),
                                   child: Text(
                                     "(4/567 Shah Faisal Colony, Karachi)",
                                     style: TextStyle(
@@ -469,7 +472,7 @@ class _AllRequestState extends State<AllRequest> {
                             )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 10),
+                            padding: EdgeInsets.only(bottom: 10, right: 8, top: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
