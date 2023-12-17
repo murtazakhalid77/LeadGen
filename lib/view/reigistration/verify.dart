@@ -1,17 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:pinput/pinput.dart';
 
 class Verify extends StatefulWidget {
-  const Verify({super.key});
+  final String otp;
+  final String phoneNumber;
 
+ 
+ const Verify({Key? key, required this.otp, required this.phoneNumber})
+      : super(key: key);
   @override
   State<Verify> createState() => _MyVerifyState();
 }
 
+ final OtpService _otpService = OtpService(); 
+
+
+
 class _MyVerifyState extends State<Verify> {
+
   bool isPinFilled = false;
+  late String pinEnter;
+
   @override
   Widget build(BuildContext context) {
+      String otp= widget.otp;
+        String phoneNumber=widget.phoneNumber;
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -100,9 +116,11 @@ class _MyVerifyState extends State<Verify> {
                 onCompleted: (pin) {
                   setState(() {
                     isPinFilled =
-                        pin.length == 6; // Check if pin is completely filled
+                        pin.length == 6;
+                      pinEnter=pin;
                   });
-                  print(pin);
+              
+                 
                 },
               ),
               const SizedBox(
@@ -112,22 +130,39 @@ class _MyVerifyState extends State<Verify> {
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isPinFilled
-                        ? Colors.blue.shade600
-                        : Colors.grey, // Change color based on pin input
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: isPinFilled
-                      ? () {
-                        print(context);
-                        Navigator.pushNamed(context,'/password');
-                      }
-                      : null, // Disable button if pin is not completely filled
-                  child: const Text("Verify Phone"),
-                ),
+  style: ElevatedButton.styleFrom(
+    backgroundColor:
+        isPinFilled ? Colors.blue.shade600 : Colors.grey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  onPressed: isPinFilled
+      ? () {
+          if (pinEnter == otp) {
+
+              Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => Password(phoneNumber:phoneNumber), // Replace '123456' with the actual OTP value
+  ),
+);
+            // PIN matches OTP, navigate to '/password'
+          
+          } else {
+            // PIN does not match OTP, show a message
+            Fluttertoast.showToast(
+              msg: 'The PIN you entered is not correct.',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+            );
+          }
+        }
+      : null, // Disable button if PIN is not completely filled
+  child: const Text("Verify Phone"),
+),
               ),
               Row(
                 children: [

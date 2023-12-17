@@ -38,12 +38,12 @@ class LocationState extends State<Location> {
       });
 
       // Navigate to the Signup page after fetching the location
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SignUpPage(), // Replace with your signup page
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => SignUpPage(), // Replace with your signup page
+      //   ),
+      // );
 
     } catch (e) {
       print('Error: $e');
