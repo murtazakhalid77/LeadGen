@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/reigistration/verify.dart';
+
 
 class PhonePage extends StatefulWidget {
   const PhonePage({Key? key}) : super(key: key);
@@ -8,7 +13,10 @@ class PhonePage extends StatefulWidget {
   State<PhonePage> createState() => PhoneState();
 }
 
+
 class PhoneState extends State<PhonePage> {
+  bool isLoading = false;
+    final OtpService _otpService = OtpService(); 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneNumberController = TextEditingController();
 
@@ -18,6 +26,40 @@ class PhoneState extends State<PhonePage> {
     _phoneNumberController.dispose();
     super.dispose();
   }
+  Future<void> sendOtp() async {
+    if (_formKey.currentState!.validate()) {
+      String phoneNumber = _phoneNumberController.text;
+ setState(() {
+      isLoading = true; // Show loader when OTP sending begins
+    });
+
+      try {
+        var response = await _otpService.otpSend(phoneNumber);
+
+        if (response.statusCode == 200) {
+          // Successful OTP send
+          showCustomToast('OTP sent');
+
+          String otp = response.body; // Extract the OTP from the response
+
+      Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => Verify(otp: otp,phoneNumber:phoneNumber), // Replace '123456' with the actual OTP value
+    ),
+  );
+        } else {
+          
+          showCustomToast(response.body);
+        }
+      } catch (e) {
+        
+        String errorMessage = "Failed to send OTP: $e";
+        showCustomToast(errorMessage);
+      }
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,12 +138,12 @@ class PhoneState extends State<PhonePage> {
                     
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // send otp from java
-                            Navigator.pushNamed(context, "/otpEnter");
-                          }
-                        },
+                        onPressed: () async {
+      if (_formKey.currentState!.validate()) {
+        await sendOtp(); // Call sendOtp method
+        
+      }
+    },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue, // Background color
                           shape: RoundedRectangleBorder(

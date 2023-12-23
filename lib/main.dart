@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
-import 'package:lead_gen/services/loginService.dart';
+import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
+import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:provider/provider.dart';
 
 
@@ -9,8 +10,8 @@ void main() {
    runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<LoginService>(create: (context) => LoginService())
-     //   ChangeNotifierProvider(create: (context) => DataService()),
+         ChangeNotifierProvider<OtpService>(create: (context) => OtpService())
+      // ChangeNotifierProvider(create: (context) => Loc()),
        // ChangeNotifierProvider(create: (context) => SettingsService()),
       ],
       child: const MyApp(),

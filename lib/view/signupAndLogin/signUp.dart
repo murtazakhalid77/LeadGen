@@ -1,41 +1,138 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:lead_gen/model/LocationModel.dart';
+import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:flutter/services.dart';
-
-import '../../model/Login.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../../model/Registration.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final String phoneNumber;
+
+  const SignUpPage({Key? key, required this.phoneNumber}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
-
 class _SignUpPageState extends State<SignUpPage> {
+    final OtpService _otpService = OtpService(); 
+
+   @override
+  void initState() {
+    super.initState();
+    _getCurrentLocationAndHitAPI();
+  }
+
+  
+  
   final _formKey = GlobalKey<FormState>();
+
+  bool isLocationSaved = false;
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+   final _emailController = TextEditingController();
+ 
+
+ Registration _constructRegistrationObject() {
+    return Registration(
+      _firstNameController.text,
+      _lastNameController.text,
+      _cnicController.text,
+      _emailController.text,
+      widget.phoneNumber
+    );
+  }
+
+  Future<void> _registerUser(Registration registrationData) async {
+    try {
+      
+      var response = await _otpService.registerUser(registrationData);
+
+      if (response.statusCode == 200) {
+       showCustomToast('User registered successfully!');
+      } else {
+        // Handle registration failure
+        // For example:
+       showCustomToast('User registration failed!');
+      }
+    } catch (e) {
+      print('Error: $e');
+      showCustomToast('Error Creating User');
+    }
+  }
+
+Future<void> _getCurrentLocationAndHitAPI() async {
+  var permissionStatus = await Permission.location.request();
+
+  if (permissionStatus.isGranted) {
+    try {
+   
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+
+      if (currentPlace != null) {
+        LocationModel location = LocationModel(
+          locality: currentPlace.locality ?? '',
+          subLocality: currentPlace.subLocality ?? '',
+          street: currentPlace.street ?? '',
+          country: currentPlace.country ?? '',
+          subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
+          administrativeArea: currentPlace.administrativeArea ?? '',
+        );
+
+        var response = await _otpService.locationCreation(location, widget.phoneNumber);
+
+        if (response.statusCode == 200) {
+         setState(() {
+    isLocationSaved = true; // Set isLoading to false after the operation completes
+  });
+showCustomToast('The location is saved');
+        } else {
+          showCustomToast('The location Cannot be saved');
+        }
+      } else {
+        showCustomToast('No location data available');
+      }
+    } catch (e) {
+      print('Error: $e');
+      showCustomToast('User registered successfully!');
+    
+    }
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
-    final login = Login(_usernameController.text, _passwordController.text);
+    //final login = Registration(_firstNameController.text, _lastNameController.text,_cnicController.text,_emailController.text);
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
         title: const Text(
-          'Registration',
+          'More information',
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
-            // Unfocus the current focus node before popping the screen
+          
             FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop(); // Add navigation functionality here
+            Navigator.of(context).pop(); 
           },
         ),
       ),
@@ -45,22 +142,17 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Stack(
           children: [
             SingleChildScrollView(
-              // adds scrolling in page
               child: Container(
                 padding: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.06,
                     right: 35,
                     left: 35),
-
-                //Text First Name and Last Name
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // First Name and Last Name in a Row
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // First Name Text
                         Text(
                           'First Name',
                           style: TextStyle(
@@ -68,24 +160,18 @@ class _SignUpPageState extends State<SignUpPage> {
                             fontSize: 20,
                           ),
                         ),
-
-                        // Spacer between First Name and Last Name Text
                         SizedBox(width: 70),
-
-                        // Last Name Text
                         Text(
                           'Last Name',
                           style: TextStyle(
                             color: Colors.lightBlue,
                             fontSize: 20,
-                          ),
+                          )
                         ),
                       ],
                     ),
 
                     const SizedBox(height: 10),
-
-                    // Row for First Name Input
                     Row(
                       children: [
                         Expanded(
@@ -174,7 +260,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       validator: (value) {
                         if (value == null ||
                             value.isEmpty ||
-                            value.length != 14) {
+                            value.length != 13) {
                           return 'Enter a valid CNIC with 14 digits';
                         }
                         return null;
@@ -188,7 +274,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
                                   const BorderSide(color: Colors.lightBlue)),
-                          hintText: '42301-835745678-2',
+                          hintText: '42101-8367133193-2',
                           hintStyle: TextStyle(color: Colors.grey[600]),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10))),
@@ -217,7 +303,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         }
                         if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
                             .hasMatch(value)) {
-                          if (login.email.isNotEmpty) {
+                          if (value.isNotEmpty) {
                             return 'Enter a valid email';
                           } else {
                             return null; // Return null if email is empty and no validation yet
@@ -225,12 +311,8 @@ class _SignUpPageState extends State<SignUpPage> {
                         }
                         return null; // Return null for valid email
                       },
-                      onChanged: (val) {
-                        setState(() {
-                          login.email = val;
-                        });
-                      },
-                      controller: _usernameController,
+                     
+                      controller: _emailController,
                       decoration: InputDecoration(
                         focusColor: Colors.blue.shade100,
                         hintText: 'google@mail.com',
@@ -246,42 +328,39 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 20),
 
-                    // register Button
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // Validation passed, continue with sign-up
-                          // Unfocus the current focus node before popping the screen
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const LogInPage(), // goes to all categories page
-                            ),
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightBlue,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(18),
-                        child: Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                     ElevatedButton(
+  onPressed: isLocationSaved
+      ? () async {
+          if (_formKey.currentState?.validate() ?? false) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Registration registrationData = _constructRegistrationObject();
+            await _registerUser(registrationData);
+          }
+        }
+      : null, // Disable the button if isLocationSaved is false
+  style: ElevatedButton.styleFrom(
+    backgroundColor: isLocationSaved ? Colors.lightBlue : Colors.grey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+  child:  const Padding(
+    padding: EdgeInsets.all(18),
+    child: Center(
+      child: Text(
+        'Register',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+      ),
+    ),
+  ),
+)
 
+                    ,
+                     
                     const SizedBox(height: 20),
 
                     //Already have an account? login

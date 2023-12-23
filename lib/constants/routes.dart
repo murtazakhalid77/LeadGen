@@ -33,9 +33,9 @@ const String user_Selection = '/user_selection';
 
 final Map<String, WidgetBuilder> routes = {
   phone: (context) =>  const PhonePage(),
-  password :(context) => const Password(),
+  // password :(context) => const Password(),
   otpRegister: (context) => const MyPhone(),  
-  otpPinEnter: (context) => const Verify(),
+  // otpPinEnter: (context) => const Verify(phoneNumber: '',),
   location: (context) => const Location(),
   buyer_home: (context) => const HomePage(),
   buyer_makeRequest:(context) => const MakeRequestPage(),
@@ -43,14 +43,14 @@ final Map<String, WidgetBuilder> routes = {
   buyer_vehicle:(context) => const VehiclesPage(),
   seller_home: (context) => const SellerHomePage(),
   seller_request: (context) => const AllRequest(),
-  sign_up:(context) => const SignUpPage(),
+  // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LogInPage(),
   user_Selection:(context) => const SelectionPage(),
   
 };
 
 class UrlConfig {
-   static const String baseUrl = "https://0d26-202-47-53-142.ngrok.io/api";
+   static const String baseUrl = "https://3f59-119-155-182-189.ngrok.io/api";
 
   static Uri buildUri(String path) {
     return Uri.parse("$baseUrl/$path");

@@ -1,20 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 
 
 class Password extends StatefulWidget {
-  const Password({super.key});
+final String phoneNumber;
+
+  const Password({Key? key, required this.phoneNumber}) : super(key: key);
+
 
   @override
   State<Password> createState() => PasswordState();
+  
 }
 
+
 class PasswordState extends State<Password> {
+   OtpService _otpService = new OtpService();
+
    String? _passwordError;
    String? _confirmPasswordError;
    bool _obscureText = true;
   final TextEditingController _passwordController = TextEditingController();
    final TextEditingController _ConfirmpasswordController = TextEditingController();
    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+ 
+
+ Future<void> passwordCreation(String password,String confirm)async {
+    if (password==confirm) {
+      try {
+        var response = await _otpService.passwordCreation(confirm,widget.phoneNumber);
+
+  
+        if (response.statusCode == 200) {
+            Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => SignUpPage(phoneNumber:widget.phoneNumber)
+  ),
+);
+        } else {
+        
+          showCustomToast('The password you eneterd is not correct');
+        }
+      } catch (e) {
+        // Handle exceptions thrown during OTP verification
+        String errorMessage = "Failed to set the password: $e";
+       showCustomToast(errorMessage);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // final loginService = Provider.of<LoginService>(context);
@@ -131,9 +169,7 @@ class PasswordState extends State<Password> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-    
-                              //send otp from java
-                              Navigator.pushNamed(context, "/location");
+                              passwordCreation(_passwordController.text,_ConfirmpasswordController.text);
                             }
                           },
                           style: TextButton.styleFrom(
