@@ -246,7 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     const SizedBox(height: 20),
 
-                    // Login Button
+                    // register Button
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
