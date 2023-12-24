@@ -7,6 +7,7 @@ import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
 import 'package:provider/provider.dart';
 
+
 void main() {
    runApp(
     MultiProvider(
