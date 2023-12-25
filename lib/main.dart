@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/Chats/all_chats.dart';
+import 'package:lead_gen/view/buyer/EditProfile.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
+import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const AllChatsPage(),
       routes: routes,
     );
   }
