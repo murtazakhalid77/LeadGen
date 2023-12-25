@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: const ProfilePage(),
+      home: const AllChatsPage(),
       routes: routes,
     );
   }
