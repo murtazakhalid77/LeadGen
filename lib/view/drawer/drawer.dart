@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
 
 class NavBar extends StatelessWidget {
   final String userType;
+  final User user;
+  
+ NavBar({Key? key,required this.userType,required this.user})
+      : super(key: key);
 
-  const NavBar({Key? key, required this.userType}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,13 +16,16 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text('John'),
-            accountEmail: const Text('john345@gmail.com'),
+            accountName:  Text(user.firstName),
+            accountEmail:  Text(user.email),
             currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.asset('assets/man.png'),
-              ),
-            ),
+  child:  ClipOval(
+    child: Image.network(
+      "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg",
+    ),
+  ),
+  backgroundColor: Colors.blue,
+),
             decoration: const BoxDecoration(
               color: Colors.blue,
             ),
@@ -59,7 +66,7 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-              // Handle Requests tapped based on user type
+           
               print('Requests tapped for $userType');
               // You can implement different logic based on user type
               if (userType == 'seller') {

@@ -1,20 +1,65 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/services/UserService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+   final String phoneNumber;
+
+   const MyHomePage({Key? key,required this.phoneNumber})
+      : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
+
+
 class _MyHomePageState extends State<MyHomePage> {
+  late UserService userService;
+  
+ late User user;
+  @override
+  void initState() {
+    user=User();
+    userService = UserService();
+   
+    super.initState();
+    fetchUser();
+    
+  }
+
+  @override
+  void dispose() {
+   
+  }
+
+
+  
+ Future<void> fetchUser() async {
+    try {
+      User? loggedInUser = await userService.getLoggedInUser(widget.phoneNumber);
+   
+      if (loggedInUser!=null) {
+        setState(() {
+          user.firstName=loggedInUser.firstName;
+          user.email=loggedInUser.email;
+        });
+        
+      }
+    } catch (error) {
+      print('Error fetching User: $error');
+       showCustomToast("error while fetching logged In User");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       drawer: const NavBar(userType: 'buyer'),
+       drawer:  NavBar(userType: 'buyer', user: user),
       body: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -30,15 +75,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(height: 50),
                 ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                  title: Text('Hello Ahad!', style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  title: Text("Hello ${user!.firstName} !!", style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.white
                   )),
                   subtitle: Text('Good Morning', style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.white54
                   )),
                   trailing: const CircleAvatar(
-                    radius: 30
-                  
+                    radius: 30,
+                   backgroundImage: NetworkImage("https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg"),
                   ),
                 ),
                 const SizedBox(height: 30)

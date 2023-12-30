@@ -50,7 +50,7 @@ final Map<String, WidgetBuilder> routes = {
 };
 
 class UrlConfig {
-   static const String baseUrl = "https://7e5e-119-155-201-34.ngrok.io/api";
+   static const String baseUrl = "https://1521-202-47-53-142.ngrok-free.app/api";
 
   static Uri buildUri(String path) {
     return Uri.parse("$baseUrl/$path");

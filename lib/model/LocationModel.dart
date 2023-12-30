@@ -25,4 +25,15 @@ class LocationModel {
       'administrativeArea': administrativeArea,
     };
   }
+    factory LocationModel.fromJson(Map<String, dynamic> json) {
+    return LocationModel(
+      locality: json['locality'] as String?,
+      subLocality: json['subLocality'] as String?,
+      street: json['street'] as String?,
+      country: json['country'] as String?,
+      subAdministrativeArea: json['subAdministrativeArea'] as String?,
+      administrativeArea: json['administrativeArea'] as String?,
+    );
+  }
+
 }

@@ -18,47 +18,44 @@ class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
-class _SignUpPageState extends State<SignUpPage> {
-    final OtpService _otpService = OtpService(); 
 
-   @override
+class _SignUpPageState extends State<SignUpPage> {
+  final OtpService _otpService = OtpService();
+
+  @override
   void initState() {
     super.initState();
     _getCurrentLocationAndHitAPI();
   }
 
-  
-  
   final _formKey = GlobalKey<FormState>();
 
   bool isLocationSaved = false;
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
-   final _emailController = TextEditingController();
- 
+  final _emailController = TextEditingController();
 
- Registration _constructRegistrationObject() {
-    return Registration(
-      _firstNameController.text,
-      _lastNameController.text,
-      _cnicController.text,
-      _emailController.text,
-      widget.phoneNumber
-    );
+  Registration _constructRegistrationObject() {
+    return Registration(_firstNameController.text, _lastNameController.text,
+        _cnicController.text, _emailController.text, widget.phoneNumber);
   }
 
   Future<void> _registerUser(Registration registrationData) async {
     try {
-      
       var response = await _otpService.registerUser(registrationData);
 
       if (response.statusCode == 200) {
-       showCustomToast('User registered successfully!');
+        showCustomToast('User registered successfully!');
+         Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => LoginScreen()
+  ),
+);
       } else {
-        // Handle registration failure
-        // For example:
-       showCustomToast('User registration failed!');
+        
+        showCustomToast('User registration failed!');
       }
     } catch (e) {
       print('Error: $e');
@@ -66,55 +63,53 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-Future<void> _getCurrentLocationAndHitAPI() async {
-  var permissionStatus = await Permission.location.request();
+  Future<void> _getCurrentLocationAndHitAPI() async {
+    var permissionStatus = await Permission.location.request();
 
-  if (permissionStatus.isGranted) {
-    try {
-   
-
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
-
-      if (currentPlace != null) {
-        LocationModel location = LocationModel(
-          locality: currentPlace.locality ?? '',
-          subLocality: currentPlace.subLocality ?? '',
-          street: currentPlace.street ?? '',
-          country: currentPlace.country ?? '',
-          subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
-          administrativeArea: currentPlace.administrativeArea ?? '',
+    if (permissionStatus.isGranted) {
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
         );
 
-        var response = await _otpService.locationCreation(location, widget.phoneNumber);
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
 
-        if (response.statusCode == 200) {
-         setState(() {
-    isLocationSaved = true; // Set isLoading to false after the operation completes
-  });
-showCustomToast('The location is saved');
+        Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+
+        if (currentPlace != null) {
+          LocationModel location = LocationModel(
+            locality: currentPlace.locality ?? '',
+            subLocality: currentPlace.subLocality ?? '',
+            street: currentPlace.street ?? '',
+            country: currentPlace.country ?? '',
+            subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
+            administrativeArea: currentPlace.administrativeArea ?? '',
+          );
+
+          var response =
+              await _otpService.locationCreation(location, widget.phoneNumber);
+
+          if (response.statusCode == 200) {
+            setState(() {
+              isLocationSaved =
+                  true; // Set isLoading to false after the operation completes
+            });
+            showCustomToast('The location is saved');
+          } else {
+            showCustomToast('The location Cannot be saved');
+          }
         } else {
-          showCustomToast('The location Cannot be saved');
+          showCustomToast('No location data available');
         }
-      } else {
-        showCustomToast('No location data available');
+      } catch (e) {
+        print('Error: $e');
+        showCustomToast('User registered successfully!');
       }
-    } catch (e) {
-      print('Error: $e');
-      showCustomToast('User registered successfully!');
-    
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +125,8 @@ showCustomToast('The location is saved');
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
-          
             FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop(); 
+            Navigator.of(context).pop();
           },
         ),
       ),
@@ -161,13 +155,11 @@ showCustomToast('The location is saved');
                           ),
                         ),
                         SizedBox(width: 70),
-                        Text(
-                          'Last Name',
-                          style: TextStyle(
-                            color: Colors.lightBlue,
-                            fontSize: 20,
-                          )
-                        ),
+                        Text('Last Name',
+                            style: TextStyle(
+                              color: Colors.lightBlue,
+                              fontSize: 20,
+                            )),
                       ],
                     ),
 
@@ -282,13 +274,13 @@ showCustomToast('The location is saved');
 
                     const SizedBox(height: 20),
 
-                   //Email Text
+                    //Email Text
                     const Text(
                       'Enter Your Email',
                       style: TextStyle(
-                      //  fontFamily: "UBUNTU",
+                        //  fontFamily: "UBUNTU",
                         color: Colors.blue,
-                      //  fontWeight: FontWeight.bold,
+                        //  fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
@@ -311,14 +303,13 @@ showCustomToast('The location is saved');
                         }
                         return null; // Return null for valid email
                       },
-                     
                       controller: _emailController,
                       decoration: InputDecoration(
                         focusColor: Colors.blue.shade100,
                         hintText: 'google@mail.com',
                         hintStyle: const TextStyle(
                           fontSize: 18,
-                      //    fontFamily: "UBUNTU",
+                          //    fontFamily: "UBUNTU",
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -328,39 +319,39 @@ showCustomToast('The location is saved');
 
                     const SizedBox(height: 20),
 
-                     ElevatedButton(
-  onPressed: isLocationSaved
-      ? () async {
-          if (_formKey.currentState?.validate() ?? false) {
-            FocusManager.instance.primaryFocus?.unfocus();
-            Registration registrationData = _constructRegistrationObject();
-            await _registerUser(registrationData);
-          }
-        }
-      : null, // Disable the button if isLocationSaved is false
-  style: ElevatedButton.styleFrom(
-    backgroundColor: isLocationSaved ? Colors.lightBlue : Colors.grey,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-  ),
-  child:  const Padding(
-    padding: EdgeInsets.all(18),
-    child: Center(
-      child: Text(
-        'Register',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      ),
-    ),
-  ),
-)
+                    ElevatedButton(
+                      onPressed: isLocationSaved
+                          ? () async {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                Registration registrationData =
+                                    _constructRegistrationObject();
+                                await _registerUser(registrationData);
+                              }
+                            }
+                          : null, // Disable the button if isLocationSaved is false
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isLocationSaved ? Colors.lightBlue : Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(18),
+                        child: Center(
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
 
-                    ,
-                     
                     const SizedBox(height: 20),
 
                     //Already have an account? login

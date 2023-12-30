@@ -1,11 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/LocationModel.dart';
+import 'package:lead_gen/model/ProfanityCheckResponse.dart';
+import 'package:lead_gen/model/RequestModel.dart';
+import 'package:lead_gen/model/Subcategory.dart';
+import 'package:lead_gen/services/HelperService.dart';
+import 'package:lead_gen/services/categoryService.dart';
 import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:lead_gen/model/category.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lead_gen/view/categoriesAndSubcategories/categoryDropDownButton.dart';
 import 'package:lead_gen/view/categoriesAndSubcategories/vehicle_subCat.dart';
 import 'package:lead_gen/view/conditionDropDown/conditionDropDown.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/pictureClick/imagePickerwidget.dart';
 
 class MakeRequestPage extends StatefulWidget {
@@ -15,9 +26,97 @@ class MakeRequestPage extends StatefulWidget {
   State<MakeRequestPage> createState() => _MakeRequestPageState();
 }
 
+
 class _MakeRequestPageState extends State<MakeRequestPage> {
-  String? dropdownValue;
+ String? dropdownValue; 
+  String? subCategory; 
+   late  CategoryService _categoryService;
+   late HelperService _helperService;
+
+  List<Categoryy> categories = [];
+  List<SubCategory> subCategories = [];
+
+  late LocationModel locationModel;
+  late Categoryy? categoryy;
+  late RequestModel requestModel;
+
   String? selectedLocation;
+  late final TextEditingController _title;
+  late final TextEditingController _description;
+    late final TextEditingController _price;
+
+
+  @override
+  void initState() {
+    _categoryService = CategoryService();
+    _helperService = HelperService();
+    _title = TextEditingController();
+    _description = TextEditingController();
+    _price = TextEditingController();
+
+    super.initState();
+    fetchCategories();
+    _fetchLocation();
+  }
+
+  @override
+  void dispose() {
+    _title.dispose();
+    _description.dispose();
+    _price.dispose();
+    super.dispose();
+  }
+
+
+
+  Future<void> fetchCategories() async {
+    try {
+      List<Categoryy> fetchedCategories = await _categoryService.fetchCategories();
+
+      if (fetchedCategories.isNotEmpty) {
+        setState(() {
+          categories = fetchedCategories;
+        });
+         showCustomToast("category fetched");
+      }
+    } catch (error) {
+      print('Error fetching categories: $error');
+       showCustomToast("error while fetching category");
+    }
+  }
+
+
+ Future<void> makeRequest(RequestModel? requestModel) async{
+try {
+      RequestModel? requestModel = await _helperService.requestPost(this.requestModel);
+
+      if (requestModel!=null) {
+      
+         showCustomToast("Request Posted");
+      }
+    } catch (error) {
+      print('Error fetching categories: $error');
+       showCustomToast("error while posting request");
+    }
+ }
+
+  Future<void> fetchSubCategories(String selectedCategory) async {
+    try {
+      // Simulate fetching subcategories for a selected category from the service
+      // Replace this logic with your actual API call to fetch subcategories based on the selected category
+      List<SubCategory> fetchedSubCategories = await _categoryService.fetchSubCat(selectedCategory);
+
+      if (fetchedSubCategories.isNotEmpty) {
+       setState(() {
+          subCategories = fetchedSubCategories; // Update subCategories list
+        });
+          showCustomToast("Sub category fetched");
+      }
+    } catch (error) {
+      print('Error fetching subcategories: $error');
+         showCustomToast("error while fetching Subcategory");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +156,12 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
-              //upload Images
                 const SizedBox(
               height: 170,
               child: ImagePickerWidget(),
               ),
 
                  const SizedBox(height: 8),
-
-              //title text
               const Text(
                 'Title *',
                 style: TextStyle(
@@ -77,6 +172,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
               const SizedBox(height: 5),
               //title input
               TextFormField(
+                controller:_title ,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'title field caanot be empty';
@@ -84,6 +180,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   return null;
                 },
                 decoration: InputDecoration(
+            
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: const BorderSide(
@@ -106,7 +203,6 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
               const SizedBox(height: 8),
 
-              //description text
               const Text(
                 'Description *',
                 style: TextStyle(
@@ -115,8 +211,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 ),
               ),
               const SizedBox(height: 5),
-              //description input
               TextFormField(
+                    controller:_description ,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'description field caanot be empty';
@@ -155,16 +251,14 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 ),
               ),
               const SizedBox(height: 5),
-              // Location input
               TextFormField(
-                readOnly: true, //prevent direct user input.
+                readOnly: true,
                 controller: TextEditingController(text: selectedLocation ?? ''),
                 onTap: () async {
-                  // Fetch location and update the input field
-                  //_fetchLocation that fetches the current location using the geolocator package.
-                  String location = await _fetchLocation();
+                  LocationModel location = await _fetchLocation();
                   setState(() {
-                    selectedLocation = location;
+                    locationModel=location;
+                    selectedLocation = (location.administrativeArea!+location.locality!+location.subLocality!);
                   });
                 },
                 validator: (value) {
@@ -196,7 +290,6 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
               const SizedBox(height: 8),
 
-              //dropdown category text
               const Text(
                 'Category',
                 style: TextStyle(
@@ -204,29 +297,65 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   fontSize: 20,
                 ),
               ),
-              const SizedBox(height: 5),
-              const CategoryDropDownBtn(),//calling categories dropdown here
-
-              const SizedBox(height: 8),
-
-
-              const SizedBox(height: 8),
-
-              //dropdown Sub-category text
-              const Text(
-                'SubCategory',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
+   
+     
+ DropdownButton<Categoryy>(
+        value: categories.firstOrNull,
+        icon: const Icon(Icons.arrow_drop_down),
+        style: const TextStyle(color: Colors.black),
+        onChanged: (Categoryy? newValue) {
+          setState(() {
+            categoryy=newValue;
+            dropdownValue = newValue!.name;
+            fetchSubCategories(newValue.name);
+          });
+        },
+        isExpanded: true,
+        hint: const Text('Select Category'),
+        items: categories.map((Categoryy category) {
+          return DropdownMenuItem<Categoryy>(
+            value: category,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(category.name),
+            ),
+          );
+        }).toList(),
+      ),
+      const SizedBox(height: 8),
+    
+                const Text(
+        'SubCategory',
+        style: TextStyle(
+          color: Colors.lightBlue,
+          fontSize: 20,
+        ),
+      ),
+      const SizedBox(height: 5),
+              DropdownButton<SubCategory>(
+          value: subCategories.isNotEmpty
+              ? subCategories.firstOrNull!
+              : null,
+          icon: const Icon(Icons.arrow_drop_down),
+          style: const TextStyle(color: Colors.black),
+          onChanged: (SubCategory? newValue) {
+            setState(() {
+              subCategory = newValue!.subcategoryName;
+            });
+          },
+          isExpanded: true,
+          hint: const Text('Select SubCategory'),
+          items: subCategories.map((SubCategory subCategory) {
+            return DropdownMenuItem<SubCategory>(
+              value: subCategory,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(subCategory.subcategoryName),
               ),
-              const SizedBox(height: 5),
-              const VehicleSubCat(),//calling Sub-categories dropdown here
-
-              const SizedBox(height: 8),
-
-
-              //Condition dropdown text
+            );
+          }).toList(),
+              )
+,
               const Text(
                 'Condition',
                 style: TextStyle(
@@ -235,13 +364,11 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 ),
               ),
               const SizedBox(height: 5),
-              //conditiond drop down menu
-              const ConditionDropdown(),//calling condition dropdown
+              
+              const ConditionDropdown(),
 
               const SizedBox(height: 8),
 
-
-              //price text
               const Text(
                 'Price',
                 style: TextStyle(
@@ -252,6 +379,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
               const SizedBox(height: 5),
               //price input
               TextFormField(
+                    controller:_price ,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Enter the price';
@@ -284,18 +412,12 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
               // send request Button
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    // Validation passed, continue with sign-up
-                    // Unfocus the current focus node before popping the screen
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const HomePage(), // goes to all categories page
-                      ),
-                    );
-                  }
+                
+                onPressed: () async {
+                      RequestModel requestModel = RequestModel(title: _title.text, description: _description.text, locationModel: locationModel, category: categoryy ,number: "03468288815", condition: "new", price: _price.text);
+                   this.requestModel=requestModel;
+                    await  makeRequest(requestModel);
+            print(requestModel.toJson());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue,
@@ -317,27 +439,41 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   ),
                 ),
               ),
-            ],
+          ],
           ),
         ))));
   }
 
-  Future<String> _fetchLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
+  Future<LocationModel> _fetchLocation() async {
+  try {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
-      Placemark place = placemarks[0];
-      return '${place.name}, ${place.locality}, ${place.administrativeArea}';
-    } catch (e) {
-      print('Error: $e');
-      return 'Failed to fetch location';
-    }
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+
+    LocationModel location = LocationModel(
+      locality: currentPlace?.locality ?? '',
+      subLocality: currentPlace?.subLocality ?? '',
+      street: currentPlace?.street ?? '',
+      country: currentPlace?.country ?? '',
+      subAdministrativeArea: currentPlace?.subAdministrativeArea ?? '',
+      administrativeArea: currentPlace?.administrativeArea ?? '',
+    );
+
+locationModel=location;
+    return location;
+  } catch (error) {
+    print('Error fetching location: $error');
+    // Handle the error as needed, e.g., throw a custom exception or return a default location
+    return LocationModel(); // Return a default empty LocationModel or throw a custom exception
   }
+}
+
 }
