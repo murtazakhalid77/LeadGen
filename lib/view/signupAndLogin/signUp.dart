@@ -19,14 +19,18 @@ class SignUpPage extends StatefulWidget {
   _SignUpPageState createState() => _SignUpPageState();
 }
 
+
 class _SignUpPageState extends State<SignUpPage> {
   final OtpService _otpService = OtpService();
+  final OtpService _otpService = OtpService();
 
+  @override
   @override
   void initState() {
     super.initState();
     _getCurrentLocationAndHitAPI();
   }
+
 
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +38,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
-  final _emailController = TextEditingController();
+   final _emailController = TextEditingController();
+ 
 
   Registration _constructRegistrationObject() {
     return Registration(_firstNameController.text, _lastNameController.text,
@@ -65,6 +70,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _getCurrentLocationAndHitAPI() async {
     var permissionStatus = await Permission.location.request();
+  Future<void> _getCurrentLocationAndHitAPI() async {
+    var permissionStatus = await Permission.location.request();
 
     if (permissionStatus.isGranted) {
       try {
@@ -76,7 +83,12 @@ class _SignUpPageState extends State<SignUpPage> {
           position.latitude,
           position.longitude,
         );
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude,
+          position.longitude,
+        );
 
+        Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
         Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
 
         if (currentPlace != null) {
@@ -88,7 +100,18 @@ class _SignUpPageState extends State<SignUpPage> {
             subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
             administrativeArea: currentPlace.administrativeArea ?? '',
           );
+        if (currentPlace != null) {
+          LocationModel location = LocationModel(
+            locality: currentPlace.locality ?? '',
+            subLocality: currentPlace.subLocality ?? '',
+            street: currentPlace.street ?? '',
+            country: currentPlace.country ?? '',
+            subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
+            administrativeArea: currentPlace.administrativeArea ?? '',
+          );
 
+          var response =
+              await _otpService.locationCreation(location, widget.phoneNumber);
           var response =
               await _otpService.locationCreation(location, widget.phoneNumber);
 

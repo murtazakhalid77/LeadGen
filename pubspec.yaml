@@ -49,6 +49,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: ^0.8.4
   flutter_neumorphic: ^3.2.0
+  email_validator: ^2.1.17
   
 
 flutter_native_splash:
@@ -84,6 +85,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets: 
     - lib/assets/
+    
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
