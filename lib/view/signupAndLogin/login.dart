@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
@@ -84,28 +83,31 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color.fromARGB(255, 61, 108, 227),
-                Color.fromARGB(255, 61, 200, 255),
+                Color.fromARGB(255, 61, 78, 227),
+                Color.fromARGB(255, 208, 238, 240),
               ],
             ),
           ),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 30),
-                  Container(
-                    padding: const EdgeInsets.all(0),
-                    child: Image.asset(
-                      'lib/assets/logo.png',
-                      width: 250,
-                      height: 250,
-                    ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 30),
+              Container(
+                padding: EdgeInsets.all(0),
+                child: Image.asset(
+                  'lib/assets/logo.png',
+                  width: 250,
+                  height: 250,
+                ),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
                   ),
                   color: Colors.white,
                 ),
@@ -226,70 +228,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ],
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 70),
-                          Container(
-                            height: 55,
-                            width: 350,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color.fromARGB(255, 61, 108, 227),
-                                  Color.fromARGB(255, 61, 200, 255),
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState?.validate() ?? false) {
-                                    // Perform login or further actions
-                                  }
-                                },
-                                child: const Text(
-                                  'SIGN IN',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 80),
-                          const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  "Sign up",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
