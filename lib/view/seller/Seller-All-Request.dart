@@ -12,7 +12,7 @@ class _AllRequestState extends State<AllRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const NavBar(userType: 'seller'),
+      // drawer: const NavBar(userType: 'seller'),
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Welcome to Lead Gen"),

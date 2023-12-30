@@ -47,9 +47,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (response.statusCode == 200) {
         showCustomToast('User registered successfully!');
+         Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => LoginScreen()
+  ),
+);
       } else {
-        // Handle registration failure
-        // For example:
+        
         showCustomToast('User registration failed!');
       }
     } catch (e) {

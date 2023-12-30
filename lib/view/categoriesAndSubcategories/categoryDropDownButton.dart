@@ -1,87 +1,61 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
+// import 'package:lead_gen/model/category.dart';
+// import 'package:lead_gen/services/categoryService.dart';
 
-class CategoryDropDownBtn extends StatefulWidget {
-  const CategoryDropDownBtn({super.key});
+// class CategoryDropDownBtn extends StatefulWidget {
+//   const CategoryDropDownBtn({Key? key}) : super(key: key);
 
-  @override
-  State<CategoryDropDownBtn> createState() =>
-      _CategoryDropDownBtnStateState();
-}
+//   @override
+//   State<CategoryDropDownBtn> createState() => _CategoryDropDownBtnState();
+// }
 
-class _CategoryDropDownBtnStateState extends State<CategoryDropDownBtn> {
-  String? dropdownValue;
+// class _CategoryDropDownBtnState extends State<CategoryDropDownBtn> {
+//   final CategoryService _categoryService = CategoryService();
+//   String? dropdownValue;
+//   List<Category> categories = []; // Store categories from API
 
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_drop_down),
-      style: const TextStyle(color: Colors.black),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-        });
-      },
-      isExpanded: true,
-      hint: const Text('Select Category'),
-      items: const [
-        DropdownMenuItem<String>(
-          value: 'Vehicle',
-          child: Text('Vehicle'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Bikes',
-          child: Text('Bikes'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Businesses',
-          child: Text('Businesses'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Property',
-          child: Text('Property'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Mobiles',
-          child: Text('Mobiles'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Home Appliances & Electronics',
-          child: Text('Home Appliances & Electronics'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Services',
-          child: Text('Services'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Jobs',
-          child: Text('Jobs'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Furniture & Home Decore',
-          child: Text('Furniture & Home Decore'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Kids',
-          child: Text('Kids'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Fashion and Accessories',
-          child: Text('Fashion and Accessories'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Hobbies',
-          child: Text('Hobbies'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Books',
-          child: Text('Books'),
-        ),
-        DropdownMenuItem<String>(
-          value: 'Animals',
-          child: Text('Animals'),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchCategories();
+//   }
+
+//   Future<void> fetchCategories() async {
+//     try {
+//       List<Category> fetchedCategories = await _categoryService.fetchCategories();
+
+//       if (fetchedCategories.isNotEmpty) {
+//         setState(() {
+//           categories = fetchedCategories;
+//         });
+//       }
+//     } catch (error) {
+//       print('Error fetching categories: $error');
+//       // Handle error accordingly, e.g., show an error message
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<Category>(
+//       value: dropdownValue != null
+//           ? categories.firstWhere((category) => category.name == dropdownValue)
+//           : null,
+//       icon: const Icon(Icons.arrow_drop_down),
+//       style: const TextStyle(color: Colors.black),
+//       onChanged: (Category? newValue) {
+//         setState(() {
+//           dropdownValue = newValue!.name;
+//         });
+//       },
+//       isExpanded: true,
+//       hint: const Text('Select Category'),
+//       items: categories.map((Category category) {
+//         return DropdownMenuItem<Category>(
+//           value: category,
+//           child: Text(category.name),
+//         );
+//       }).toList(),
+//     );
+//   }
+// }

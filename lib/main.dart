@@ -3,8 +3,10 @@ import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
 import 'package:lead_gen/view/buyer/EditProfile.dart';
+import 'package:lead_gen/services/categoryService.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
+import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
@@ -16,7 +18,8 @@ void main() {
    runApp(
     MultiProvider(
       providers: [
-         ChangeNotifierProvider<OtpService>(create: (context) => OtpService())
+         ChangeNotifierProvider<OtpService>(create: (context) => OtpService()),
+          ChangeNotifierProvider<CategoryService>(create: (context) => CategoryService())
       // ChangeNotifierProvider(create: (context) => Loc()),
        // ChangeNotifierProvider(create: (context) => SettingsService()),
       ],
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: const AllChatsPage(),
+      home:  SplashScreen(),
       routes: routes,
     );
   }
