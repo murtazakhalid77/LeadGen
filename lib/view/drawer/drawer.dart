@@ -53,6 +53,15 @@ class NavBar extends StatelessWidget {
                       MyHomePage(phoneNumber: user.phoneNumber)
                 ),
               );
+             
+              // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's requests page
+                //   Navigator.pushNamed(context, '/sellerRequests');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's requests page
+                   Navigator.pushNamed(context, '/HomePage');
+              }
             },
           ),
           ListTile(
@@ -94,9 +103,17 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      AllChatsPage()
+                      const AllChatsPage(),
                 ),
               );
+               // You can implement different logic based on user type
+              if (userType == 'seller') {
+                // Navigate to seller's requests page
+                //   Navigator.pushNamed(context, '/sellerRequests');
+              } else if (userType == 'buyer') {
+                // Navigate to buyer's requests page
+                   Navigator.pushNamed(context, '/AllChatsPage');
+              }
             },
           ),
           ListTile(
@@ -130,7 +147,7 @@ class NavBar extends StatelessWidget {
                 //   Navigator.pushNamed(context, '/sellerRequests');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                //   Navigator.pushNamed(context, '/buyer_makeRequest');
+                   Navigator.pushNamed(context, '/HomePage');
               }
             },
           ),

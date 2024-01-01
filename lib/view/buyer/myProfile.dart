@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/EditProfile.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/drawer/drawer.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   final String? name;
   final String? phone;
   final String? address;
@@ -17,53 +21,100 @@ class ProfilePage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  late UserService userService;
+  late User user;
+
+  @override
+  void initState() {
+    user = User();
+    userService = UserService();
+    super.initState();
+    fetchUser();
+  }
+
+  Future<void> fetchUser() async {
+    try {
+      // Replace the 'widget' with 'widget.' to access the properties of ProfilePage
+      User? loggedInUser = await userService.getLoggedInUser(widget.phone!);
+      if (loggedInUser != null) {
+        setState(() {
+          user.firstName = loggedInUser.firstName;
+          user.email = loggedInUser.email;
+          user.location = loggedInUser.location;
+          user.phoneNumber = widget.phone!;
+          print(user.toJson());
+        });
+      }
+    } catch (error) {
+      print('Error fetching User: $error');
+      showCustomToast("error while fetching logged In User");
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const SizedBox(height: 80),
-            const Text(
-              'My Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.blueAccent,
-                fontSize: 20,
+      drawer: NavBar(userType: 'buyer', user: user),
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
+        elevation: 0.2,
+        title: const Text(
+          'Profile',
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const SizedBox(height: 35),
+              const Text(
+                'My Profile',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blueAccent,
+                  fontSize: 20,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const CircleAvatar(
-              radius: 70,
-              backgroundImage: AssetImage('lib/assets/man.png'),
-            ),
-            const SizedBox(height: 20),
-            itemProfile('Name', name ?? 'N/A', CupertinoIcons.person),
-            const SizedBox(height: 10),
-            itemProfile('Phone', phone ?? 'N/A', CupertinoIcons.phone),
-            const SizedBox(height: 10),
-            itemProfile('Address', address ?? 'N/A', CupertinoIcons.location),
-            const SizedBox(height: 10),
-            itemProfile('Email', email ?? 'N/A', CupertinoIcons.mail),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const EditProfile(),
+              const SizedBox(height: 20),
+              const CircleAvatar(
+                radius: 70,
+                backgroundImage: AssetImage('lib/assets/man.png'),
+              ),
+              const SizedBox(height: 20),
+              itemProfile('Name', widget.name ?? 'N/A', CupertinoIcons.person),
+              const SizedBox(height: 10),
+              itemProfile('Phone', widget.phone ?? 'N/A', CupertinoIcons.phone),
+              const SizedBox(height: 10),
+              itemProfile('Address', widget.address ?? 'N/A', CupertinoIcons.location),
+              const SizedBox(height: 10),
+              itemProfile('Email', widget.email ?? 'N/A', CupertinoIcons.mail),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    ),
                   ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.all(15),
+                  ),
+                  child: const Text('Edit Profile'),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  padding: const EdgeInsets.all(15),
-                ),
-                child: const Text('Edit Profile'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -87,9 +138,9 @@ class ProfilePage extends StatelessWidget {
         title: Text(title),
         subtitle: Text(subtitle),
         leading: Icon(iconData),
-        trailing: Icon(Icons.arrow_forward, color: Colors.grey.shade400),
         tileColor: Colors.white,
       ),
     );
   }
+  
 }
