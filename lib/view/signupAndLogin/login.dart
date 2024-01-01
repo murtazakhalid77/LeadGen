@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/reigistration/phone.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -52,11 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
         if (token != null) {
           // Login successful, navigate to the home page
           Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => MyHomePage(phoneNumber: _emailController.text),
-  ),
-);
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  MyHomePage(phoneNumber: _emailController.text),
+            ),
+          );
         } else {
           // Login failed
           ScaffoldMessenger.of(context).showSnackBar(
@@ -125,7 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextFormField(
                               controller: _emailController,
                               decoration: InputDecoration(
-                                suffixIcon: Icon(Icons.check, color: Colors.grey),
+                                suffixIcon:
+                                    Icon(Icons.check, color: Colors.grey),
                                 labelText: 'PhoneNumber',
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -214,7 +217,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      // Handle sign-up navigation
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const PhonePage()),
+                                      );
                                     },
                                     child: Text(
                                       "Sign up",

@@ -47,6 +47,9 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           user.firstName=loggedInUser.firstName;
           user.email=loggedInUser.email;
+          user.location=loggedInUser.location;
+          user.phoneNumber=widget.phoneNumber;
+          print(user.toJson());
         });
         
       }
