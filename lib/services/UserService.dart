@@ -15,7 +15,7 @@ class UserService extends ChangeNotifier {
 Future<User?> getLoggedInUser(String emailOrNumber) async {
     try {
       final response = await http.get(
-         UrlConfig.buildUri('/user/getLoggedInUser/${emailOrNumber}'),
+         UrlConfig.buildUri('user/getLoggedInUser/${emailOrNumber}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

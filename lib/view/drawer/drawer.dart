@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/view/Chats/all_chats.dart';
+import 'package:lead_gen/view/Chats/person_chat.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/buyer/myProfile.dart';
 
 class NavBar extends StatelessWidget {
   final String userType;
   final User user;
-  
- NavBar({Key? key,required this.userType,required this.user})
-      : super(key: key);
 
+  NavBar({Key? key, required this.userType, required this.user})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +19,16 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName:  Text(user.firstName),
-            accountEmail:  Text(user.email),
+            accountName: Text(user.firstName),
+            accountEmail: Text(user.email),
             currentAccountPicture: CircleAvatar(
-  child:  ClipOval(
-    child: Image.network(
-      "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg",
-    ),
-  ),
-  backgroundColor: Colors.blue,
-),
+              child: ClipOval(
+                child: Image.network(
+                  "https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg",
+                ),
+              ),
+              backgroundColor: Colors.blue,
+            ),
             decoration: const BoxDecoration(
               color: Colors.blue,
             ),
@@ -43,15 +46,13 @@ class NavBar extends StatelessWidget {
             textColor: Colors.blue,
             onTap: () {
               // Handle Home tapped based on user type
-              print('Home tapped for $userType');
-              // You can implement different logic based on user type
-              if (userType == 'seller') {
-                // Navigate to seller's home page
-                Navigator.pushNamed(context, '/seller_home');
-              } else if (userType == 'buyer') {
-                // Navigate to buyer's home page
-                Navigator.pushNamed(context, '/buyer_home');
-              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MyHomePage(phoneNumber: user.phoneNumber)
+                ),
+              );
             },
           ),
           ListTile(
@@ -66,7 +67,6 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-           
               print('Requests tapped for $userType');
               // You can implement different logic based on user type
               if (userType == 'seller') {
@@ -74,7 +74,7 @@ class NavBar extends StatelessWidget {
                 Navigator.pushNamed(context, '/seller-request');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-              //  Navigator.pushNamed(context, '/buyer_makeRequest');
+                //  Navigator.pushNamed(context, '/buyer_makeRequest');
               }
             },
           ),
@@ -90,16 +90,13 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-              // Handle Requests tapped based on user type
-              print('Chats tapped for $userType');
-              // You can implement different logic based on user type
-              if (userType == 'seller') {
-                // Navigate to seller's requests page
-            //    Navigator.pushNamed(context, '/sellerRequests');
-              } else if (userType == 'buyer') {
-                // Navigate to buyer's requests page
-            //    Navigator.pushNamed(context, '/buyer_makeRequest');
-              }
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AllChatsPage()
+                ),
+              );
             },
           ),
           ListTile(
@@ -113,16 +110,27 @@ class NavBar extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.blue,
-           onTap: () {
+            onTap: () {
+              print(user.toJson());
               // Handle Requests tapped based on user type
-              print('Profile tapped for $userType');
+              Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProfilePage(
+        name: user.firstName,
+        phone: user.phoneNumber,
+        address: user.location,
+        email: user.email,
+      ),
+    ),
+  );
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
-             //   Navigator.pushNamed(context, '/sellerRequests');
+                //   Navigator.pushNamed(context, '/sellerRequests');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-             //   Navigator.pushNamed(context, '/buyer_makeRequest');
+                //   Navigator.pushNamed(context, '/buyer_makeRequest');
               }
             },
           ),
