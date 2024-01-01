@@ -11,6 +11,7 @@ import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
+import 'package:lead_gen/view/user-select/selection.dart';
 import 'package:provider/provider.dart';
 
 
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home:  MakeRequestPage(),
+      home:  const SelectionPage(),
       routes: routes,
     );
   }

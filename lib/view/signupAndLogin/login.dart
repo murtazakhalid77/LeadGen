@@ -3,6 +3,7 @@ import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
+import 'package:lead_gen/view/user-select/selection.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Color.fromARGB(255, 61, 78, 227),
@@ -96,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
-                padding: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(0),
                 child: Image.asset(
                   'lib/assets/logo.png',
                   width: 250,
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),
@@ -126,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             TextFormField(
                               controller: _emailController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 suffixIcon:
                                     Icon(Icons.check, color: Colors.grey),
                                 labelText: 'PhoneNumber',
@@ -156,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 labelText: 'Password',
-                                labelStyle: TextStyle(
+                                labelStyle: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 26, 102, 216),
                                 ),
@@ -168,8 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 20),
-                            Align(
+                            const SizedBox(height: 20),
+                            const Align(
                               alignment: Alignment.centerRight,
                               child: Text(
                                 'Forgot Password?',
@@ -180,9 +181,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 70),
+                            const SizedBox(height: 70),
                             _isLoading
-                                ? CircularProgressIndicator()
+                                ? const CircularProgressIndicator()
                                 : ElevatedButton(
                                     onPressed: _handleSignIn,
                                     style: ElevatedButton.styleFrom(
@@ -191,9 +192,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30),
                                       ),
-                                      minimumSize: Size(350, 55),
+                                      minimumSize: const Size(350, 55),
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       'SIGN IN',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -201,14 +202,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   ),
-                            SizedBox(height: 150),
+                            const SizedBox(height: 150),
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Don't have an account?",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -220,10 +221,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => const PhonePage()),
+                                            builder: (context) => const SelectionPage()),
                                       );
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "Sign up",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
