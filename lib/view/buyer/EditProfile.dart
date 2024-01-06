@@ -1,19 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key? key}) : super(key: key);
+  final User user; // Define the user field here
+
+  const EditProfile({Key? key, required this.user}) : super(key: key);
 
   @override
-  _EditProfileState createState() => _EditProfileState();
+  State<EditProfile> createState() => _EditProfileState();
 }
-
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  late TextEditingController nameController ;
+  late TextEditingController phoneController;
+  late TextEditingController addressController;
+ late TextEditingController emailController;
+ @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.user.firstName);
+    phoneController = TextEditingController(text: widget.user.phoneNumber);
+    addressController = TextEditingController(text: widget.user.location);
+    emailController = TextEditingController(text: widget.user.email);
+  }
 
   @override
   Widget build(BuildContext context) {

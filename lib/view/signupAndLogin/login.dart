@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/services/UserService.dart';
-import 'package:lead_gen/view/buyer/Home.dart';
+
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
@@ -52,12 +52,11 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (token != null) {
-          // Login successful, navigate to the home page
-          Navigator.push(
+           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  MyHomePage(phoneNumber: _emailController.text),
+                  SelectionPage(phoneNumber: _emailController.text),
             ),
           );
         } else {
@@ -221,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => const SelectionPage()),
+                                            builder: (context) => const PhonePage()),
                                       );
                                     },
                                     child: const Text(
