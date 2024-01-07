@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lead_gen/view/buyer/Home.dart';
+
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 
 class SelectionPage extends StatefulWidget {
-  const SelectionPage({Key? key}) : super(key: key);
+  final String phoneNumber;
+  const SelectionPage({Key? key, required this.phoneNumber}) : super(key: key);
 
   @override
   State<SelectionPage> createState() => _SelectionPageState();
@@ -74,7 +75,7 @@ class _SelectionPageState extends State<SelectionPage> {
                         onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MyHomePage(phoneNumber: '',)),
+                              builder: (context) =>  MyHomePage(phoneNumber: widget.phoneNumber)),
                         ),
                         style: ElevatedButton.styleFrom(
                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed

@@ -33,6 +33,29 @@ Future<List<Categoryy>> fetchCategories() async {
     }
   
 }
+Future<List<Map<dynamic, dynamic>>> fetchCategoriesForHomePage() async {
+  try {
+    final response = await http.get(
+      UrlConfig.buildUri('category/getAll'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> fetchedCategories = jsonDecode(response.body) as List<dynamic>;
+      return fetchedCategories.cast<Map<dynamic, dynamic>>();
+    } else {
+      print('Failed to fetch categories: ${response.statusCode}');
+      return [];
+    }
+  } catch (error) {
+    print('Error fetching categories: $error');
+    return [];
+  }
+}
+
+
 
 Future<List<SubCategory>> fetchSubCat(String? subcat) async {
    
