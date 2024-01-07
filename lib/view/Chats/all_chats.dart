@@ -1,23 +1,71 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/Chats/person_chat.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/drawer/drawer.dart';
 
 class AllChatsPage extends StatefulWidget {
-  const AllChatsPage({super.key});
+   final String? name;
+  final String? phone;
+  final String? address;
+  final String? email;
+
+  const AllChatsPage({
+    Key? key,
+    this.name,
+    this.phone,
+    this.address,
+    this.email,
+  }) : super(key: key);
+
 
   @override
   _AllChatsPageState createState() => _AllChatsPageState();
 }
 
 class _AllChatsPageState extends State<AllChatsPage> {
+
+late UserService userService;
+  late User user;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  void initState() {
+    user = User();
+    userService = UserService();
+    super.initState();
+    fetchUser();
+  }
+
+  Future<void> fetchUser() async {
+    try {
+      // Replace the 'widget' with 'widget.' to access the properties of ProfilePage
+      User? loggedInUser = await userService.getLoggedInUser(widget.phone!);
+      if (loggedInUser != null) {
+        setState(() {
+          user.firstName = loggedInUser.firstName;
+          user.email = loggedInUser.email;
+          user.location = loggedInUser.location;
+          user.phoneNumber = widget.phone!;
+          print(user.toJson());
+        });
+      }
+    } catch (error) {
+      print('Error fetching User: $error');
+      showCustomToast("error while fetching logged In User");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {  
+    return Scaffold(  
+      drawer: NavBar(userType: 'buyer', user: user),  
       backgroundColor: Colors.blueAccent,
-      body: SafeArea(
-        child: Column(
-          children: [
+      body: SafeArea(      
+        child: Column(       
+          children: [           
             _top(),
             _body(),
           ],
@@ -26,13 +74,13 @@ class _AllChatsPageState extends State<AllChatsPage> {
     );
   }
 
-  Widget _top() {
-    return Container(
+  Widget _top() {  
+    return Container(    
       padding: const EdgeInsets.only(top: 30, left: 30),
-      child: Column(
+      child: Column(      
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
+        children: [ 
+          const Text(     
             'Start Chatting',
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),

@@ -13,6 +13,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:lead_gen/model/category.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/categoriesAndSubcategories/categoryDropDownButton.dart';
 import 'package:lead_gen/view/categoriesAndSubcategories/vehicle_subCat.dart';
 import 'package:lead_gen/view/conditionDropDown/conditionDropDown.dart';
@@ -136,7 +137,7 @@ try {
               FocusManager.instance.primaryFocus?.unfocus();
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                  builder: (context) => const HomePage(), // goes to home page
+                  builder: (context) => const MyHomePage(phoneNumber: '',), // goes to home page
                 ),
               ); // Add navigation functionality here
             },

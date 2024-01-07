@@ -49,18 +49,17 @@ class NavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      MyHomePage(phoneNumber: user.phoneNumber)
-                ),
+                    builder: (context) =>
+                        MyHomePage(phoneNumber: user.phoneNumber)),
               );
-             
+
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
                 //   Navigator.pushNamed(context, '/sellerRequests');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                   Navigator.pushNamed(context, '/HomePage');
+                Navigator.pushNamed(context, '/HomePage');
               }
             },
           ),
@@ -80,10 +79,10 @@ class NavBar extends StatelessWidget {
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
-                Navigator.pushNamed(context, '/seller-request');
+             //   Navigator.pushNamed(context, '/seller-request');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                //  Navigator.pushNamed(context, '/buyer_makeRequest');
+                Navigator.pushNamed(context, '/MyRequests');
               }
             },
           ),
@@ -99,20 +98,19 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-               Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const AllChatsPage(),
+                  builder: (context) => const AllChatsPage(),
                 ),
               );
-               // You can implement different logic based on user type
+              // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
                 //   Navigator.pushNamed(context, '/sellerRequests');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                   Navigator.pushNamed(context, '/AllChatsPage');
+                Navigator.pushNamed(context, '/AllChatsPage');
               }
             },
           ),
@@ -131,23 +129,23 @@ class NavBar extends StatelessWidget {
               print(user.toJson());
               // Handle Requests tapped based on user type
               Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ProfilePage(
-        name: user.firstName,
-        phone: user.phoneNumber,
-        address: user.location,
-        email: user.email,
-      ),
-    ),
-  );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    name: user.firstName,
+                    phone: user.phoneNumber,
+                    address: user.location,
+                    email: user.email,
+                  ),
+                ),
+              );
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
                 //   Navigator.pushNamed(context, '/sellerRequests');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                   Navigator.pushNamed(context, '/HomePage');
+                Navigator.pushNamed(context, '/HomePage');
               }
             },
           ),

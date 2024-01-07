@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/services/UserService.dart';
+import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
 
@@ -115,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemDashboard('bussiness', CupertinoIcons.person_2, Colors.purple),
                   itemDashboard('Property', CupertinoIcons.house, Colors.brown),
                   itemDashboard('Mobile', CupertinoIcons.phone, Colors.indigo),
-                  itemDashboard('Home Appliances\n& Electronics', CupertinoIcons.add_circled, Colors.teal),
+                  itemDashboard('Home Appliances\n   & Electronics', CupertinoIcons.add_circled, Colors.teal),
                   itemDashboard('Services', CupertinoIcons.paintbrush_fill, Colors.blue),
                   itemDashboard('Jobs', CupertinoIcons.phone, Colors.pinkAccent),
                   itemDashboard('Furniture &\nHome Decor', CupertinoIcons.person_2, Colors.purple),
@@ -134,33 +135,42 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  itemDashboard(String title, IconData iconData, Color background) => Container(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(10),
-      boxShadow: [
-        BoxShadow(
-          offset: const Offset(0, 5),
-          color: Theme.of(context).primaryColor.withOpacity(.2),
-          spreadRadius: 2,
-          blurRadius: 5
-        )
-      ]
-    ),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: background,
-            shape: BoxShape.circle,
+  itemDashboard(String title, IconData iconData, Color background) => InkWell(
+   onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const MakeRequestPage(), 
+         ),
+       );
+     },
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 5),
+            color: Theme.of(context).primaryColor.withOpacity(.2),
+            spreadRadius: 2,
+            blurRadius: 5
+          )
+        ]
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: background,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(iconData, color: Colors.white)
           ),
-          child: Icon(iconData, color: Colors.white)
-        ),
-        const SizedBox(height: 8),
-        Text(title.toUpperCase(), style: Theme.of(context).textTheme.titleMedium)
-      ],
+          const SizedBox(height: 8),
+          Text(title.toUpperCase(), style: Theme.of(context).textTheme.titleMedium)
+        ],
+      ),
     ),
   );
 }

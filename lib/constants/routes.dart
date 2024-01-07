@@ -3,6 +3,7 @@ import 'package:lead_gen/view/buyer/Home.dart';
 import 'package:lead_gen/view/buyer/all_categories.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/buyer/vehicles.dart';
+import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/otpPhone.dart';
 import 'package:lead_gen/view/reigistration/getlocation.dart';
@@ -29,7 +30,7 @@ const String buyer_vehicle = '/buyer_vehicle';
 const String sign_up = '/signup';
 const String log_in = '/login';
 const String user_Selection = '/user_selection';
-
+const String my_requests = '/my_requests';
 
 
 final Map<String, WidgetBuilder> routes = {
@@ -47,7 +48,7 @@ final Map<String, WidgetBuilder> routes = {
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(),
   user_Selection:(context) => const SelectionPage(),
-  
+  my_requests:(context) => const MyRequests(),
 };
 
 class UrlConfig {
