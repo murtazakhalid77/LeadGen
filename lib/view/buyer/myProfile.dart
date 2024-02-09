@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      drawer: NavBar(userType: 'buyer', user: user),
+   //   drawer: NavBar(userType: 'buyer', user: user),
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,

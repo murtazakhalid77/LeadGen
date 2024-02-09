@@ -47,8 +47,8 @@ final Map<String, WidgetBuilder> routes = {
   seller_request: (context) => const AllRequest(),
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(),
-  user_Selection:(context) => const SelectionPage(),
-  my_requests:(context) => const MyRequests(),
+  //user_Selection:(context) => const SelectionPage(),
+ // my_requests:(context) => const MyRequests(),
 };
 
 class UrlConfig {

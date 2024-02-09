@@ -29,7 +29,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       /* leading: IconButton(
+        leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
             // Unfocus the current focus node before popping the screen
@@ -40,7 +40,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ); // Add navigation functionality here
           },
-        ),*/
+        ),
         title: const Text(
           'Edit Profile',
           style: TextStyle(
@@ -72,7 +72,10 @@ class _EditProfileState extends State<EditProfile> {
                       height: 35,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100), color: Colors.lightBlueAccent),
-                      child: const Icon(CupertinoIcons.camera, color: Colors.black, size: 20),
+                      child: const Icon(
+                        CupertinoIcons.camera, 
+                        color: Colors.black, 
+                        size: 20),
                     ),
                   ),
                 ],
@@ -111,7 +114,7 @@ class _EditProfileState extends State<EditProfile> {
                             padding: const EdgeInsets.all(20),
                             side: BorderSide.none,
                             shape: const StadiumBorder()),
-                        child: const Text('Edit Profile', style: TextStyle(color: Colors.white)),
+                        child: const Text('Edit', style: TextStyle(color: Colors.white)),
                       ),
                     ),
                     const SizedBox(height: 5),

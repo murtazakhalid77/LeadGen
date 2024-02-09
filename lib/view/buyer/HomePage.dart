@@ -190,11 +190,11 @@ Color parseColor(String colorString) {
 
   itemDashboard(String title, IconData iconData, Color background) => InkWell(
    onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const MakeRequestPage(), 
-         ),
-       );
+      //   Navigator.of(context).push(
+      //     MaterialPageRoute(
+      //       builder: (context) =>  MakeRequestPage(categoryName: '',),  //TODO:MURTZA
+      //    ),
+      //  );
      },
     child: Container(
       decoration: BoxDecoration(

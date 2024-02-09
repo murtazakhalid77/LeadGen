@@ -61,7 +61,7 @@ late UserService userService;
   @override
   Widget build(BuildContext context) {  
     return Scaffold(  
-      drawer: NavBar(userType: 'buyer', user: user),  
+     // drawer: NavBar(userType: 'buyer', user: user),  
       backgroundColor: Colors.blueAccent,
       body: SafeArea(      
         child: Column(       
