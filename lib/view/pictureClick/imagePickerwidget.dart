@@ -85,3 +85,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
     );
   }
 }
+
+
+         // Ye code us jagah us page mai likhna hai jahan per humain image picker chahye. 
+ /*     const SizedBox(
+                height: 170,
+                child: ImagePickerWidget(),
+              ),*/

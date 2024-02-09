@@ -141,103 +141,47 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 170,
-                child: ImagePickerWidget(),
-              ),
-
-              const SizedBox(height: 8),
-              const Text(
-                'Title *',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              //title input
-              TextFormField(
+              const SizedBox(height: 45),
+              buildTextField(
                 controller: _title,
+                labelText: 'Title *',
+                hintText: 'Enter title',
+                isReadOnly: false,
+                onTap: null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'title field caanot be empty';
+                    return 'Title field cannot be empty';
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  hintText: 'Enter title',
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                keyboardType: null,
               ),
 
               const SizedBox(height: 8),
 
-              const Text(
-                'Description *',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
+              buildTextField(
                 controller: _description,
+                labelText: 'Description *',
+                hintText: 'Enter description',
+                isReadOnly: false,
+                onTap: null,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'description field caanot be empty';
+                    return 'Description field cannot be empty';
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  hintText: 'Enter Description',
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                keyboardType: null,
               ),
 
               const SizedBox(height: 8),
 
-              //Location text
-              const Text(
-                'Location *',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              TextFormField(
-                readOnly: true,
+
+               buildTextField(
                 controller: TextEditingController(text: selectedLocation ?? ''),
+                labelText: 'Location *',
+                hintText: 'Choose Location',
+                isReadOnly: true,
                 onTap: () async {
                   LocationModel location = await _fetchLocation();
                   setState(() {
@@ -253,59 +197,31 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  hintText: 'Choose Location',
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                keyboardType: null,
               ),
 
               const SizedBox(height: 8),
 
-              const Text(
-                'Category',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
+              buildTextField(
+                controller: _price,
+                labelText: 'Price',
+                hintText: 'Enter the price',
+                isReadOnly: false,
+                onTap: null,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter the price';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.number,
               ),
 
-              DropdownButton<Categoryy>(
-                value: categories.firstOrNull,
-                icon: const Icon(Icons.arrow_drop_down),
-                style: const TextStyle(color: Colors.black),
-                onChanged: (Categoryy? newValue) {
-                  setState(() {
-                    categoryy = newValue;
-                    dropdownValue = newValue!.name;
-                  });
-                },
-                isExpanded: true,
-                hint: const Text('Select Category'),
-                items: categories.map((Categoryy category) {
-                  return DropdownMenuItem<Categoryy>(
-                    value: category,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text(category.name),
-                    ),
-                  );
-                }).toList(),
-              ),
+              const SizedBox(height: 8),
+
+             
+              buildDropdownButton(),
+
               const SizedBox(height: 8),
 
               const Text(
@@ -321,48 +237,6 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
               const SizedBox(height: 8),
 
-              const Text(
-                'Price',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              //price input
-              TextFormField(
-                controller: _price,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter the price';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(
-                      color: Colors.lightBlue,
-                    ),
-                  ),
-                  hintText: 'Price',
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              // send request Button
               ElevatedButton(
                 onPressed: () async {
                   RequestModel requestModel = RequestModel(
@@ -402,6 +276,87 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         ))));
   }
 
+  Container buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required String hintText,
+    required bool isReadOnly,
+    required Function()? onTap,
+    required String? Function(String?)? validator,
+    required TextInputType? keyboardType,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 5),
+            color: Colors.blueAccent.withOpacity(.3),
+            spreadRadius: 2,
+            blurRadius: 10,
+          )
+        ],
+      ),
+      child: TextFormField(
+        controller: controller,
+        readOnly: isReadOnly,
+        onTap: onTap,
+        validator: validator,
+        keyboardType: keyboardType,
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.lightBlue,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.lightBlue,
+            ),
+          ),
+          hintText: hintText,
+          hintStyle: TextStyle(color: Colors.grey[600]),
+          labelText: labelText,
+          labelStyle: const TextStyle(
+            color: Colors.lightBlue,
+            fontSize: 20,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
+
+  DropdownButton<Categoryy> buildDropdownButton() {
+    return DropdownButton<Categoryy>(
+      value: categories.firstOrNull,
+      icon: const Icon(Icons.arrow_drop_down),
+      style: const TextStyle(color: Colors.black),
+      onChanged: (Categoryy? newValue) {
+        setState(() {
+          categoryy = newValue;
+          dropdownValue = newValue!.name;
+        });
+      },
+      isExpanded: true,
+      hint: const Text('Select Category'),
+      items: categories.map((Categoryy category) {
+        return DropdownMenuItem<Categoryy>(
+          value: category,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(category.name),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
   Future<LocationModel> _fetchLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
@@ -432,4 +387,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
       return LocationModel(); // Return a default empty LocationModel or throw a custom exception
     }
   }
+}
+
+extension IterableExtensions<T> on Iterable<T> {
+  T? get firstOrNull => isEmpty ? null : first;
 }

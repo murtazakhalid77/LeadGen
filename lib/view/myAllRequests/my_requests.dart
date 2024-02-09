@@ -4,7 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'dart:core'; // Import this to use maxFinite
 
 class MyRequests extends StatelessWidget {
-  const MyRequests({super.key});
+  const MyRequests({super.key, required String phoneNumber});
 
   @override
   Widget build(BuildContext context) {
