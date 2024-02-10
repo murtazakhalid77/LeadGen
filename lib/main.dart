@@ -1,5 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
+import 'package:lead_gen/firebase/FirebaseApi.dart';
 import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
 import 'package:lead_gen/view/buyer/EditProfile.dart';
@@ -16,7 +18,10 @@ import 'package:lead_gen/view/user-select/selection.dart';
 import 'package:provider/provider.dart';
 
 
-void main() {
+ main()async {
+  WidgetsFlutterBinding.ensureInitialized ();
+await Firebase.initializeApp();
+await FirebaseApi().initNotifications();
    runApp(
     MultiProvider(
       providers: [

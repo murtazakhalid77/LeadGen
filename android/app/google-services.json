@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "556840120196",
+    "project_id": "lead-2e832",
+    "storage_bucket": "lead-2e832.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556840120196:android:113ea2e814e8e86e46b7d1",
+        "android_client_info": {
+          "package_name": "com.example.lead_gen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAzZB3-2wY1ut8XzoKdqPZ8JIfs8Lu3-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
