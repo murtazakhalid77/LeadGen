@@ -5,6 +5,7 @@ class LocationModel {
   final String? country;
   final String? subAdministrativeArea;
   final String? administrativeArea;
+  final String? deviceId;
 
   LocationModel({
     this.locality,
@@ -13,6 +14,7 @@ class LocationModel {
     this.country,
     this.subAdministrativeArea,
     this.administrativeArea,
+    this.deviceId
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class LocationModel {
       'country': country,
       'subAdministrativeArea': subAdministrativeArea,
       'administrativeArea': administrativeArea,
+      'deviceId':deviceId
     };
   }
     factory LocationModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +36,7 @@ class LocationModel {
       country: json['country'] as String?,
       subAdministrativeArea: json['subAdministrativeArea'] as String?,
       administrativeArea: json['administrativeArea'] as String?,
+      deviceId: json['deviceId'] as String?
     );
   }
 

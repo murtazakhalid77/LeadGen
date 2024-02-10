@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,6 +9,7 @@ import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../firebase/FirebaseApi.dart';
 import '../../model/Registration.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -21,11 +24,14 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final OtpService _otpService = OtpService();
+  final _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
-  void initState() {
+void initState()  {
     super.initState();
     _getCurrentLocationAndHitAPI();
+
+
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -35,6 +41,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
   final _emailController = TextEditingController();
+
 
   Registration _constructRegistrationObject() {
     return Registration(_firstNameController.text, _lastNameController.text,
@@ -63,7 +70,13 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  Future<String?> getFCMToken() async {
+      await _firebaseMessaging.requestPermission();
+   return await _firebaseMessaging.getToken();
+  }
+
   Future<void> _getCurrentLocationAndHitAPI() async {
+
     var permissionStatus = await Permission.location.request();
 
     if (permissionStatus.isGranted) {
@@ -87,6 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
             country: currentPlace.country ?? '',
             subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
             administrativeArea: currentPlace.administrativeArea ?? '',
+            deviceId: await getFCMToken()
           );
 
           var response =
