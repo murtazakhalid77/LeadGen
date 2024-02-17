@@ -48,14 +48,14 @@ class OtpService extends ChangeNotifier {
     }
   }
 
-Future<http.Response> locationCreation(LocationModel locationModel, String number) async {
+Future<http.Response> locationCreation(LocationModel location, String number) async {
   try {
     final response = await http.post(
       UrlConfig.buildUri('location/save/$number'), 
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(locationModel.toJson()), 
+      body: jsonEncode(location.toJson()), 
     );
 
     return response;
