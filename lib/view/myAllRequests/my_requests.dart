@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/RequestModel.dart';
+import 'package:lead_gen/services/HelperService.dart';
 import 'package:lead_gen/view/myAllRequests/request_card.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'dart:core'; // Import this to use maxFinite
 
-class MyRequests extends StatelessWidget {
-  const MyRequests({super.key, required String phoneNumber});
+class MyRequests extends StatefulWidget {
+  final phoneNumber;
+
+  const MyRequests({Key? key, required this.phoneNumber}) : super(key: key);
+
+  @override
+  _MyRequestsState createState() => _MyRequestsState();
+}
+
+class _MyRequestsState extends State<MyRequests> {
+  late String phoneNumber;
+  List<RequestModel> fetchedRequests = [];
+  late HelperService helperService;
+
+  @override
+  void initState() {
+    super.initState();
+    helperService = HelperService();
+    phoneNumber = widget.phoneNumber;
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      List<RequestModel> fetchedRequests =
+          await helperService.fetchUserRequest(widget.phoneNumber);
+
+      setState(() {
+        this.fetchedRequests = fetchedRequests;
+      });
+    } catch (error) {
+      print('Error fetching Requests: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,51 +62,43 @@ class MyRequests extends StatelessWidget {
               const SizedBox(height: 30),
               SizedBox(
                 height: 40,
-                //animated text "All Your Requests Are Listed Here"
                 child: AnimatedTextKit(
                   animatedTexts: [
-                    FadeAnimatedText('All Your Requests Are Listed Here',
-                    textStyle: const TextStyle(
-                      color: Colors.purple,
+                    FadeAnimatedText(
+                      'All Your Requests Are Listed Here',
+                      textStyle: const TextStyle(
+                        color: Colors.purple,
                       ),
                     ),
                   ],
-                  totalRepeatCount: 50000, //count of animation repeatition 
+                  totalRepeatCount: 50000,
                   onTap: () {
                     print("isRepeatingAnimation");
                   },
                 ),
               ),
               const SizedBox(height: 5),
-              Wrap(
-                spacing: 10, // Adjust the spacing between cards
-                runSpacing: 10, // Adjust the spacing between rows
-                children: [
-                  MyRequestCard(
-                    imagePath: 'lib/assets/cars.png',
-                    requestText: 'I want a Civic car in white color.',
-                    locationText: 'Khayaban e Mujahid, Defence.',
-                    date: DateTime.now(),
-                  ),
-                  MyRequestCard(
-                    imagePath: 'lib/assets/mobile.jpg',
-                    requestText: 'I want a mobile. Camera should be in good quality.',
-                    locationText: 'Khayaban e Mujahid, Defence.',
-                    date: DateTime.now(),
-                  ),
-                  MyRequestCard(
-                    imagePath: 'lib/assets/furniture and home decore.png',
-                    requestText: 'I want a modern study table.',
-                    locationText: 'Khayaban e Mujahid, Defence.',
-                    date: DateTime.now(),
-                  ),
-                  MyRequestCard(
-                    imagePath: 'lib/assets/businesses.png',
-                    requestText: 'I need a shop on rent in Johar.',
-                    locationText: 'Khayaban e Mujahid, Defence.',
-                    date: DateTime.now(),
-                  ),
-                ],
+              Center(
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  alignment: WrapAlignment.center, // Aligns the cards to the center
+                  children: fetchedRequests.map((request) {
+                    print(request.locationModel.street);
+                    // Build the location text using specific attributes
+                    String locationText = '${request.locationModel.administrativeArea ?? ''} '
+                        '${request.locationModel.street ?? ''} '
+                        '${request.locationModel.subLocality ?? ''}';
+                    
+                    String categoryName =request.category!.name ?? '';
+                    return MyRequestCard(
+                      requestText: request.description,
+                      locationText: locationText,
+                      date: request.createdDate,
+                      categoryName: categoryName
+                    );
+                  }).toList(),
+                ),
               ),
             ],
           ),

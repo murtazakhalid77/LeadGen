@@ -19,19 +19,58 @@ Future<RequestModel?> requestPost(RequestModel? requestModel) async {
     );
 
     if (response.statusCode == 200) {
-      // Parse the response JSON to a RequestModel object
+  
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       RequestModel updatedRequestModel = RequestModel.fromJson(responseData);
 
       return updatedRequestModel;
     } else {
-      // If the response status code is not 200, handle the error accordingly
+      
       print('Request failed with status: ${response.statusCode}');
-      return null; // Return null or throw an appropriate error
+      return null; 
     }
   } catch (error) {
     print('Error: $error');
-    rethrow; // Rethrow the error to propagate it further
+    rethrow; 
   }
 }
+
+
+Future<List<RequestModel>> fetchUserRequest(String phoneNumber) async {
+  try {
+    final response = await http.get(
+      UrlConfig.buildUri('userRequest/getAllUserRequests/03468288815'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Check for null response body
+      if (response.body != null) {
+        List<dynamic>? fetchedRequest = jsonDecode(response.body);
+        if (fetchedRequest != null) {
+          List<RequestModel> requestList = fetchedRequest
+              .map((data) => RequestModel.fromJson(data))
+              .toList();
+          return requestList;
+        }
+      }
+      print('Failed to decode JSON: Response body is null or not in expected format');
+      return [];
+    } else {
+      print('Failed to fetch request: ${response.statusCode}');
+      return [];
+    }
+  } catch (error) {
+    print('Error fetching request: $error');
+    return [];
+  }
+}
+
+
+
+
+
+
 }

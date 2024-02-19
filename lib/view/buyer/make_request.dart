@@ -183,12 +183,12 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 hintText: 'Choose Location',
                 isReadOnly: true,
                 onTap: () async {
-                  LocationModel location = await _fetchLocation();
+                  LocationModel locationModel = await _fetchLocation();
                   setState(() {
-                    locationModel = location;
-                    selectedLocation = (location.administrativeArea! +
-                        location.locality! +
-                        location.subLocality!);
+                    locationModel = locationModel;
+                    selectedLocation = (locationModel.administrativeArea! +
+                        locationModel.locality! +
+                        locationModel.subLocality!);
                   });
                 },
                 validator: (value) {
@@ -244,8 +244,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                       description: _description.text,
                       locationModel: locationModel,
                       category: categoryy,
-                      number: "03468288815",
-                      condition: "new",
+                     
+                      // condition: "new",
+                      createdDate: DateTime.now().toString(),
                       price: _price.text);
                   this.requestModel = requestModel;
                   await makeRequest(requestModel);
@@ -332,7 +333,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     );
   }
 
-  DropdownButton<Categoryy> buildDropdownButton() {
+  DropdownButton<Categoryy?> buildDropdownButton() {
     return DropdownButton<Categoryy>(
       value: categories.firstOrNull,
       icon: const Icon(Icons.arrow_drop_down),
@@ -350,7 +351,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           value: category,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(category.name),
+            child: Text(category.name!),
           ),
         );
       }).toList(),
