@@ -280,7 +280,7 @@ void initState()  {
                               borderRadius: BorderRadius.circular(10),
                               borderSide:
                                   const BorderSide(color: Colors.lightBlue)),
-                          hintText: '42101-8367133193-2',
+                          hintText: '4210183671331932',
                           hintStyle: TextStyle(color: Colors.grey[600]),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10))),

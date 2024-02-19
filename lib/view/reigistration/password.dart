@@ -4,63 +4,57 @@ import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 
-
 class Password extends StatefulWidget {
-final String phoneNumber;
+  final String phoneNumber;
 
   const Password({Key? key, required this.phoneNumber}) : super(key: key);
 
-
   @override
   State<Password> createState() => PasswordState();
-  
 }
 
-
 class PasswordState extends State<Password> {
-   OtpService _otpService = new OtpService();
+  OtpService _otpService = new OtpService();
 
-   String? _passwordError;
-   String? _confirmPasswordError;
-   bool _obscureText = true;
+  String? _passwordError;
+  String? _confirmPasswordError;
+  bool _obscureTextPassword = true;
+  bool _obscureTextConfirmPassword = true;
+
   final TextEditingController _passwordController = TextEditingController();
-   final TextEditingController _ConfirmpasswordController = TextEditingController();
-   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
- 
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
- Future<void> passwordCreation(String password,String confirm)async {
-    if (password==confirm) {
+  Future<void> passwordCreation(String password, String confirm) async {
+    if (password == confirm) {
       try {
-        var response = await _otpService.passwordCreation(confirm,widget.phoneNumber);
+        var response =
+            await _otpService.passwordCreation(confirm, widget.phoneNumber);
 
-  
         if (response.statusCode == 200) {
-            Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => SignUpPage(phoneNumber:widget.phoneNumber)
-  ),
-);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  SignUpPage(phoneNumber: widget.phoneNumber),
+            ),
+          );
         } else {
-        
-          showCustomToast('The password you eneterd is not correct');
+          showCustomToast('The password you entered is not correct');
         }
       } catch (e) {
         // Handle exceptions thrown during OTP verification
         String errorMessage = "Failed to set the password: $e";
-       showCustomToast(errorMessage);
+        showCustomToast(errorMessage);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final loginService = Provider.of<LoginService>(context);
-
-
-   
     return Scaffold(
-       extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
@@ -76,7 +70,6 @@ class PasswordState extends State<Password> {
       ),
       body: Form(
         key: _formKey,
-        
         child: SizedBox(
           width: double.infinity,
           height: double.infinity,
@@ -87,8 +80,7 @@ class PasswordState extends State<Password> {
                 Container(
                   padding: EdgeInsets.only(
                     left: MediaQuery.of(context).size.width * 0.07,
-                    top: MediaQuery.of(context).size.height *
-                        0.25, // Adjusted top padding
+                    top: MediaQuery.of(context).size.height * 0.25,
                   ),
                   child: const Text(
                     'Create password',
@@ -103,84 +95,90 @@ class PasswordState extends State<Password> {
                 SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height *
-                          0.35, // Adjusted top padding
+                      top: MediaQuery.of(context).size.height * 0.35,
                       left: 35,
                       right: 35,
                     ),
                     child: Column(
                       children: [
                         TextFormField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                onChanged: (value) {
-                  setState(() {
-                    _passwordError = _validatePassword(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter Password',
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  errorText: _passwordError,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: _ConfirmpasswordController,
-                obscureText: _obscureText,
-                onChanged: (value) {
-                  setState(() {
-                    _confirmPasswordError = _validateConfirmPassword(value);
-                  });
-                },
-                decoration: InputDecoration(
-                  hintText: 'Confirm Password',
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscureText = !_obscureText;
-                      });
-                    },
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  errorText: _confirmPasswordError,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
+                          controller: _passwordController,
+                          obscureText: _obscureTextPassword,
+                          onChanged: (value) {
+                            setState(() {
+                              _passwordError = _validatePassword(value);
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Enter Password',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureTextPassword =
+                                      !_obscureTextPassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscureTextPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            errorText: _passwordError,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: _confirmPasswordController,
+                          obscureText: _obscureTextConfirmPassword,
+                          onChanged: (value) {
+                            setState(() {
+                              _confirmPasswordError =
+                                  _validateConfirmPassword(value);
+                            });
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Confirm Password',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscureTextConfirmPassword =
+                                      !_obscureTextConfirmPassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscureTextConfirmPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            errorText: _confirmPasswordError,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 30),
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              passwordCreation(_passwordController.text,_ConfirmpasswordController.text);
+                              passwordCreation(
+                                  _passwordController.text,
+                                  _confirmPasswordController.text);
                             }
                           },
                           style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue, // Background color
+                            backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10), // Adjust the radius as needed
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                    30), // Adjust the horizontal padding to make it wider
+                                horizontal: 30),
                           ),
                           child: const Text(
                             'Next',
@@ -201,9 +199,25 @@ class PasswordState extends State<Password> {
       ),
     );
   }
+
   String? _validatePassword(String value) {
     if (value.isEmpty) {
       return 'Password is empty';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters long';
+    }
+    if (!RegExp(r'(?=.*?[A-Z])').hasMatch(value)) {
+      return 'Password must contain at least one uppercase letter';
+    }
+    if (!RegExp(r'(?=.*?[a-z])').hasMatch(value)) {
+      return 'Password must contain at least one lowercase letter';
+    }
+    if (!RegExp(r'(?=.*?[0-9])').hasMatch(value)) {
+      return 'Password must contain at least one number';
+    }
+    if (!RegExp(r'(?=.*?[!@#$%^&*(),.?":{}|<>])').hasMatch(value)) {
+      return 'Password must contain at least one special character';
     }
     return null;
   }
@@ -218,3 +232,4 @@ class PasswordState extends State<Password> {
     return null;
   }
 }
+

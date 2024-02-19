@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/services/UserService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
 
 class SellerHomePage extends StatefulWidget {
-  const SellerHomePage({super.key});
+  final String? name;
+  final String? phone;
+  final String? address;
+  final String? email;
+
+  const SellerHomePage({
+     this.name,
+    this.phone,
+    this.address,
+    this.email,
+    super.key});
 
   @override
   State<SellerHomePage> createState() => _SellerHomePageState();
@@ -10,17 +23,46 @@ class SellerHomePage extends StatefulWidget {
 
 
 class _SellerHomePageState extends State<SellerHomePage> {
+  late UserService userService;
+  late User user;
+
+  @override
+  void initState() {
+    user = User();
+    userService = UserService();
+    super.initState();
+    fetchUser();
+  }
+
+  Future<void> fetchUser() async {
+    try {
+      User? loggedInUser = await userService.getLoggedInUser(widget.phone!);
+      if (loggedInUser != null) {
+        setState(() {
+          user.firstName = loggedInUser.firstName;
+          user.email = loggedInUser.email;
+          user.location = loggedInUser.location;
+          user.phoneNumber = widget.phone!;
+          print(user.toJson());
+        });
+      }
+    } catch (error) {
+      print('Error fetching User: $error');
+      showCustomToast("error while fetching logged In User");
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: const NavBar(userType: 'seller'),
+       drawer: NavBar(userType: 'seller', user: user),
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Welcome to Lead Gen"),
         backgroundColor: Colors.blue,
         actions: <Widget>[
           IconButton(
-            icon: Image.asset("assets/leadGen.png"),
+            icon: Image.asset("lib/assets/leadGen.png"),
             onPressed: () {
               // do something
             },
