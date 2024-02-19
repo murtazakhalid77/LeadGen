@@ -56,7 +56,7 @@ class NavBar extends StatelessWidget {
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
-                //   Navigator.pushNamed(context, '/sellerRequests');
+                   Navigator.pushNamed(context, '/seller-home');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
                 Navigator.pushNamed(context, '/HomePage');
@@ -79,7 +79,7 @@ class NavBar extends StatelessWidget {
               // You can implement different logic based on user type
               if (userType == 'seller') {
                 // Navigate to seller's requests page
-             //   Navigator.pushNamed(context, '/seller-request');
+                Navigator.pushNamed(context, '/seller-request');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
                 Navigator.pushNamed(context, '/MyRequests');

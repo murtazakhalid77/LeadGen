@@ -111,7 +111,7 @@ class PhoneState extends State<PhonePage> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: const BorderSide(color: Colors.lightBlue),
                             ),
-                            hintText: '+92 3373927254',
+                            hintText: '03382644867',
                             hintStyle: TextStyle(color: Colors.grey[600]),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
