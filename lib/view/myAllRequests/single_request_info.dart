@@ -1,39 +1,59 @@
-// import 'package:flutter/material.dart';
-// import 'package:lead_gen/view/myAllRequests/request_card.dart';
+import 'package:flutter/material.dart';
+import 'package:lead_gen/view/myAllRequests/request_card.dart';
 
-// class MyRequestInfo extends StatefulWidget {
-//   const MyRequestInfo({super.key});
+class MyRequestInfo extends StatelessWidget {
+  final String requestText;
+  final String locationText;
+  final String date;
+  final String categoryName;
 
-//   @override
-//   State<MyRequestInfo> createState() => _MyRequestInfoState();
-// }
+  const MyRequestInfo({
+    required this.requestText,
+    required this.locationText,
+    required this.date,
+    required this.categoryName,
+  });
 
-// class _MyRequestInfoState extends State<MyRequestInfo> {
-//   @override
- 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.lightBlue,
-//         elevation: 0.2,
-//         title: const Text(
-//           'Requests Details',
-//         ),
-//       ),
-//       backgroundColor: const Color(0xFFF5F5F3),
-//       body: Center(
-//         child: SizedBox(
-//           height: 500,
-//           width: 300,
-//           child: const MyRequestCard(
-                      
-//                       requestText: 'I want a Civic car in white color.',
-//                       locationText: 'Khayaban e Mujahid, Defence.',
-//                       // date: DateTime.now(),
-//                     ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightBlue,
+        elevation: 0.2,
+        title: const Text(
+          'Requests Details',
+        ),
+      ),
+      backgroundColor: const Color(0xFFF5F5F3),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Request: $requestText',
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Location: $locationText',
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Date: $date',
+                style: const TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Category: $categoryName',
+                style: const TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

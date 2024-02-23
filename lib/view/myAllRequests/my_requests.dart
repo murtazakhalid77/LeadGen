@@ -52,12 +52,12 @@ class _MyRequestsState extends State<MyRequests> {
       backgroundColor: const Color(0xFFF5F5F3),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.01,
-            right: 10,
-            left: 10,
+          padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height * 0.01,
+            horizontal: 10,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
               SizedBox(
@@ -82,21 +82,18 @@ class _MyRequestsState extends State<MyRequests> {
                 child: Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  alignment: WrapAlignment.center, // Aligns the cards to the center
+                  alignment: WrapAlignment.center,
                   children: fetchedRequests.map((request) {
-                    print(request.locationModel.street);
-                    // Build the location text using specific attributes
                     String locationText = '${request.locationModel.administrativeArea ?? ''} '
                         '${request.locationModel.street ?? ''} '
                         '${request.locationModel.subLocality ?? ''}';
-                    
-                    String categoryName =request.category!.name ?? '';
+
+                    String categoryName = request.category!.name ?? '';
                     return MyRequestCard(
-                      requestText: request.description,
-                      locationText: locationText,
-                      date: request.createdDate,
-                      categoryName: categoryName
-                    );
+                        requestText: request.description,
+                        locationText: locationText,
+                        date: request.createdDate,
+                        categoryName: categoryName);
                   }).toList(),
                 ),
               ),
