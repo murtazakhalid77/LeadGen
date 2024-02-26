@@ -3,14 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_info.dart';
 
 class MyRequestCard extends StatelessWidget {
- 
   final String? requestText;
   final String? locationText;
   final String? date;
   final String categoryName;
 
   const MyRequestCard({
-  
     required this.requestText,
     required this.locationText,
     required this.categoryName,
@@ -19,16 +17,16 @@ class MyRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // String formattedDate = DateFormat('dd-MM-yyyy').format(date as DateTime);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(date!));
 
     return InkWell(
-    //  onTap: () {
-    //     Navigator.of(context).push(
-    //       MaterialPageRoute(
-    //         // builder: (context) => const MyRequestInfo(), 
-    //      ),
-    //    );
-    //  },
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+             builder: (context) => const MyRequestInfo(requestText: '', locationText: '', date: '', categoryName: '',),
+          ),
+        );
+      },
       child: Container(
         width: 180,
         height: 220,
@@ -47,34 +45,36 @@ class MyRequestCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               const SizedBox(height: 6),
               Text(
-                requestText!,
+                _truncateText(requestText!),
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                _truncateText(locationText!),
+                style: const TextStyle(
+                  fontSize: 15,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                formattedDate,
                 style: const TextStyle(
                   fontSize: 15,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                locationText!,
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-              const SizedBox(height: 8),
-              // Display the current date
-              Text(
-                date!,
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-               const SizedBox(height: 8),
-              // Display the current date
-              Text(
-                categoryName!,
+                categoryName,
                 style: const TextStyle(
                   fontSize: 15,
                 ),
@@ -84,5 +84,12 @@ class MyRequestCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _truncateText(String text) {
+    if (text.length > 25) {
+      return text.substring(0, 25) + '...';
+    }
+    return text;
   }
 }
