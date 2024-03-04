@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/view/myAllRequests/request_card.dart';
+import 'package:lead_gen/view/myAllRequests/single_request_card.dart';
 
 class MyRequestInfo extends StatelessWidget {
-  final String requestText;
-  final String locationText;
-  final String date;
-  final String categoryName;
+  final String? title;
+  final String? requestText;
+  final String? locationText;
+  final String? date;
+  final String? categoryName;
 
   const MyRequestInfo({
+    required this.title,
     required this.requestText,
     required this.locationText,
     required this.date,
@@ -31,25 +35,54 @@ class MyRequestInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Request: $requestText',
-                style: const TextStyle(fontSize: 18),
+              Center(
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
+                  children: [ 
+                    MySingleRequestCard(
+                        title: title,
+                        requestText: requestText!,
+                        locationText: locationText!,
+                        date: date!,
+                        categoryName: categoryName!)
+                        ],
+
+                  //  fetchedRequests.map((request) {
+                  //   String locationText = '${request.locationModel.administrativeArea ?? ''} '
+                  //       '${request.locationModel.street ?? ''} '
+                  //       '${request.locationModel.subLocality ?? ''}';
+
+                  //   String categoryName = request.category!.name ?? '';
+                  //   return MyRequestCard(
+                  //       title: request.title,
+                  //       requestText: request.description,
+                  //       locationText: locationText,
+                  //       date: request.createdDate,
+                  //       categoryName: categoryName);
+                  // }).toList(),
+                ),
               ),
-              const SizedBox(height: 12),
-              Text(
-                'Location: $locationText',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Date: $date',
-                style: const TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'Category: $categoryName',
-                style: const TextStyle(fontSize: 18),
-              ),
+              // Text(
+              //   'Request: $requestText',
+              //   style: const TextStyle(fontSize: 18),
+              // ),
+              // const SizedBox(height: 12),
+              // Text(
+              //   'Location: $locationText',
+              //   style: const TextStyle(fontSize: 18),
+              // ),
+              // const SizedBox(height: 12),
+              // Text(
+              //   'Date: $date',
+              //   style: const TextStyle(fontSize: 18),
+              // ),
+              // const SizedBox(height: 12),
+              // Text(
+              //   'Category: $categoryName',
+              //   style: const TextStyle(fontSize: 18),
+              // ),
             ],
           ),
         ),
