@@ -80,8 +80,8 @@ class _MyRequestsState extends State<MyRequests> {
               const SizedBox(height: 5),
               Center(
                 child: Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                  spacing: 12,
+                  runSpacing: 20,
                   alignment: WrapAlignment.center,
                   children: fetchedRequests.map((request) {
                     String locationText = '${request.locationModel.administrativeArea ?? ''} '
@@ -90,6 +90,7 @@ class _MyRequestsState extends State<MyRequests> {
 
                     String categoryName = request.category!.name ?? '';
                     return MyRequestCard(
+                        title: request.title,
                         requestText: request.description,
                         locationText: locationText,
                         date: request.createdDate,
