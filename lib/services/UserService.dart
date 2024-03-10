@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:lead_gen/model/UserDetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
@@ -12,6 +13,28 @@ import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:provider/provider.dart';
 
 class UserService extends ChangeNotifier {
+
+Future<UserType?> getUserType(String phoneNumber) async {
+  try{
+    final response = await http.get(
+      UrlConfig.buildUri('user/getUserType/${phoneNumber}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if(response.statusCode == 200){
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      UserType userType = UserType.fromJson(responseData);
+            
+      return userType;
+    }
+
+  }catch(e){
+      e.toString();
+    }
+}
+
 Future<User?> getLoggedInUser(String emailOrNumber) async {
     try {
       final response = await http.get(

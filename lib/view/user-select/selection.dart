@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/UserDetails.dart';
+import 'package:lead_gen/services/UserService.dart';
 
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
@@ -12,6 +14,32 @@ class SelectionPage extends StatefulWidget {
 }
 
 class _SelectionPageState extends State<SelectionPage> {
+  late String phoneNumber;
+  late UserService userService;
+  late UserType userType;
+
+  @override
+  void initState() {
+    super.initState();
+    userService = UserService();
+    userType = UserType();
+    phoneNumber = widget.phoneNumber;
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      UserType? userType =
+          await userService.getUserType(widget.phoneNumber);
+
+      setState(() {
+        this.userType = userType!;
+      });
+    } catch (error) {
+      print('Error fetching User Type: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,83 +60,7 @@ class _SelectionPageState extends State<SelectionPage> {
                     image: AssetImage("lib/assets/logo.png"),
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SellerHomePage()),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.grey[350],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                15.0), // Adjust the radius as needed
-                          ),
-                        ),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Icon(Icons.shopping_cart_rounded),
-                            SizedBox(height: 15),
-                            Text(
-                              "Want to sell \nsomething",
-                              style: TextStyle(
-                                fontSize: 16, // Adjust the font size as needed
-                                fontFamily: "UBUNTU",
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>  MyHomePage(phoneNumber: widget.phoneNumber)),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.grey[350],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                15.0), // Adjust the radius as needed
-                          ),
-                        ),
-                        child: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Icon(Icons.search),
-                            SizedBox(height: 15),
-                            Text(
-                              "Looking for \nsomething",
-                              style: TextStyle(
-                                fontSize: 16, // Adjust the font size as needed
-                                fontFamily: "UBUNTU",
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  buildElevatedButtons(context, widget.phoneNumber, this.userType.user_Type),
                 ],
               ),
             ),
@@ -118,3 +70,67 @@ class _SelectionPageState extends State<SelectionPage> {
     );
   }
 }
+
+Widget buildElevatedButtons(BuildContext context, String phoneNumber, String type) {
+  if (type == "BOTH") {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        buildElevatedButton(phoneNumber, context, true),
+        buildElevatedButton(phoneNumber, context, false),
+      ],
+    );
+  } else {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        if (type == "SELLER") buildElevatedButton(phoneNumber, context, true),
+        if (type == "BUYER") buildElevatedButton(phoneNumber, context, false),
+      ],
+    );
+  }
+}
+
+Widget buildElevatedButton(String phoneNumber, BuildContext  context, bool condition) {
+
+  return ElevatedButton(
+    onPressed: condition
+        ? () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SellerHomePage()),
+            )
+        : () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage(phoneNumber: phoneNumber)),
+            ),
+    style: ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed
+      foregroundColor: Colors.black,
+      backgroundColor: Colors.grey[350],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0), // Adjust the radius as needed
+      ),
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Icon(condition ? Icons.shopping_cart_rounded : Icons.search),
+        const SizedBox(height: 15),
+        Text(
+          condition ? "Want to sell \nsomething" : "Looking for \nsomething",
+          style: const TextStyle(
+            fontSize: 16, // Adjust the font size as needed
+            fontFamily: "UBUNTU",
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
+    ),
+  );
+}
+
