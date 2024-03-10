@@ -5,9 +5,10 @@ import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/loader.dart';
 import 'package:lead_gen/view/reigistration/verify.dart';
 
-
 class PhonePage extends StatefulWidget {
-  const PhonePage({Key? key}) : super(key: key);
+  final bool isSignUp;
+
+  const PhonePage({Key? key, required this.isSignUp}) : super(key: key);
 
   @override
   State<PhonePage> createState() => PhoneState();
@@ -171,7 +172,6 @@ class PhoneState extends State<PhonePage> {
               top: 280,
               right: 0,
               child: Container(
-                
                 child: Center(
                   child: LoaderWidget(isLoading: isLoading),
                 ),

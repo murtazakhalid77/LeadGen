@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   late UserService userService;
   bool _isLoading = false;
+   String _userType = ''; // Add user type field
 
   @override
   void initState() {
@@ -53,13 +54,15 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (token != null) {
-          Navigator.push(
+          /*     Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  SelectionPage(phoneNumber: _emailController.text),
+              builder: (context) => SelectionPage(
+                phoneNumber: _emailController.text,
+                userType: _userType, // Pass user type to SelectionPage
+              ),
             ),
-          );
+          );*/
         } else {
           // Login failed
           ScaffoldMessenger.of(context).showSnackBar(
@@ -173,11 +176,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 alignment: Alignment.centerRight,
                                 child: TextButton(
                                   onPressed: () {
-                                   Navigator.push(
+                                    Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const Password(phoneNumber: '',)),
+                                                  const PhonePage(isSignUp: false,)),
                                         );
                                   },
                                   child: const Text(
@@ -233,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const PhonePage()),
+                                                  const PhonePage(isSignUp: true,)),
                                         );
                                       },
                                       child: const Text(
@@ -246,6 +249,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                   ],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment
+                                    .bottomLeft, // Align the button to the bottom left
+                                child: TextButton(
+                                  onPressed: () {
+                                    // Logic to handle the button tap
+                                    Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PhonePage(isSignUp: false,)),
+                                        );
+                                  },
+                                  child: Text(
+                                    _userType == 'buyer' ?"Want to be a Buyer?"  : "Want to be a Seller?" ,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
