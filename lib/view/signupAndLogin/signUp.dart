@@ -27,11 +27,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
-void initState()  {
+  void initState() {
     super.initState();
     _getCurrentLocationAndHitAPI();
-
-
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +39,6 @@ void initState()  {
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
   final _emailController = TextEditingController();
-
 
   Registration _constructRegistrationObject() {
     return Registration(_firstNameController.text, _lastNameController.text,
@@ -54,14 +51,11 @@ void initState()  {
 
       if (response.statusCode == 200) {
         showCustomToast('User registered successfully!');
-         Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => LoginScreen()
-  ),
-);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginScreen(phoneNumber: '',)),
+        );
       } else {
-        
         showCustomToast('User registration failed!');
       }
     } catch (e) {
@@ -71,12 +65,11 @@ void initState()  {
   }
 
   Future<String?> getFCMToken() async {
-      await _firebaseMessaging.requestPermission();
-   return await _firebaseMessaging.getToken();
+    await _firebaseMessaging.requestPermission();
+    return await _firebaseMessaging.getToken();
   }
 
   Future<void> _getCurrentLocationAndHitAPI() async {
-
     var permissionStatus = await Permission.location.request();
 
     if (permissionStatus.isGranted) {
@@ -94,14 +87,13 @@ void initState()  {
 
         if (currentPlace != null) {
           LocationModel location = LocationModel(
-            locality: currentPlace.locality ?? '',
-            subLocality: currentPlace.subLocality ?? '',
-            street: currentPlace.street ?? '',
-            country: currentPlace.country ?? '',
-            subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
-            administrativeArea: currentPlace.administrativeArea ?? '',
-            deviceId: await getFCMToken()
-          );
+              locality: currentPlace.locality ?? '',
+              subLocality: currentPlace.subLocality ?? '',
+              street: currentPlace.street ?? '',
+              country: currentPlace.country ?? '',
+              subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
+              administrativeArea: currentPlace.administrativeArea ?? '',
+              deviceId: await getFCMToken());
 
           var response =
               await _otpService.locationCreation(location, widget.phoneNumber);
@@ -187,6 +179,10 @@ void initState()  {
                               if (value == null || value.isEmpty) {
                                 return 'Enter your First Name';
                               }
+                              // Check if the input contains only alphabets
+                              if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                return 'Enter only alphabets';
+                              }
                               return null;
                             },
                             decoration: InputDecoration(
@@ -217,6 +213,10 @@ void initState()  {
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Enter your Last Name';
+                              }
+                              // Check if the input contains only alphabets
+                              if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                return 'Enter only alphabets';
                               }
                               return null;
                             },
