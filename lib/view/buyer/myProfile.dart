@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/EditProfile.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
 
@@ -62,6 +63,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
    //   drawer: NavBar(userType: 'buyer', user: user),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            // Unfocus the current focus node before popping the screen
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();// Add navigation functionality here
+          },
+        ),
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
         title: const Text(

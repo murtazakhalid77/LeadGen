@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/model/category.dart';
 import 'package:lead_gen/services/UserService.dart';
@@ -106,7 +107,12 @@ Color parseColor(String colorString) {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+    onWillPop: () async {
+      Navigator.pushReplacementNamed(context, user_Selection);
+      return false; // Prevent default back button behavior
+    },
+    child: Scaffold(
       drawer: NavBar(userType: 'buyer', user: user),
       body: ListView(
         padding: EdgeInsets.zero,
@@ -167,7 +173,7 @@ Color parseColor(String colorString) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MakeRequestPage(categoryName: categoryName),
+                builder: (context) => MakeRequestPage(categoryName: categoryName, phoneNumber: '',),
               ),
             );
           },
@@ -185,6 +191,7 @@ Color parseColor(String colorString) {
           const SizedBox(height: 20)
         ],
       ),
+    ),
     );
   }
 

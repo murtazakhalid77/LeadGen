@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
           onPressed: () {
             // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).push(
+            Navigator.of(context).pop(
              MaterialPageRoute(
                 builder: (context) => const ProfilePage(), // goes to home page
               ),
@@ -114,7 +114,12 @@ class _EditProfileState extends State<EditProfile> {
                             padding: const EdgeInsets.all(20),
                             side: BorderSide.none,
                             shape: const StadiumBorder()),
-                        child: const Text('Edit', style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          'Save', 
+                          style: TextStyle(
+                            color: Colors.white,
+                            ),
+                            ),
                       ),
                     ),
                     const SizedBox(height: 5),

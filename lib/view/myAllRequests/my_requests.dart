@@ -60,44 +60,64 @@ class _MyRequestsState extends State<MyRequests> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 30),
-              SizedBox(
-                height: 40,
-                child: AnimatedTextKit(
-                  animatedTexts: [
-                    FadeAnimatedText(
-                      'All Your Requests Are Listed Here',
-                      textStyle: const TextStyle(
-                        color: Colors.purple,
+              fetchedRequests.isNotEmpty
+                  ? SizedBox(
+                      height: 40,
+                      child: AnimatedTextKit(
+                        animatedTexts: [
+                          FadeAnimatedText(
+                            'All Your Requests Are Listed Here',
+                            textStyle: const TextStyle(
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ],
+                        totalRepeatCount: 50000,
+                        onTap: () {
+                          print("isRepeatingAnimation");
+                        },
                       ),
-                    ),
-                  ],
-                  totalRepeatCount: 50000,
-                  onTap: () {
-                    print("isRepeatingAnimation");
-                  },
-                ),
-              ),
+                    )
+                  : Center(
+                    child: AnimatedTextKit(
+                        animatedTexts: [
+                          FadeAnimatedText(
+                            'You have not made any requests yet',
+                            textStyle: const TextStyle(
+                              color: Colors.purple,
+                            ),
+                          ),
+                        ],
+                        totalRepeatCount: 50000,
+                        onTap: () {
+                          print("isRepeatingAnimation");
+                        },
+                      ),
+                  ),
               const SizedBox(height: 5),
-              Center(
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 20,
-                  alignment: WrapAlignment.center,
-                  children: fetchedRequests.map((request) {
-                    String locationText = '${request.locationModel.administrativeArea ?? ''} '
-                        '${request.locationModel.street ?? ''} '
-                        '${request.locationModel.subLocality ?? ''}';
+              fetchedRequests.isNotEmpty
+                  ? Center(
+                      child: Wrap(
+                        spacing: 12,
+                        runSpacing: 20,
+                        alignment: WrapAlignment.center,
+                        children: fetchedRequests.map((request) {
+                          String locationText =
+                              '${request.locationModel.administrativeArea ?? ''} '
+                              '${request.locationModel.street ?? ''} '
+                              '${request.locationModel.subLocality ?? ''}';
 
-                    String categoryName = request.category!.name ?? '';
-                    return MyRequestCard(
-                        title: request.title,
-                        requestText: request.description,
-                        locationText: locationText,
-                        date: request.createdDate,
-                        categoryName: categoryName);
-                  }).toList(),
-                ),
-              ),
+                          String categoryName = request.category!.name ?? '';
+                          return MyRequestCard(
+                              title: request.title,
+                              requestText: request.description,
+                              locationText: locationText,
+                              date: request.createdDate,
+                              categoryName: categoryName);
+                        }).toList(),
+                      ),
+                    )
+                  : SizedBox(), // empty SizedBox when there are no requests
             ],
           ),
         ),
