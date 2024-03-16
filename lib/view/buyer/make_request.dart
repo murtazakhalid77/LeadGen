@@ -22,7 +22,7 @@ import 'package:lead_gen/view/pictureClick/imagePickerwidget.dart';
 
 class MakeRequestPage extends StatefulWidget {
   final String categoryName;
-  const MakeRequestPage({Key? key, required this.categoryName})
+  const MakeRequestPage({Key? key, required this.categoryName, required String phoneNumber})
       : super(key: key);
 
   @override
