@@ -5,6 +5,8 @@ import 'package:lead_gen/view/Chats/person_chat.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 
+import '../../constants/routes.dart';
+
 class NavBar extends StatelessWidget {
   final String userType;
   final User user;
@@ -82,7 +84,7 @@ class NavBar extends StatelessWidget {
                 Navigator.pushNamed(context, '/seller-request');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
-                Navigator.pushNamed(context, '/MyRequests');
+                Navigator.pushNamed(context, my_requests);
               }
             },
           ),
