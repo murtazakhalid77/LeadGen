@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home:  UserRegistrationSelection(phoneNumber: '',),
+      home:  LoginScreen(phoneNumber: ""),
       routes: routes,
     );
   }

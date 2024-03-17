@@ -14,6 +14,22 @@ import 'package:provider/provider.dart';
 
 class UserService extends ChangeNotifier {
 
+  Future updatePassword(String phoneNumber, String password) async {
+  try{
+    final response = await http.put(
+      UrlConfig.buildUri('user/updatePassword/${phoneNumber}/${password}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    return response;
+
+  }catch(e){
+      e.toString();
+    }
+}
+
 Future<UserType?> getUserType(String phoneNumber) async {
   try{
     final response = await http.get(

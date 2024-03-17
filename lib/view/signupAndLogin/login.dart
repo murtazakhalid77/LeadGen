@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/services/UserService.dart';
 
 import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/forgot-password/forgot-pass-phone.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
@@ -177,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  const Password(phoneNumber: '',)),
+                                                  const ForgotPassPhonePage()),
                                         );
                                   },
                                   child: const Text(

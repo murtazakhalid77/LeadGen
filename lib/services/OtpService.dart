@@ -28,6 +28,25 @@ class OtpService extends ChangeNotifier {
     }
   }
 
+  Future<http.Response> forgotPassword(String number) async {
+
+    try {
+      final response = await http.post(
+        UrlConfig.buildUri('user/forgot-password/$number'),
+
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      return response;
+    } catch (error) {
+      // ignore: avoid_print
+      print('Error: $error');
+      rethrow; // Rethrow the error for the caller to handle
+    }
+  }
+
  Future<http.Response> passwordCreation(String password,String number) async {
 
     try {
