@@ -1,4 +1,7 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
 
 import 'package:lead_gen/view/buyer/all_categories.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
@@ -44,15 +47,16 @@ final Map<String, WidgetBuilder> routes = {
   buyer_allCategories:(context) => const AllCategoriesPage(),
   buyer_vehicle:(context) => const VehiclesPage(),
   seller_home: (context) => const SellerHomePage(),
+
   seller_request: (context) => const AllRequest(),
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(phoneNumber: '',),
   user_Selection:(context) => const SelectionPage(phoneNumber: '',),
-  my_requests:(context) => const MyRequests(phoneNumber: '',),
+
 };
 
 class UrlConfig {
-static const String baseUrl = "https://820a-202-47-55-142.ngrok-free.app/api";
+static const String baseUrl = "http://192.168.1.106:8080/api";
 
 
   static Uri buildUri(String path) {

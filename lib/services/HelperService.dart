@@ -11,7 +11,7 @@ class HelperService extends ChangeNotifier {
 Future<RequestModel?> requestPost(RequestModel? requestModel) async {
   try {
     final response = await http.post(
-         UrlConfig.buildUri('/userRequest/saverequest'),
+         UrlConfig.buildUri('userRequest/saverequest'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

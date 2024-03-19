@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/RequestModel.dart';
 import 'package:lead_gen/services/HelperService.dart';
 import 'package:lead_gen/view/myAllRequests/request_card.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+
+import '../../model/LocationModel.dart';
 
 class MyRequests extends StatefulWidget {
   final phoneNumber;
@@ -79,7 +83,7 @@ class _MyRequestsState extends State<MyRequests> {
                       ),
                     )
                   : Center(
-                    child: AnimatedTextKit(
+                      child: AnimatedTextKit(
                         animatedTexts: [
                           FadeAnimatedText(
                             'You have not made any requests yet',
@@ -93,7 +97,7 @@ class _MyRequestsState extends State<MyRequests> {
                           print("isRepeatingAnimation");
                         },
                       ),
-                  ),
+                    ),
               const SizedBox(height: 5),
               fetchedRequests.isNotEmpty
                   ? Center(
@@ -102,18 +106,38 @@ class _MyRequestsState extends State<MyRequests> {
                         runSpacing: 20,
                         alignment: WrapAlignment.center,
                         children: fetchedRequests.map((request) {
-                          String locationText =
-                              '${request.locationModel.administrativeArea ?? ''} '
-                              '${request.locationModel.street ?? ''} '
-                              '${request.locationModel.subLocality ?? ''}';
+                          try {
+                            // continue from here i have made an method for string to model then user it here to display all reqyest
+                           
+                           
+                            LocationModel location =  LocationModel.fromString(request.locationModel!);
 
-                          String categoryName = request.category!.name ?? '';
-                          return MyRequestCard(
+                            String locationText =
+                                '${location.administrativeArea ?? ''} '
+                                '${location.street ?? ''} '
+                                '${location.subLocality ?? ''}';
+
+                            String categoryName = request.category!.name ?? '';
+                            return MyRequestCard(
                               title: request.title,
                               requestText: request.description,
                               locationText: locationText,
                               date: request.createdDate,
-                              categoryName: categoryName);
+                              categoryName: categoryName,
+                            );
+                          } catch (e) {
+                            // Handle decoding error
+                            print('Error decoding location model: $e');
+                            // Provide a placeholder or fallback behavior
+                            return MyRequestCard(
+                              title: request.title,
+                              requestText: request.description,
+                              locationText:
+                                  'Location information not available',
+                              date: request.createdDate,
+                              categoryName: request.category?.name ?? '',
+                            );
+                          }
                         }).toList(),
                       ),
                     )

@@ -4,6 +4,7 @@ import 'package:lead_gen/services/UserService.dart';
 
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectionPage extends StatefulWidget {
   final String phoneNumber;
@@ -27,18 +28,25 @@ class _SelectionPageState extends State<SelectionPage> {
     fetchData();
   }
 
-  Future<void> fetchData() async {
-    try {
-      UserType? userType =
-          await userService.getUserType(widget.phoneNumber);
+ Future<void> fetchData() async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? phoneNumber = prefs.getString('phoneNumber');
+
+    if (phoneNumber != null) {
+      UserType? userType = await userService.getUserType(phoneNumber);
 
       setState(() {
         this.userType = userType!;
       });
-    } catch (error) {
-      print('Error fetching User Type: $error');
+    } else {
+      // Handle the case where phone number is not available in shared preferences
+      print('Phone number not found in shared preferences');
     }
+  } catch (error) {
+    print('Error fetching User Type: $error');
   }
+}
 
   @override
   Widget build(BuildContext context) {
