@@ -1,8 +1,14 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
+import 'package:lead_gen/constants/routes.dart';
+import 'package:lead_gen/model/RequestModel.dart';
 import 'package:lead_gen/model/UserDto.dart';
+import 'package:lead_gen/services/HelperService.dart';
 import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
+import 'package:lead_gen/view/seller/seller-card.dart';
 
 class SellerHomePage extends StatefulWidget {
   final String? name;
@@ -25,30 +31,47 @@ class SellerHomePage extends StatefulWidget {
 class _SellerHomePageState extends State<SellerHomePage> {
   late UserService userService;
   late User user;
+  List<RequestModel> fetchedRequests = [];
+  late HelperService helperService;
 
   @override
   void initState() {
     user = User();
     userService = UserService();
+    helperService = HelperService();
     super.initState();
     fetchUser();
+    fetchData();
   }
 
   Future<void> fetchUser() async {
     try {
-      User? loggedInUser = await userService.getLoggedInUser(widget.phone!);
+      User? loggedInUser = await userService.getLoggedInUser("03162657340");
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
           user.location = loggedInUser.location;
-          user.phoneNumber = widget.phone!;
+          user.phoneNumber = "03162657340";
           print(user.toJson());
         });
       }
     } catch (error) {
       print('Error fetching User: $error');
       showCustomToast("error while fetching logged In User");
+    }
+  }
+
+  Future<void> fetchData() async {
+    try {
+      List<RequestModel> fetchedRequests =
+          await helperService.fetchUserRequest("03162657340");
+
+      setState(() {
+        this.fetchedRequests = fetchedRequests;
+      });
+    } catch (error) {
+      print('Error fetching Requests: $error');
     }
   }
   
@@ -73,7 +96,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
+            children: [
               Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -108,253 +131,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20, left: 20),
-                      child: Container(
-                        color: Colors.blue.shade100,
-                        child: Wrap(
-                          children: [
-                            Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "Murtaza Khalid",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold
-                                    )
-                                  ),
-                                ),
-                                const Spacer(),
-                                IconButton(
-                                  icon: const Icon(Icons.message),
-                                  color: Colors.blue.shade300,
-                                  onPressed: () {
-                                    // do something
-                                  },
-                                ),
-                              ],
-                            ),
-                            Container(
-                              child: const Wrap(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 10, left: 10),
-                                    child: Text(
-                                      "I want a teacher for my coaching center he/she should be graduated and must have strong oop and dsa concepts.will give him market competetive salary."
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 10, left: 10, top: 5),
-                                    child: Text(
-                                      "(4/567 Shah Faisal Colony, Karachi)",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 10, top: 5, right: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    child: Text(
-                                      "Offer",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white
-                                      )
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                        )
-                                      )
-                                    ),
-                                    onPressed: () => null
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton(
-                                    child: Text(
-                                      "Accept",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white
-                                      )
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                        )
-                                      )
-                                    ),
-                                    onPressed: () => null
-                                  ),
-                                  const SizedBox(width: 10),
-                                  ElevatedButton(
-                                    child: Text(
-                                      "Deny",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white
-                                      )
-                                    ),
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(18.0),
-                                        )
-                                      )
-                                    ),
-                                    onPressed: () => null
-                                  )
-                                ]
-                              ),
-                            ),
-                          ]
-                        )
-                      ),
-                    )
                   ],
                 ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
-                    child: Container(
-                      color: Colors.blue.shade100,
-                      child: Wrap(
-                        children: [
-                          Row(
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Haris Adeel",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold
-                                  )
-                                ),
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                icon: const Icon(Icons.message),
-                                color: Colors.blue.shade300,
-                                onPressed: () {
-                                  // do something
-                                },
-                              ),
-                            ],
-                          ),
-                          Container(
-                            child: const Wrap(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10),
-                                  child: Text(
-                                    "I want a teacher for my son he is in 5th grade he is not good in studies so i want a strict teacher will pay him market competive salary."
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 10, left: 10, top: 5),
-                                  child: Text(
-                                    "(4/567 Shah Faisal Colony, Karachi)",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10, top: 5, right: 8),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  child: Text(
-                                    "Offer",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white
-                                    )
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                      )
-                                    )
-                                  ),
-                                  onPressed: () => null
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                  child: Text(
-                                    "Accept",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white
-                                    )
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                      )
-                                    )
-                                  ),
-                                  onPressed: () => null
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                  child: Text(
-                                    "Deny",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white
-                                    )
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18.0),
-                                      )
-                                    )
-                                  ),
-                                  onPressed: () => null
-                                )
-                              ]
-                            ),
-                          ),
-                        ]
-                      )
-                    ),
-                  )
-                ],
+                Center(
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 20,
+                  alignment: WrapAlignment.center,
+                  children: fetchedRequests.map((request) {
+                    print(request.toJson());
+                    String locationText = '${request.locationModel.administrativeArea ?? ''} '
+                        '${request.locationModel.street ?? ''} '
+                        '${request.locationModel.subLocality ?? ''}';
+
+                    String categoryName = request.category!.name ?? '';
+                    return SellerCard();
+                  }).toList(),
+                ),
               ),
+              // const SellerCard(),
             ],
           ),
           Column(
@@ -423,7 +218,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 46),
+                    SizedBox(width: 30),
                     Text(
                       "Total Earning",
                       style: TextStyle(
@@ -457,7 +252,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       ),
                       onPressed: () => null
                     ),
-                    const SizedBox(width: 40),
+                    const SizedBox(width: 30),
                     ElevatedButton(
                       child: Text(
                         "Pending",
@@ -476,7 +271,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       ),
                       onPressed: () => null
                     ),
-                    const SizedBox(width: 38),
+                    const SizedBox(width: 10),
                     ElevatedButton(
                       child: Text(
                         "Earnings",
