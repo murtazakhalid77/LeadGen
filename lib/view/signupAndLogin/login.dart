@@ -6,6 +6,7 @@ import 'package:lead_gen/view/forgot-password/forgot-pass-phone.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key, required String phoneNumber}) : super(key: key);
@@ -54,6 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         if (token != null) {
+           SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('phoneNumber', _emailController.text);
           Navigator.push(
             context,
             MaterialPageRoute(

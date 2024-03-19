@@ -19,10 +19,12 @@ import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/conditionDropDown/conditionDropDown.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/pictureClick/imagePickerwidget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MakeRequestPage extends StatefulWidget {
   final String categoryName;
-  const MakeRequestPage({Key? key, required this.categoryName, required String phoneNumber})
+  const MakeRequestPage(
+      {Key? key, required this.categoryName, required String phoneNumber})
       : super(key: key);
 
   @override
@@ -31,18 +33,21 @@ class MakeRequestPage extends StatefulWidget {
 
 class _MakeRequestPageState extends State<MakeRequestPage> {
   String? dropdownValue;
-  
+
   late CategoryService _categoryService;
   late HelperService _helperService;
 
   List<Categoryy> categories = [];
   List<SubCategory> subCategories = [];
 
+  late String? locationn;
+  Categoryy? category; // Initialize category variable
   late LocationModel locationModel;
-  late Categoryy? categoryy;
   late RequestModel requestModel;
+  String? phoneNumber;
 
-  String? selectedLocation;
+String? selectedLocation; 
+   late String selectedCategory;
   late final TextEditingController _title;
   late final TextEditingController _description;
   late final TextEditingController _price;
@@ -57,11 +62,10 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
     super.initState();
     fetchCategories();
-    _fetchLocation();
+ 
 
-    dropdownValue=widget.categoryName;
+    dropdownValue = widget.categoryName;
   }
-  
 
   @override
   void dispose() {
@@ -69,6 +73,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     _description.dispose();
     _price.dispose();
     super.dispose();
+
+
   }
 
   Future<void> fetchCategories() async {
@@ -77,6 +83,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           await _categoryService.fetchCategories();
 
       if (fetchedCategories.isNotEmpty) {
+             SharedPreferences prefs = await SharedPreferences.getInstance();
+                   phoneNumber = prefs.getString('phoneNumber')!;
+                   // here i am also initiaizing the phone number
         setState(() {
           categories = fetchedCategories;
         });
@@ -121,7 +130,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => const MyHomePage(
-                    phoneNumber: '03468288815',   //TODO: to be done
+                    phoneNumber: '03468288815', //TODO: to be done
                   ), // goes to home page
                 ),
               ); // Add navigation functionality here
@@ -156,9 +165,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 },
                 keyboardType: null,
               ),
-
               const SizedBox(height: 8),
-
               buildTextField(
                 controller: _description,
                 labelText: 'Description *',
@@ -173,22 +180,55 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 },
                 keyboardType: null,
               ),
-
               const SizedBox(height: 8),
-
-
-               buildTextField(
-                controller: TextEditingController(text: selectedLocation ?? ''),
+              buildTextField(
+                controller: TextEditingController(text: selectedLocation  ?? ''),
                 labelText: 'Location *',
                 hintText: 'Choose Location',
                 isReadOnly: true,
                 onTap: () async {
-                  LocationModel locationModel = await _fetchLocation();
+                  // Request permission for location
+                  LocationPermission permission =
+                      await Geolocator.requestPermission();
+
+                  if (permission == LocationPermission.denied) {
+                    // Handle if permission is denied
+                    // You can show a message to the user informing that location permission is required.
+                    return;
+                  }
+
+                  if (permission == LocationPermission.deniedForever) {
+                    // Handle if permission is permanently denied
+                    // You can show a message to the user informing that location permission is required and direct them to settings.
+                    return;
+                  }
+
+                  // Fetch location
+                  Position position = await Geolocator.getCurrentPosition(
+                    desiredAccuracy: LocationAccuracy.high,
+                  );
+
+                  // Reverse geocoding to get address details from coordinates
+                  List<Placemark> placemarks = await placemarkFromCoordinates(
+                    position.latitude,
+                    position.longitude,
+                  );
+
+                  Placemark placemark = placemarks.first;
                   setState(() {
-                    locationModel = locationModel;
-                    selectedLocation = (locationModel.administrativeArea! +
-                        locationModel.locality! +
-                        locationModel.subLocality!);
+                     locationModel = LocationModel(
+                      administrativeArea: placemark.administrativeArea,
+                      locality: placemark.locality,
+                      subLocality: placemark.subLocality,
+                      country: placemark.country,
+                      subAdministrativeArea: placemark.subAdministrativeArea,
+                      street: placemark.street);
+                  });
+                
+                 
+                  setState(() {
+                    selectedLocation =
+                        '${placemark.administrativeArea ?? ''} ${placemark.locality ?? ''} ${placemark.subLocality ?? ''}';
                   });
                 },
                 validator: (value) {
@@ -199,9 +239,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 },
                 keyboardType: null,
               ),
-
               const SizedBox(height: 8),
-
               buildTextField(
                 controller: _price,
                 labelText: 'Price',
@@ -216,14 +254,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 },
                 keyboardType: TextInputType.number,
               ),
-
               const SizedBox(height: 8),
-
-             
-              buildDropdownButton(),
-
+              buildDropdownWithHeading(),
               const SizedBox(height: 8),
-
               const Text(
                 'Condition',
                 style: TextStyle(
@@ -232,25 +265,24 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 ),
               ),
               const SizedBox(height: 5),
-
               const ConditionDropdown(),
-
               const SizedBox(height: 8),
-
               ElevatedButton(
                 onPressed: () async {
+                  
                   RequestModel requestModel = RequestModel(
                       title: _title.text,
                       description: _description.text,
-                      locationModel: locationModel,
-                      category: categoryy,
-                     
-                      // condition: "new",
+                      locationModel: locationModel.toString(),
+                      category: category,
+                      number: phoneNumber,
+                      condition: "new",
                       createdDate: DateTime.now().toString(),
                       price: _price.text);
                   this.requestModel = requestModel;
                   await makeRequest(requestModel);
                   print(requestModel.toJson());
+                    Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightBlue,
@@ -333,61 +365,75 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     );
   }
 
-  DropdownButton<Categoryy?> buildDropdownButton() {
-    return DropdownButton<Categoryy>(
-      value: categories.firstOrNull,
-      icon: const Icon(Icons.arrow_drop_down),
-      style: const TextStyle(color: Colors.black),
-      onChanged: (Categoryy? newValue) {
-        setState(() {
-          categoryy = newValue;
-          dropdownValue = newValue!.name;
-        });
-      },
-      isExpanded: true,
-      hint: const Text('Select Category'),
-      items: categories.map((Categoryy category) {
-        return DropdownMenuItem<Categoryy>(
-          value: category,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(category.name!),
+  Column buildDropdownWithHeading() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Category', // Heading text
+            style: TextStyle(
+              color: Colors.lightBlue,
+              fontSize: 20,
+            ),
           ),
-        );
-      }).toList(),
+        ),
+        DropdownButton<Categoryy?>(
+          value: category,
+          icon: const Icon(Icons.arrow_drop_down),
+          style: const TextStyle(color: Colors.black),
+          onChanged: (Categoryy? newValue) {
+            setState(() {
+              category = newValue;
+              dropdownValue = newValue!.name;
+            });
+          },
+          isExpanded: true,
+          hint: const Text('Select Category'),
+          items: categories.map((Categoryy category) {
+            return DropdownMenuItem<Categoryy>(
+              value: category,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(category.name!),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 
-  Future<LocationModel> _fetchLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+  // Future<LocationModel> _fetchLocation() async {
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.high,
+  //     );
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
+  //     List<Placemark> placemarks = await placemarkFromCoordinates(
+  //       position.latitude,
+  //       position.longitude,
+  //     );
+  //     this.selectedLocation=
+  //     Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
 
-      Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+  //     LocationModel location = LocationModel(
+  //       locality: currentPlace?.locality ?? '',
+  //       subLocality: currentPlace?.subLocality ?? '',
+  //       street: currentPlace?.street ?? '',
+  //       country: currentPlace?.country ?? '',
+  //       subAdministrativeArea: currentPlace?.subAdministrativeArea ?? '',
+  //       administrativeArea: currentPlace?.administrativeArea ?? '',
+  //     );
 
-      LocationModel location = LocationModel(
-        locality: currentPlace?.locality ?? '',
-        subLocality: currentPlace?.subLocality ?? '',
-        street: currentPlace?.street ?? '',
-        country: currentPlace?.country ?? '',
-        subAdministrativeArea: currentPlace?.subAdministrativeArea ?? '',
-        administrativeArea: currentPlace?.administrativeArea ?? '',
-      );
+  //     return location;
+  //   } catch (error) {
+  //     print('Error fetching location: $error');
 
-      locationModel = location;
-      return location;
-    } catch (error) {
-      print('Error fetching location: $error');
-      // Handle the error as needed, e.g., throw a custom exception or return a default location
-      return LocationModel(); // Return a default empty LocationModel or throw a custom exception
-    }
-  }
+  //     return LocationModel();
+  //   }
+  // }
 }
 
 extension IterableExtensions<T> on Iterable<T> {

@@ -29,7 +29,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocationAndHitAPI();
+    // _getCurrentLocationAndHitAPI();
+    // saveFcmToken();
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -40,9 +41,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _cnicController = TextEditingController();
   final _emailController = TextEditingController();
 
-  Registration _constructRegistrationObject() {
+  Future<Registration> _constructRegistrationObject() async {
+    String? token = await getFCMToken();
     return Registration(_firstNameController.text, _lastNameController.text,
-        _cnicController.text, _emailController.text, widget.phoneNumber);
+        _cnicController.text, _emailController.text, widget.phoneNumber, token);
   }
 
   Future<void> _registerUser(Registration registrationData) async {
@@ -53,7 +55,10 @@ class _SignUpPageState extends State<SignUpPage> {
         showCustomToast('User registered successfully!');
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen(phoneNumber: '',)),
+          MaterialPageRoute(
+              builder: (context) => LoginScreen(
+                    phoneNumber: '',
+                  )),
         );
       } else {
         showCustomToast('User registration failed!');
@@ -69,53 +74,81 @@ class _SignUpPageState extends State<SignUpPage> {
     return await _firebaseMessaging.getToken();
   }
 
-  Future<void> _getCurrentLocationAndHitAPI() async {
-    var permissionStatus = await Permission.location.request();
+// Future<void> saveFcmToken() async{
 
-    if (permissionStatus.isGranted) {
-      try {
-        Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
+// try{
+//   String? token=await getFCMToken();
+//    var response =
+//               await _otpService.locationCreation(location, widget.phoneNumber);
 
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-          position.latitude,
-          position.longitude,
-        );
+// }
 
-        Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+//           if (response.statusCode == 200) {
+//             setState(() {
+//               isLocationSaved =
+//                   true; // Set isLoading to false after the operation completes
+//             });
+//             showCustomToast('The location is saved');
+//           } else {
+//             showCustomToast('The location Cannot be saved');
+//           }
+//         } else {
+//           showCustomToast('No location data available');
+//         }
+//       } catch (e) {
+//         print('Error: $e');
+//         showCustomToast('User registered successfully!');
+//       }
+//     }
 
-        if (currentPlace != null) {
-          LocationModel location = LocationModel(
-              locality: currentPlace.locality ?? '',
-              subLocality: currentPlace.subLocality ?? '',
-              street: currentPlace.street ?? '',
-              country: currentPlace.country ?? '',
-              subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
-              administrativeArea: currentPlace.administrativeArea ?? '',
-              deviceId: await getFCMToken());
+// }
+  // Future<void> _getCurrentLocationAndHitAPI() async {
+  //   var permissionStatus = await Permission.location.request();
 
-          var response =
-              await _otpService.locationCreation(location, widget.phoneNumber);
+  //   if (permissionStatus.isGranted) {
+  //     try {
+  //       Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high,
+  //       );
 
-          if (response.statusCode == 200) {
-            setState(() {
-              isLocationSaved =
-                  true; // Set isLoading to false after the operation completes
-            });
-            showCustomToast('The location is saved');
-          } else {
-            showCustomToast('The location Cannot be saved');
-          }
-        } else {
-          showCustomToast('No location data available');
-        }
-      } catch (e) {
-        print('Error: $e');
-        showCustomToast('User registered successfully!');
-      }
-    }
-  }
+  //       List<Placemark> placemarks = await placemarkFromCoordinates(
+  //         position.latitude,
+  //         position.longitude,
+  //       );
+
+  //       Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
+
+  //       if (currentPlace != null) {
+  //         LocationModel location = LocationModel(
+  //             locality: currentPlace.locality ?? '',
+  //             subLocality: currentPlace.subLocality ?? '',
+  //             street: currentPlace.street ?? '',
+  //             country: currentPlace.country ?? '',
+  //             subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
+  //             administrativeArea: currentPlace.administrativeArea ?? '',
+  //             deviceId: await getFCMToken());
+
+  //         var response =
+  //             await _otpService.locationCreation(location, widget.phoneNumber);
+
+  //         if (response.statusCode == 200) {
+  //           setState(() {
+  //             isLocationSaved =
+  //                 true; // Set isLoading to false after the operation completes
+  //           });
+  //           showCustomToast('The location is saved');
+  //         } else {
+  //           showCustomToast('The location Cannot be saved');
+  //         }
+  //       } else {
+  //         showCustomToast('No location data available');
+  //       }
+  //     } catch (e) {
+  //       print('Error: $e');
+  //       showCustomToast('User registered successfully!');
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -334,24 +367,22 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(height: 20),
 
                     ElevatedButton(
-                      onPressed: isLocationSaved
-                          ? () async {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                Registration registrationData =
-                                    _constructRegistrationObject();
-                                await _registerUser(registrationData);
-                              }
-                            }
-                          : null, // Disable the button if isLocationSaved is false
+                      onPressed: () async {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          Registration registrationData =
+                              await _constructRegistrationObject();
+                          await _registerUser(registrationData);
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            isLocationSaved ? Colors.lightBlue : Colors.grey,
+                            Colors.lightBlue, // Fixed color for the button
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(18),
                         child: Center(
                           child: Text(

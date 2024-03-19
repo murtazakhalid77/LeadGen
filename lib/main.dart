@@ -20,22 +20,22 @@ import 'package:lead_gen/view/user-select/selection.dart';
 import 'package:lead_gen/view/user-select/user_registration.dart';
 import 'package:provider/provider.dart';
 
-
- main()async {
-  WidgetsFlutterBinding.ensureInitialized ();
-await Firebase.initializeApp();
-await FirebaseApi().initNotifications();
-   runApp(
+main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseApi().initNotifications();
+  runApp(
     MultiProvider(
       providers: [
-         ChangeNotifierProvider<OtpService>(create: (context) => OtpService()),
-          ChangeNotifierProvider<CategoryService>(create: (context) => CategoryService())
-      // ChangeNotifierProvider(create: (context) => Loc()),
-       // ChangeNotifierProvider(create: (context) => SettingsService()),
+        ChangeNotifierProvider<OtpService>(create: (context) => OtpService()),
+        ChangeNotifierProvider<CategoryService>(
+            create: (context) => CategoryService())
+        // ChangeNotifierProvider(create: (context) => Loc()),
+        // ChangeNotifierProvider(create: (context) => SettingsService()),
       ],
       child: const MyApp(),
     ),
-  );  
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -46,9 +46,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home:  LoginScreen(phoneNumber: ""),
+      home: SplashScreen(),
       routes: routes,
     );
   }
 }
-

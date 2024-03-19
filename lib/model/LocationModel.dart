@@ -40,4 +40,39 @@ class LocationModel {
     );
   }
 
+  @override
+  String toString() {
+    return 'LocationModel(locality: $locality, subLocality: $subLocality, street: $street, country: $country, '
+        'subAdministrativeArea: $subAdministrativeArea, administrativeArea: $administrativeArea, deviceId: $deviceId)';
+  }
+
+   static LocationModel fromString(String locationString) {
+    // Remove "LocationModel(" from the beginning and ")" from the end
+    locationString = locationString.substring(14, locationString.length - 1);
+
+    // Split the string by ", " to get individual key-value pairs
+    List<String> keyValuePairs = locationString.split(', ');
+
+    // Create a map to store the extracted key-value pairs
+    Map<String, String?> locationMap = {};
+
+    // Iterate over the key-value pairs and extract the key and value
+    keyValuePairs.forEach((pair) {
+      List<String> parts = pair.split(': ');
+      String key = parts[0].trim();
+      String? value = parts.length > 1 ? parts[1].trim() : null;
+      locationMap[key] = value;
+    });
+
+    // Create a LocationModel instance using the extracted data
+    return LocationModel(
+      locality: locationMap['locality'],
+      subLocality: locationMap['subLocality'],
+      street: locationMap['street'],
+      country: locationMap['country'],
+      subAdministrativeArea: locationMap['subAdministrativeArea'],
+      administrativeArea: locationMap['administrativeArea'],
+      deviceId: locationMap['deviceId'],
+    );
+  }
 }
