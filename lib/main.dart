@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const MyHomePage(phoneNumber: '',),
       routes: routes,
     );
   }
