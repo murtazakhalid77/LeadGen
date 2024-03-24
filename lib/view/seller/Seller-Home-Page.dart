@@ -139,6 +139,11 @@ class _SellerHomePageState extends State<SellerHomePage> {
                   runSpacing: 20,
                   alignment: WrapAlignment.center,
                   children: fetchedRequests.map((request) {
+                    print(request.toJson());
+         //           String locationText = '${request.locationModel.administrativeArea ?? ''} '
+           //             '${request.locationModel.street ?? ''} '
+             //           '${request.locationModel.subLocality ?? ''}';
+
                     String categoryName = request.category!.name ?? '';
                     return SellerCard();
                   }).toList(),
