@@ -238,6 +238,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_expandable_text:
+    dependency: "direct main"
+    description:
+      name: flutter_expandable_text
+      sha256: "9c6496051fda42bb7d25bbf09453a587475bb3f6c2114f312cb5b2e87cff7e89"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -270,6 +278,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
+  flutter_rating_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rating_bar
+      sha256: d2af03469eac832c591a1eba47c91ecc871fe5708e69967073c043b2d775ed93
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -648,6 +664,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
+  readmore:
+    dependency: "direct main"
+    description:
+      name: readmore
+      sha256: "99c2483202f7c7e98c50834d72be2b119aefecf4497ca1960ae9d5f418eb1481"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   shared_preferences:
     dependency: "direct main"
     description:
