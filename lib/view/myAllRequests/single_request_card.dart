@@ -24,7 +24,7 @@ class MySingleRequestCard extends StatelessWidget {
     return InkWell(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height-140,
+        height: MediaQuery.of(context).size.height-170,
         decoration: BoxDecoration(
           color: Colors.blue.shade200, // Soft blue color for the background
           borderRadius: BorderRadius.circular(20),
@@ -114,6 +114,50 @@ class MySingleRequestCard extends StatelessWidget {
                     fontSize: 15,
                   ),
                 ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      child: Text(
+                        "Bid Again",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white
+                        )
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          )
+                        )
+                      ),
+                      onPressed: () {}
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      child: Text(
+                        "Cancel Requset",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white
+                        )
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          )
+                        )
+                      ),
+                      onPressed: () {}
+                    )
+                  ],
+                )
+                
               ],
             ),
           ),

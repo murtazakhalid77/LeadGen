@@ -4,6 +4,7 @@ import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/firebase/FirebaseApi.dart';
 import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
+import 'package:lead_gen/view/ReviewAndRating/reviews.dart';
 import 'package:lead_gen/view/buyer/EditProfile.dart';
 import 'package:lead_gen/services/categoryService.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const MyHomePage(phoneNumber: '',),
       routes: routes,
     );
   }
