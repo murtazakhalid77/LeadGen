@@ -109,12 +109,12 @@ Widget buildElevatedButton(String phoneNumber, BuildContext  context, bool condi
     onPressed: condition
         ? () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyHomePage(option: option)),
+              MaterialPageRoute(builder: (context) => MyHomePage(option: option, phoneNumber: '',)),
               // MaterialPageRoute(builder: (context) => SellerHomePage(option: option)),
             )
         : () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyHomePage( option: option)),
+              MaterialPageRoute(builder: (context) => MyHomePage( option: option, phoneNumber: '',)),
             ),
     style: ElevatedButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed

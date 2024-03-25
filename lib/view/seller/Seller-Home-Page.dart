@@ -74,26 +74,27 @@ fetchUser();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavBar(userType: 'seller', user: user!),
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Welcome to Lead Gen"),
-        backgroundColor: Colors.blue,
-        actions: <Widget>[
-          IconButton(
-            icon: Image.asset("lib/assets/leadGen.png"),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
-      ),
-      body: ListView(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+Widget build(BuildContext context) {
+  return Scaffold(
+  // drawer: user != null ? NavBar(userType: 'seller', user: user!) : null, // Check if user is not null
+    appBar: AppBar(
+      automaticallyImplyLeading: false, // Disable the automatic leading widget
+      centerTitle: true,
+      title: const Text("Welcome to Lead Gen"),
+      backgroundColor: Colors.blue,
+      actions: <Widget>[
+        IconButton(
+          icon: Image.asset("lib/assets/leadGen.png"),
+          onPressed: () {
+            // do something
+          },
+        )
+      ],
+    ),
+    body: Column(
+      children: [
+        Expanded(
+          child: ListView(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,43 +132,45 @@ fetchUser();
                   ),
                 ],
               ),
-              Center(
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 20,
-                  alignment: WrapAlignment.center,
-                  children: fetchedRequests.map((request) {
-                    LocationModel location =
-                        LocationModel.fromString(request.locationModel!);
-                    String locationText =
-                        '${location.administrativeArea ?? ''} '
-                        '${location.street ?? ''} '
-                        '${location.subLocality ?? ''}';
-                    String categoryName = request.category!.name ?? '';
-                    return SellerCard(
-                      name: request.user!.firstName, // Pass name
-                      description: request.description, // Pass description
-                      locationText: locationText, // Pass location text
-                    );
-                  }).toList(),
-                ),
-              ),
-              // const SellerCard(),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: const EdgeInsets.only(top: 40, left: 20),
-                child: const Text(
-                  "Summary",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
+              SingleChildScrollView(
+                child: Center(
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 20,
+                    alignment: WrapAlignment.center,
+                    children: fetchedRequests.map((request) {
+                      LocationModel location =
+                          LocationModel.fromString(request.locationModel!);
+                      String locationText =
+                          '${location.administrativeArea ?? ''} '
+                          '${location.street ?? ''} '
+                          '${location.subLocality ?? ''}';
+                      String categoryName = request.category!.name ?? '';
+                      return SellerCard(
+                        name: request.user!.firstName, // Pass name
+                        description: request.description, // Pass description
+                        locationText: locationText, // Pass location text
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 40, left: 20),
+              child: const Text(
+                "Summary",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                ),
+              ),
+            ),
               const Padding(
                   padding: EdgeInsets.only(right: 20, left: 20),
                   child: Row(
@@ -211,7 +214,7 @@ fetchUser();
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 30),
+                      SizedBox(width: 40),
                       Text(
                         "Total Earning",
                         style: TextStyle(
@@ -237,7 +240,7 @@ fetchUser();
                             borderRadius: BorderRadius.circular(18.0),
                           ))),
                       onPressed: () => null),
-                  const SizedBox(width: 30),
+                  const SizedBox(width: 40),
                   ElevatedButton(
                       child: Text("Pending",
                           style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -250,7 +253,7 @@ fetchUser();
                             borderRadius: BorderRadius.circular(18.0),
                           ))),
                       onPressed: () => null),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 35),
                   ElevatedButton(
                       child: Text("Earnings",
                           style: TextStyle(fontSize: 14, color: Colors.white)),
@@ -270,11 +273,11 @@ fetchUser();
                 child: SizedBox(
                     child: Padding(
                   padding: EdgeInsets.only(top: 20, bottom: 30),
-                  child: Text(
+              /*    child: Text(
                     "Advertisement",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-                  ),
+                  ),*/
                 )),
               )
             ],
