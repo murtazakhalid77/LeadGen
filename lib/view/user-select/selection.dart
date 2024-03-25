@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDetails.dart';
 import 'package:lead_gen/services/UserService.dart';
@@ -18,7 +20,7 @@ class _SelectionPageState extends State<SelectionPage> {
   late String phoneNumber;
   late UserService userService;
   late UserType userType;
-
+  late Bool option;
   @override
   void initState() {
     super.initState();
@@ -84,32 +86,35 @@ Widget buildElevatedButtons(BuildContext context, String phoneNumber, String typ
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        buildElevatedButton(phoneNumber, context, true),
-        buildElevatedButton(phoneNumber, context, false),
+        buildElevatedButton(phoneNumber, context, true,true),
+        buildElevatedButton(phoneNumber, context, false,false),
       ],
     );
   } else {
+  
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        if (type == "SELLER") buildElevatedButton(phoneNumber, context, true),
-        if (type == "BUYER") buildElevatedButton(phoneNumber, context, false),
+        if (type == "SELLER")buildElevatedButton(phoneNumber, context, true,true),
+        if (type == "BUYER") buildElevatedButton(phoneNumber, context, false,false),
       ],
     );
   }
 }
 
-Widget buildElevatedButton(String phoneNumber, BuildContext  context, bool condition) {
+Widget buildElevatedButton(String phoneNumber, BuildContext  context, bool condition,bool option) {
 
   return ElevatedButton(
+  
     onPressed: condition
         ? () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SellerHomePage()),
+              MaterialPageRoute(builder: (context) => MyHomePage(option: option)),
+              // MaterialPageRoute(builder: (context) => SellerHomePage(option: option)),
             )
         : () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => MyHomePage(phoneNumber: phoneNumber)),
+              MaterialPageRoute(builder: (context) => MyHomePage( option: option)),
             ),
     style: ElevatedButton.styleFrom(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30), // Adjust padding as needed

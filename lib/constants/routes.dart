@@ -46,7 +46,7 @@ final Map<String, WidgetBuilder> routes = {
   
   buyer_allCategories:(context) => const AllCategoriesPage(),
   buyer_vehicle:(context) => const VehiclesPage(),
-  seller_home: (context) => const SellerHomePage(),
+  // seller_home: (context) => const SellerHomePage(),
 
   seller_request: (context) => const AllRequest(),
   // sign_up:(context) => const SignUpPage(),
@@ -56,7 +56,7 @@ final Map<String, WidgetBuilder> routes = {
 };
 
 class UrlConfig {
-static const String baseUrl = "http://192.168.10.9:8080/api";
+static const String baseUrl = "https://api.leadgen.stepwaysoftwares.com/api";
 
 
   static Uri buildUri(String path) {
