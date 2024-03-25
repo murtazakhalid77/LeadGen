@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 
   final bool option;
 
-  const MyHomePage({Key? key ,required this.option})
+  const MyHomePage({Key? key ,required this.option, required String phoneNumber})
       : super(key: key);
 
   @override
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacementNamed(context, user_Selection);
+        Navigator.pop(context, user_Selection);
         return false; // Prevent default back button behavior
       },
       child: Scaffold(

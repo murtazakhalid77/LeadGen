@@ -47,6 +47,8 @@ class _MyRequestsState extends State<MyRequests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Disable the automatic leading widget
+        centerTitle: true,
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
         title: const Text(

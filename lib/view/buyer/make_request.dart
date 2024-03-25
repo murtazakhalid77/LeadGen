@@ -366,44 +366,45 @@ String? selectedLocation;
   }
 
   Column buildDropdownWithHeading() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            'Category', // Heading text
-            style: TextStyle(
-              color: Colors.lightBlue,
-              fontSize: 20,
-            ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Padding(
+        padding: EdgeInsets.only(bottom: 8.0),
+        child: Text(
+          'Category', // Heading text
+          style: TextStyle(
+            color: Colors.lightBlue,
+            fontSize: 20,
           ),
         ),
-        DropdownButton<Categoryy?>(
-          value: category,
-          icon: const Icon(Icons.arrow_drop_down),
-          style: const TextStyle(color: Colors.black),
-          onChanged: (Categoryy? newValue) {
-            setState(() {
-              category = newValue;
-              dropdownValue = newValue!.name;
-            });
-          },
-          isExpanded: true,
-          hint: const Text('Select Category'),
-          items: categories.map((Categoryy category) {
-            return DropdownMenuItem<Categoryy>(
-              value: category,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(category.name!),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
+      ),
+      DropdownButton<Categoryy?>(
+        value: category ?? categories.firstWhereOrNull((cat) => cat.name == widget.categoryName),
+        icon: const Icon(Icons.arrow_drop_down),
+        style: const TextStyle(color: Colors.black),
+        onChanged: (Categoryy? newValue) {
+          setState(() {
+            category = newValue;
+            dropdownValue = newValue!.name;
+          });
+        },
+        isExpanded: true,
+        hint: const Text('Select Category'),
+        items: categories.map((Categoryy category) {
+          return DropdownMenuItem<Categoryy>(
+            value: category,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(category.name!),
+            ),
+          );
+        }).toList(),
+      ),
+    ],
+  );
+}
+
 
   // Future<LocationModel> _fetchLocation() async {
   //   try {
@@ -437,5 +438,13 @@ String? selectedLocation;
 }
 
 extension IterableExtensions<T> on Iterable<T> {
-  T? get firstOrNull => isEmpty ? null : first;
+  T? firstWhereOrNull(bool Function(T) test) {
+    for (final element in this) {
+      if (test(element)) {
+        return element;
+      }
+    }
+    return null;
+  }
 }
+
