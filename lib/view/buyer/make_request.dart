@@ -24,8 +24,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MakeRequestPage extends StatefulWidget {
   final String categoryName;
   const MakeRequestPage(
-      {Key? key, required this.categoryName, required String phoneNumber})
-      : super(key: key);
+        {Key? key, required this.categoryName})
+        : super(key: key);
 
   @override
   State<MakeRequestPage> createState() => _MakeRequestPageState();
@@ -127,13 +127,13 @@ String? selectedLocation;
             onPressed: () {
               // Unfocus the current focus node before popping the screen
               FocusManager.instance.primaryFocus?.unfocus();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const MyHomePage(
-                    phoneNumber: '03468288815', //TODO: to be done
-                  ), // goes to home page
-                ),
-              ); // Add navigation functionality here
+              // Navigator.of(context).pushReplacement(
+              //   MaterialPageRoute(
+              //     builder: (context) => const MyHomePage(
+              //       phoneNumber: '03468288815', //TODO: to be done
+              //     ), // goes to home page
+              //   ),
+              // ); // Add navigation functionality here
             },
           ),
         ),

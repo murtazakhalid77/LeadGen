@@ -13,6 +13,7 @@ import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/seller/Seller-All-Request.dart';
+import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
