@@ -49,12 +49,12 @@ class NavBar extends StatelessWidget {
             textColor: Colors.blue,
             onTap: () {
               // Handle Home tapped based on user type
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        MyHomePage(phoneNumber: user.phoneNumber)),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) =>
+              //           MyHomePage()),
+              // );
 
               // You can implement different logic based on user type
               if (userType == 'seller') {

@@ -8,12 +8,15 @@ import 'package:lead_gen/services/categoryService.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/drawer/drawer.dart';
+import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
-  final String phoneNumber;
 
-  const MyHomePage({Key? key, required this.phoneNumber}) : super(key: key);
+  final bool option;
+
+  const MyHomePage({Key? key ,required this.option, required String phoneNumber})
+      : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -22,12 +25,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late UserService userService;
   late CategoryService categoryService;
-  late String phoneNumber;
+
   late User user;
   late List<Map<String, dynamic>> categories =
       []; // Initialize categories as an empty list;
   @override
   void initState() {
+   
     user = User();
     userService = UserService();
     categoryService = CategoryService();
@@ -35,6 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
     fetchUser();
     fetchCategories();
   }
+
+
 
   Future<void> fetchCategories() async {
     try {
@@ -92,15 +98,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> fetchUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      phoneNumber = prefs.getString('phoneNumber')!;
-      User? loggedInUser = await userService.getLoggedInUser(phoneNumber!);
+        String  phoneNumber = prefs.getString('phoneNumber')!;
+      User? loggedInUser =
+          await userService.getLoggedInUser(phoneNumber);
 
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
           user.location = loggedInUser.location;
-          user.phoneNumber = widget.phoneNumber;
+          user.phoneNumber = phoneNumber;
           print(user.toJson());
         });
       }
@@ -114,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacementNamed(context, user_Selection);
+        Navigator.pop(context, user_Selection);
         return false; // Prevent default back button behavior
       },
       child: Scaffold(
@@ -134,11 +141,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(height: 50),
                   ListTile(
                     contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                    title: Text("Hello ${user!.firstName} !!",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(color: Colors.white)),
+                    title: Text(
+                      widget.option
+                          ? "Hello Seller ${user.firstName} !!"
+                          : "Hello Buyer ${user.firstName} !!",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(color: Colors.white),
+                    ),
                     subtitle: Text('Good Morning',
                         style: Theme.of(context)
                             .textTheme
@@ -176,15 +187,27 @@ class _MyHomePageState extends State<MyHomePage> {
                         // Navigate to another page here with the category name
                         String categoryName =
                             category['categoryName'] as String;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MakeRequestPage(
-                              categoryName: categoryName,
-                              phoneNumber: phoneNumber,
+                        if (widget.option) {
+                           print(categoryName);
+                          Navigator.push(
+                            
+                            context,
+                            MaterialPageRoute(
+                              
+                              builder: (context) => MakeRequestPage(
+                               
+                                categoryName: categoryName
+                             
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else {
+                             MaterialPageRoute(
+                              builder: (context) => SellerHomePage(
+                                 categoryName: categoryName
+                              ),
+                            );
+                        }
                       },
                       child: itemDashboard(
                         category['categoryName'] as String,
@@ -203,19 +226,22 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  itemDashboard(String title, IconData iconData, Color background) =>
-      GestureDetector(
+  itemDashboard(String title, IconData iconData, Color background) => InkWell(
         onTap: () {
-          String categoryName = title;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MakeRequestPage(
-                categoryName: categoryName,
-                phoneNumber: '',
-              ),
-            ),
-          );
+          if (widget.option) {
+              Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>  SellerHomePage(categoryName: title,), 
+             ),
+           );
+          } else {
+              Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>  MakeRequestPage(categoryName: title,),  
+             ),
+           );
+          }
+          
         },
         child: Container(
           decoration: BoxDecoration(
