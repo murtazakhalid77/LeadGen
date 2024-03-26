@@ -53,7 +53,6 @@ class _SellerHomePageState extends State<SellerHomePage> {
           user.email = loggedInUser.email;
           user.location = loggedInUser.location;
           user.phoneNumber = "03162657340";
-          print(user.toJson());
         });
       }
     } catch (error) {
@@ -139,7 +138,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                   runSpacing: 20,
                   alignment: WrapAlignment.center,
                   children: fetchedRequests.map((request) {
-                    print(request.toJson());
+                    // print(request.toJson());
          //           String locationText = '${request.locationModel.administrativeArea ?? ''} '
            //             '${request.locationModel.street ?? ''} '
              //           '${request.locationModel.subLocality ?? ''}';

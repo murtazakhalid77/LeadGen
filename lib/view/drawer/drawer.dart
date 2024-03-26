@@ -143,7 +143,6 @@ class NavBar extends StatelessWidget {
                   builder: (context) => ProfilePage(
                     name: user.firstName,
                     phone: user.phoneNumber,
-                    address: user.location,
                     email: user.email,
                   ),
                 ),

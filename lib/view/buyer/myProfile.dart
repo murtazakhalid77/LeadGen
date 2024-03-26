@@ -10,14 +10,12 @@ import 'package:lead_gen/view/drawer/drawer.dart';
 class ProfilePage extends StatefulWidget {
   final String? name;
   final String? phone;
-  final String? address;
   final String? email;
 
   const ProfilePage({
     Key? key,
     this.name,
     this.phone,
-    this.address,
     this.email,
   }) : super(key: key);
 
@@ -45,7 +43,6 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
-          user.location = loggedInUser.location;
           user.phoneNumber = widget.phone!;
           print(user.toJson());
         });
@@ -100,8 +97,6 @@ class _ProfilePageState extends State<ProfilePage> {
               itemProfile('Name', widget.name ?? 'N/A', CupertinoIcons.person),
               const SizedBox(height: 10),
               itemProfile('Phone', widget.phone ?? 'N/A', CupertinoIcons.phone),
-              const SizedBox(height: 10),
-              itemProfile('Address', widget.address ?? 'N/A', CupertinoIcons.location),
               const SizedBox(height: 10),
               itemProfile('Email', widget.email ?? 'N/A', CupertinoIcons.mail),
               const SizedBox(
