@@ -14,6 +14,24 @@ import 'package:provider/provider.dart';
 
 class UserService extends ChangeNotifier {
 
+  Future setCategory(String phoneNumber, List<String> selectedCategories) async {
+  try{
+    final response = await http.put(
+      UrlConfig.buildUri('user/${phoneNumber}'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(selectedCategories)
+    );
+
+print(response.statusCode);
+    return response.statusCode;
+
+  }catch(e){
+      e.toString();
+    }
+}
+
   Future editUserProfile(String name, String updatedPhone, String email, String userPhone) async {
     try{
       final response = await http.put(

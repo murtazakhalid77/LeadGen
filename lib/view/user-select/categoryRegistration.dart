@@ -41,6 +41,21 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
     fetchCategories();
   }
 
+  Future<void> setCategories() async {
+    try {
+      int response = await userService.setCategory("03336478318", this.selectedCategories);
+
+
+      if(response == 200){
+        showCustomToast("Successfully registered as a Seller!!!");
+      }
+    
+      // print(categories);
+    } catch (error) {
+      print('Error fetching Categories: $error');
+    }
+  }
+
   Future<void> fetchCategories() async {
     try {
       List<Map<dynamic, dynamic>> fetchedCategories =
@@ -176,9 +191,11 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
                         setState(() {
                           if (isSelected) {
                             selectedCategories.remove(categoryName);
+                            print(selectedCategories);
                           } else {
                             if(selectedCategories.length < 4) {
                               selectedCategories.add(categoryName);
+                              print(selectedCategories);
                             } else {
                               // Handle maximum selection alert here
                             }
@@ -201,11 +218,12 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
                 padding: const EdgeInsets.all(20.0),
                 child: ElevatedButton(
                   onPressed: () {
+                    setCategories();
                     Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) =>  const LoginScreen(phoneNumber: '',), 
-             ),
-           );
+                      MaterialPageRoute(
+                        builder: (context) =>  const LoginScreen(phoneNumber: '',), 
+                    ),
+                  );
                   },
                   child: const Text('Done'),
                 ),

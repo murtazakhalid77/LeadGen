@@ -90,7 +90,7 @@ bool _isSellerSelected = false;
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => CategoryRegistration(phoneNumber: '',),
+                builder: (context) => CategoryRegistration(phoneNumber: widget.phoneNumber),
               ),
             );
           } else {
