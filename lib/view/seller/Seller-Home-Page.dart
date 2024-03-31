@@ -144,7 +144,7 @@ Widget build(BuildContext context) {
              //           '${request.locationModel.subLocality ?? ''}';
 
                     String categoryName = request.category!.name ?? '';
-                    return SellerCard();
+                    return SellerCard(name: '', description: '', locationText: '',);
                   }).toList(),
                 ),
               ),

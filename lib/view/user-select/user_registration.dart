@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
+import 'package:lead_gen/view/user-select/categoryRegistration.dart';
 
 class UserRegistrationSelection extends StatefulWidget {
   final String phoneNumber;
@@ -84,17 +85,26 @@ bool _isSellerSelected = false;
                       ),
                     ),
                     onPressed: (_isSellerSelected || _isBuyerSelected)
-                        ? () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginScreen(
-                                  phoneNumber: widget.phoneNumber,
-                                ),
-                              ),
-                            );
-                          }
-                        : null,
+      ? () {
+          if (_isSellerSelected) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoryRegistration(phoneNumber: widget.phoneNumber),
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginScreen(
+                  phoneNumber: widget.phoneNumber,
+                ),
+              ),
+            );
+          }
+        }
+      : null,
                     child: const Padding(
                       padding: EdgeInsets.all(18),
                       child: Center(
