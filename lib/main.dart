@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
@@ -19,12 +20,14 @@ import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
-import 'package:lead_gen/view/user-select/user_registration.dart';
+import 'package:lead_gen/view/user-select/userTypeSelection.dart';
 import 'package:provider/provider.dart';
+
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   await FirebaseApi().initNotifications();
   runApp(
     MultiProvider(
@@ -48,7 +51,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: const UserRegistrationSelection(phoneNumber: ''),
+      home: SplashScreen(),
       routes: routes,
     );
   }

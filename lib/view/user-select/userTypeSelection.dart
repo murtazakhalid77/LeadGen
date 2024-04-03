@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/services/UserService.dart';
 
 import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/user-select/categoryRegistration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../enums/UserTypeEnum.dart';
 
 class UserRegistrationSelection extends StatefulWidget {
   final String phoneNumber;
@@ -16,10 +22,35 @@ class UserRegistrationSelection extends StatefulWidget {
 }
 
 class _UserRegistrationSelection extends State<UserRegistrationSelection> {
+  final UserService userService = UserService();
 
-bool _isSellerSelected = false;
+  bool _isSellerSelected = false;
   bool _isBuyerSelected = false;
 
+  Future<void> setUserType() async {
+    try {
+      // Determine the UserType based on _isSellerSelected and _isBuyerSelected
+      UserTypeEnum userType;
+      if (_isSellerSelected && _isBuyerSelected) {
+        userType = UserTypeEnum.BOTH;
+      } else if (_isSellerSelected) {
+        userType = UserTypeEnum.SELLER;
+      } else {
+        userType = UserTypeEnum.BUYER;
+      }
+
+      var res = await userService.setUserType(widget.phoneNumber, userType);
+
+      if (res != null) {
+        showCustomToast("User Type Selected: $res");
+      } else {
+        showCustomToast("User Type Can't be selected");
+      }
+    } catch (error) {
+      print('Error fetching User: $error');
+      showCustomToast("Error while fetching logged In User");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,27 +115,34 @@ bool _isSellerSelected = false;
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    onPressed: (_isSellerSelected || _isBuyerSelected)
-      ? () {
-          if (_isSellerSelected) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CategoryRegistration(phoneNumber: widget.phoneNumber),
-              ),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginScreen(
-                  phoneNumber: widget.phoneNumber,
-                ),
-              ),
-            );
-          }
-        }
-      : null,
+                    onPressed: () {
+                      setUserType();
+
+                      // Perform navigation based on conditions
+                      if (_isSellerSelected) {
+                       setUserType();
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CategoryRegistration(
+                              phoneNumber: widget.phoneNumber,
+                            ),
+                          ),
+                        );
+                      } else {
+                        setUserType();
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(
+                              phoneNumber: widget.phoneNumber,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     child: const Padding(
                       padding: EdgeInsets.all(18),
                       child: Center(
@@ -127,7 +165,8 @@ bool _isSellerSelected = false;
       ),
     );
   }
-Widget _buildSelectionButton({
+
+  Widget _buildSelectionButton({
     required IconData icon,
     required String text,
     required bool isSelected,

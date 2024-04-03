@@ -13,9 +13,9 @@ import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryRegistration extends StatefulWidget {
-
+final String phoneNumber;
   const CategoryRegistration(
-      {Key? key,  required String phoneNumber})
+      {Key? key, required this.phoneNumber})
       : super(key: key);
 
   @override
@@ -43,10 +43,15 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
 
   Future<void> setCategories() async {
     try {
-      int response = await userService.setCategory("03336478318", this.selectedCategories);
+      int response = await userService.setCategory(widget.phoneNumber, this.selectedCategories);
 
 
       if(response == 200){
+        Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>  const LoginScreen(phoneNumber: '',), 
+                    ),
+                  );
         showCustomToast("Successfully registered as a Seller!!!");
       }
     
@@ -219,11 +224,7 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
                 child: ElevatedButton(
                   onPressed: () {
                     setCategories();
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>  const LoginScreen(phoneNumber: '',), 
-                    ),
-                  );
+                  
                   },
                   child: const Text('Done'),
                 ),

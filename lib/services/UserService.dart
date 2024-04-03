@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 
-import 'package:lead_gen/model/UserDetails.dart';
+import 'package:lead_gen/enums/UserTypeEnum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
@@ -11,6 +11,8 @@ import 'package:lead_gen/model/UserDto.dart';
 import 'package:http/http.dart' as http;
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:provider/provider.dart';
+
+import '../model/UserDetails.dart';
 
 class UserService extends ChangeNotifier {
 
@@ -156,6 +158,43 @@ Future<User?> getLoggedInUser(String? emailOrNumber) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
+
+  Future<bool> setUserType(String phoneNumber, UserTypeEnum userTypeEnum) async {
+  try {
+    // Convert enum value to string
+    String userTypeString;
+    switch (userTypeEnum) {
+      case UserTypeEnum.BUYER:
+        userTypeString = 'buyer';
+        break;
+      case UserTypeEnum.SELLER:
+        userTypeString = 'seller';
+        break;
+      case UserTypeEnum.BOTH:
+        userTypeString = 'both';
+        break;
+    }
+
+
+    final response = await http.post(
+      UrlConfig.buildUri('user/setUserType/$phoneNumber/$userTypeString'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    if (response.statusCode == 200) {
+    
+      return true;
+    } else {
+      return false;
+     
+    }
+  } catch (e) {
+    // Handle exceptions
+ showCustomToast("the user type cant be set up");
+   throw Exception('Failed to set user type');
+  }
+}
 }
 
  

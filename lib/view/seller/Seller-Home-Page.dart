@@ -34,24 +34,22 @@ class _SellerHomePageState extends State<SellerHomePage> {
     userService = UserService();
     helperService = HelperService();
     super.initState();
-fetchUser();
+    fetchUser();
     fetchData();
   }
 
- Future<void> fetchUser() async {
+  Future<void> fetchUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-        String  phoneNumber = prefs.getString('phoneNumber')!;
-       user =
-          await userService.getLoggedInUser(phoneNumber);
-          
+      String phoneNumber = prefs.getString('phoneNumber')!;
+      user = await userService.getLoggedInUser(phoneNumber);
+
       if (user != null) {
         setState(() {
           // user!.firstName = loggedInUser.firstName;
           // user!.email = loggedInUser.email;
           // user!.location = loggedInUser.location;
           // user!.phoneNumber = phoneNumber;
-        
         });
       }
     } catch (error) {
@@ -74,35 +72,36 @@ fetchUser();
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-  // drawer: user != null ? NavBar(userType: 'seller', user: user!) : null, // Check if user is not null
-    appBar: AppBar(
-      automaticallyImplyLeading: false, // Disable the automatic leading widget
-      centerTitle: true,
-      title: const Text("Welcome to Lead Gen"),
-      backgroundColor: Colors.blue,
-      actions: <Widget>[
-        IconButton(
-          icon: Image.asset("lib/assets/leadGen.png"),
-          onPressed: () {
-            // do something
-          },
-        )
-      ],
-    ),
-    body: Column(
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Column(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // drawer: user != null ? NavBar(userType: 'seller', user: user!) : null, // Check if user is not null
+      appBar: AppBar(
+        automaticallyImplyLeading:
+            false, // Disable the automatic leading widget
+        centerTitle: true,
+        title: const Text("Welcome to Lead Gen"),
+        backgroundColor: Colors.blue,
+        actions: <Widget>[
+          IconButton(
+            icon: Image.asset("lib/assets/leadGen.png"),
+            onPressed: () {
+              // do something
+            },
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Container(
                       padding: const EdgeInsets.only(top: 20, left: 20),
                       child: const Text(
-                        "Request", 
+                        "Request",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
@@ -114,7 +113,7 @@ Widget build(BuildContext context) {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           alignment: Alignment.centerRight,
-                           backgroundColor: Colors.blue, // Background color
+                          backgroundColor: Colors.blue, // Background color
                         ),
                         onPressed: () {
                           Navigator.pushNamed(context, "/seller-request");
@@ -133,37 +132,42 @@ Widget build(BuildContext context) {
                   ],
                 ),
                 Center(
-                child: Wrap(
-                  spacing: 12,
-                  runSpacing: 20,
-                  alignment: WrapAlignment.center,
-                  children: fetchedRequests.map((request) {
-                    print(request.toJson());
-         //           String locationText = '${request.locationModel.administrativeArea ?? ''} '
-           //             '${request.locationModel.street ?? ''} '
-             //           '${request.locationModel.subLocality ?? ''}';
-
-                    String categoryName = request.category!.name ?? '';
-                    return SellerCard(name: '', description: '', locationText: '',);
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(top: 40, left: 20),
-              child: const Text(
-                "Summary",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                ),
-              ),
+                  child: Wrap(
+                    spacing: 12,
+                    runSpacing: 20,
+                    alignment: WrapAlignment.center,
+                    children: fetchedRequests.map((request) {
+                      LocationModel location =
+                          LocationModel.fromString(request.locationModel!);
+                      String locationText =
+                          '${location.administrativeArea ?? ''} '
+                          '${location.street ?? ''} '
+                          '${location.subLocality ?? ''}';
+                      String categoryName = request.category!.name ?? '';
+                      return SellerCard(
+                        name: request.user!.firstName, // Pass name
+                        description: request.description, // Pass description
+                        locationText: locationText, // Pass location text
+                      );
+                    }).toList(),
+                  ),
+                )
+              ],
             ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(top: 40, left: 20),
+                child: const Text(
+                  "Summary",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                  ),
+                ),
+              ),
               const Padding(
                   padding: EdgeInsets.only(right: 20, left: 20),
                   child: Row(
@@ -266,7 +270,7 @@ Widget build(BuildContext context) {
                 child: SizedBox(
                     child: Padding(
                   padding: EdgeInsets.only(top: 20, bottom: 30),
-              /*    child: Text(
+                  /*    child: Text(
                     "Advertisement",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),

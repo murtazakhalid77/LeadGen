@@ -8,7 +8,7 @@ import 'package:lead_gen/services/OtpService.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:flutter/services.dart';
-import 'package:lead_gen/view/user-select/user_registration.dart';
+import 'package:lead_gen/view/user-select/userTypeSelection.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../firebase/FirebaseApi.dart';
 import '../../model/Registration.dart';
@@ -58,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserRegistrationSelection(
-                    phoneNumber: '',
+                    phoneNumber: widget.phoneNumber,
                   )),
         );
       } else {
