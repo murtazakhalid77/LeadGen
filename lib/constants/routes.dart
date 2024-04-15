@@ -56,7 +56,7 @@ final Map<String, WidgetBuilder> routes = {
 };
 
 class UrlConfig {
-static const String baseUrl = "http://192.168.1.104:8080/api";  
+static const String baseUrl = "https://api.leadgen.stepwaysoftwares.com/api";
 
 
   static Uri buildUri(String path) {
