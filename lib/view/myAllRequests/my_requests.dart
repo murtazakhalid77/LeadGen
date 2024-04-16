@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/RequestModel.dart';
 import 'package:lead_gen/services/HelperService.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/myAllRequests/request_card.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -53,6 +54,17 @@ class _MyRequestsState extends State<MyRequests> {
         elevation: 0.2,
         title: const Text(
           'My Requests',
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop(
+              MaterialPageRoute(
+                builder: (context) => MyHomePage(option: true, phoneNumber: '',), // goes to home page
+              ),
+            );
+          },
         ),
       ),
       backgroundColor: const Color(0xFFF5F5F3),

@@ -12,8 +12,10 @@ import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/myAllRequests/my_requests.dart';
+import 'package:lead_gen/view/otpPhone.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
+import 'package:lead_gen/view/reigistration/verify.dart';
 import 'package:lead_gen/view/seller/Seller-All-Request.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: MyRequests(phoneNumber: ''),
       routes: routes,
     );
   }

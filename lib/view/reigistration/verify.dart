@@ -78,7 +78,7 @@ class _MyVerifyState extends State<Verify> {
                 height: 150,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/otpimage.png'),
+                    image: AssetImage('lib/assets/otpimage.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
