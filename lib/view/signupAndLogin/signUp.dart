@@ -54,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (response.statusCode == 200) {
         showCustomToast('User registered successfully!');
-        Navigator.push(
+        Navigator.pop(
           context,
           MaterialPageRoute(
               builder: (context) => UserRegistrationSelection(
@@ -383,7 +383,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: Padding(
+                      child: const Padding(
                         padding: EdgeInsets.all(18),
                         child: Center(
                           child: Text(
@@ -412,7 +412,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         GestureDetector(
                           onTap: () {
                             // Navigate to SignUpPage when "Sign Up" is clicked
-                            Navigator.of(context).pushNamed('logInPage');
+                            Navigator.of(context).pop('logInPage');
                           },
                           child: const Text(
                             'LogIn',

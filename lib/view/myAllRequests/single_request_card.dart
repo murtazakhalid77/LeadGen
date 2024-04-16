@@ -26,11 +26,11 @@ class MySingleRequestCard extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height-170,
         decoration: BoxDecoration(
-          color: Colors.blue.shade200, // Soft blue color for the background
+          color: Colors.pink.shade200, // Soft blue color for the background
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.shade400.withOpacity(0.6), // Semi-transparent blue shadow
+              color: Colors.pink.shade400.withOpacity(0.4), // Semi-transparent blue shadow
               spreadRadius: 4,
               blurRadius: 10,
               offset: Offset(0, 4), // Slightly shifted shadow for a lifted effect
@@ -43,119 +43,124 @@ class MySingleRequestCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 15),
                 const Text(
                   "Title:",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   "$title",
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 const Text(
                   "Location:",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   "$locationText",
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 const Text(
                   "Date:",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   formattedDate,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 const Text(
                   "Category:",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   categoryName,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 10),
                 const Text(
                   "Description:",
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
                   "$requestText",
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      child: Text(
-                        "Bid Again",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white
-                        )
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
+                const SizedBox(height: 50),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )
+                          )
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          "Bid Again",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white
                           )
                         )
                       ),
-                      onPressed: () {}
-                    ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      child: Text(
-                        "Cancel Requset",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white
-                        )
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.pinkAccent),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )
+                          )
+                        ),
+                        onPressed: () {},
+                        child: const Text(
+                          "Cancel Requset",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white
                           )
                         )
-                      ),
-                      onPressed: () {}
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 )
                 
               ],

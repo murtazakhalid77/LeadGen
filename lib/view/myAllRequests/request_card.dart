@@ -37,15 +37,15 @@ class MyRequestCard extends StatelessWidget {
       },
       child: Container(
         width: 180,
-        height: 220,
+        height: 200,
         decoration: BoxDecoration(
-          color: Colors.blue.shade200, // Soft blue color for the background
-          borderRadius: BorderRadius.circular(20),
+          color: Colors.pink.shade200, // Soft blue color for the background
+          borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.shade400.withOpacity(0.5), // Semi-transparent blue shadow
+              color: Colors.pink.shade400.withOpacity(0.4), // Semi-transparent blue shadow
               spreadRadius: 3,
-              blurRadius: 10,
+              blurRadius: 6,
               offset: Offset(0, 4), // Slightly shifted shadow for a lifted effect
             ),
           ],
@@ -55,6 +55,7 @@ class MyRequestCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 8),
               Text(
                 _truncateText(title!),
                 style: const TextStyle(
@@ -64,7 +65,7 @@ class MyRequestCard extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               Text(
                 _truncateText(requestText!),
                 style: const TextStyle(

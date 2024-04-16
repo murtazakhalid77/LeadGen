@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/myAllRequests/request_card.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_card.dart';
 
@@ -22,6 +23,17 @@ class MyRequestInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop(
+              MaterialPageRoute(
+                builder: (context) => MyHomePage(option: true, phoneNumber: '',), // goes to home page
+              ),
+            );
+          },
+        ),
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
         title: const Text(
@@ -65,7 +77,7 @@ class MyRequestInfo extends StatelessWidget {
                     // }).toList(),
                   ),
                 ),
-                Row(
+             /*   Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
@@ -82,7 +94,8 @@ class MyRequestInfo extends StatelessWidget {
                       child: const Text('Show Bids'),
                     ),
                   ],
-                ),
+                ),*/
+                
                 // Text(
                 //   'Request: $requestText',
                 //   style: const TextStyle(fontSize: 18),

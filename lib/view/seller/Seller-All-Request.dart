@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/model/UserDto.dart';
@@ -72,6 +73,23 @@ class _AllRequestState extends State<AllRequest> {
       ),
       body: ListView(
         children: [
+          const SizedBox(height: 20,),
+          SizedBox(
+            height: 15,
+            child: Center(
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  FadeAnimatedText(
+                    'All Your Requests Are Listed Here',
+                    textStyle: const TextStyle(
+                      color: Colors.purple,
+                    )
+                  )
+                ],
+                totalRepeatCount: 50000,              
+                ),
+            ),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

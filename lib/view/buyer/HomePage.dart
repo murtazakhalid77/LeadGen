@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return Icons.school;
     case 'Sports & Recreation':
       return Icons.sports_soccer;
-    case 'Arts & Entertainment':
+    case 'Arts &  Entertainment':
       return Icons.palette;
     case 'Business & Finance':
       return Icons.attach_money;
@@ -317,8 +317,11 @@ Color parseColor(String colorString) {
                   ),
                   child: Icon(iconData, color: Colors.white)),
               const SizedBox(height: 8),
-              Text(title.toUpperCase(),
-                  style: Theme.of(context).textTheme.titleMedium)
+              Center(
+                child: Text(title.toUpperCase(),
+                textAlign: TextAlign.center, // Aligning the category names in buttons in center
+                    style: Theme.of(context).textTheme.titleMedium),
+              )
             ],
           ),
         ),
