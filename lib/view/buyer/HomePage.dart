@@ -60,39 +60,91 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 // Function to convert string representation to IconData
-  IconData getIconData(String iconName) {
-    switch (iconName) {
-      case 'car':
-        return CupertinoIcons.car; // Replace with appropriate IconData
-      case 'house':
-        return CupertinoIcons.house; // Replace with appropriate IconData
-      // Add more cases for other icons if needed
-      default:
-        return Icons.error; // Default icon in case of an unknown icon name
-    }
+ IconData getIconData(String iconName) {
+  switch (iconName) {
+    case 'Technology':
+      return Icons.computer;
+    case 'Fashion':
+      return Icons.accessibility_new;
+    case 'Food & Cooking':
+      return Icons.restaurant_menu;
+    case 'Travel & Tourism':
+      return Icons.airplanemode_active;
+    case 'Health & Fitness':
+      return Icons.fitness_center;
+    case 'Home & Decor':
+      return Icons.home;
+    case 'Education':
+      return Icons.school;
+    case 'Sports & Recreation':
+      return Icons.sports_soccer;
+    case 'Arts & Entertainment':
+      return Icons.palette;
+    case 'Business & Finance':
+      return Icons.attach_money;
+    case 'Cars':
+      return Icons.directions_car;
+    case 'Real Estate':
+      return Icons.home_work;
+    case 'Electronics':
+      return Icons.devices;
+    case 'Bikes':
+      return Icons.directions_bike;
+    default:
+      return Icons.error; // Default icon in case of an unknown category
+  }
+}
+
+
+Color parseColor(String colorString) {
+  switch (colorString.toLowerCase()) {
+    case 'deeporange':
+      return Colors.deepOrange;
+    case 'green':
+      return Colors.green;
+    case 'blue':
+      return Colors.blue;
+    case 'red':
+      return Colors.red;
+    case 'yellow':
+      return Colors.yellow;
+    case 'purple':
+      return Colors.purple;
+    case 'pink':
+      return Colors.pink;
+    case 'orange':
+      return Colors.orange;
+    case 'cyan':
+      return Colors.cyan;
+    case 'teal':
+      return Colors.teal;
+    case 'amber':
+      return Colors.amber;
+    case 'indigo':
+      return Colors.indigo;
+    case 'brown':
+      return Colors.brown;
+    case 'lime':
+      return Colors.lime;
+    case 'grey':
+      return Colors.grey;
+    case 'black':
+      return Colors.black;
+    // Add more cases for other known color strings
+    default:
+      if (colorString.isNotEmpty &&
+          colorString.length >= 7 &&
+          colorString[0] == '#') {
+        try {
+          return Color(
+              int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
+        } catch (e) {
+          print('Error parsing color: $e');
+        }
+      }
+      return Colors.transparent; // Default color in case of an error or unknown color string
   }
 
-  Color parseColor(String colorString) {
-    switch (colorString.toLowerCase()) {
-      case 'deeporange':
-        return Colors.deepOrange;
-      case 'green':
-        return Colors.green;
-      // Add more cases for other known color strings
-      default:
-        if (colorString.isNotEmpty &&
-            colorString.length >= 7 &&
-            colorString[0] == '#') {
-          try {
-            return Color(
-                int.parse(colorString.substring(1), radix: 16) + 0xFF000000);
-          } catch (e) {
-            print('Error parsing color: $e');
-          }
-        }
-        return Colors
-            .transparent; // Default color in case of an error or unknown color string
-    }
   }
 
   Future<void> fetchUser() async {
