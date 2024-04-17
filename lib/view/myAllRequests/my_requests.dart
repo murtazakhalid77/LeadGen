@@ -12,7 +12,7 @@ import '../../model/LocationModel.dart';
 class MyRequests extends StatefulWidget {
   final phoneNumber;
 
-  const MyRequests({Key? key, required this.phoneNumber}) : super(key: key);
+  const MyRequests({Key? key, required this.phoneNumber, required bool option}) : super(key: key);
 
   @override
   _MyRequestsState createState() => _MyRequestsState();

@@ -47,7 +47,7 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
 
 
       if(response == 200){
-        Navigator.of(context).push(
+        Navigator.of(context).pop(
                       MaterialPageRoute(
                         builder: (context) =>  const LoginScreen(phoneNumber: '',), 
                     ),

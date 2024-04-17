@@ -5,6 +5,7 @@ import 'package:lead_gen/view/Chats/person_chat.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/myAllRequests/my_requests.dart';
+import 'package:lead_gen/view/signupAndLogin/login.dart';
 
 import '../../constants/routes.dart';
 
@@ -39,14 +40,14 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(
               Icons.home,
-              color: Colors.blue,
+              color: Colors.teal,
               size: 25,
             ),
             title: const Text(
               'Home',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Colors.blue,
+            textColor: Colors.teal,
             onTap: () {
               // Handle Home tapped based on user type
               // Navigator.push(
@@ -69,14 +70,14 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(
               Icons.feed,
-              color: Colors.blue,
+              color: Colors.purple,
               size: 25,
             ),
             title: const Text(
               'Requests',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Colors.blue,
+            textColor: Colors.purple,
             onTap: () {
               print('Requests tapped for $userType');
               // You can implement different logic based on user type
@@ -89,7 +90,7 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        MyRequests(phoneNumber: user.phoneNumber)),
+                        MyRequests(phoneNumber: user.phoneNumber, option: true,)),
               );
 
               }
@@ -98,14 +99,14 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(
               Icons.chat,
-              color: Colors.blue,
+              color: Colors.pink,
               size: 25,
             ),
             title: const Text(
               'Chats',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Colors.blue,
+            textColor: Colors.pink,
             onTap: () {
               Navigator.push(
                 context,
@@ -126,14 +127,14 @@ class NavBar extends StatelessWidget {
           ListTile(
             leading: const Icon(
               Icons.person,
-              color: Colors.blue,
+              color: Colors.indigo,
               size: 25,
             ),
             title: const Text(
               'Profile',
               style: TextStyle(fontSize: 18),
             ),
-            textColor: Colors.blue,
+            textColor: Colors.indigo,
             onTap: () {
               print(user.toJson());
               // Handle Requests tapped based on user type
@@ -157,6 +158,26 @@ class NavBar extends StatelessWidget {
               }
             },
           ),
+          const SizedBox(height: 250),
+          ListTile(
+            leading: const Icon(
+              Icons.logout,
+              color: Colors.blue,
+              size: 25,
+            ),
+            title: const Text(
+              'Logout',
+              style: TextStyle(fontSize: 18),
+            ),
+            textColor: Colors.blue,
+            onTap: () {
+              Navigator.of(context).pop(
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(phoneNumber: ''), // goes to login page
+              ),
+            );
+            },
+          )
         ],
       ),
     );
