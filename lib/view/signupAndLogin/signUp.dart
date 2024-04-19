@@ -54,7 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       if (response.statusCode == 200) {
         showCustomToast('User registered successfully!');
-        Navigator.pop(
+        Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => UserRegistrationSelection(
