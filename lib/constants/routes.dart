@@ -48,7 +48,7 @@ final Map<String, WidgetBuilder> routes = {
   buyer_vehicle:(context) => const VehiclesPage(),
   // seller_home: (context) => const SellerHomePage(),
 
-  seller_request: (context) => const AllRequest(),
+  seller_request: (context) => const AllRequest(bidAmount: null,),
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(phoneNumber: '',),
   user_Selection:(context) => const SelectionPage(phoneNumber: '',),
