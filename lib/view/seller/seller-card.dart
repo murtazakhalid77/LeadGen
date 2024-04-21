@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/view/seller/Seller-Single-Request.dart';
 
 
 class SellerCard extends StatelessWidget {
@@ -18,6 +19,9 @@ class SellerCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         // Handle card tap
+        Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => SellerSingleRequest(),
+              ),);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
