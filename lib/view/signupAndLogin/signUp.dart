@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +18,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
   final String phoneNumber;
+  final String password;
 
-  const SignUpPage({Key? key, required this.phoneNumber}) : super(key: key);
+  const SignUpPage({Key? key, required this.phoneNumber,required this.password}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+    final FirebaseFirestore _firebaseFirestore =FirebaseFirestore.instance;
   final OtpService _otpService = OtpService();
   final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -46,12 +50,22 @@ class _SignUpPageState extends State<SignUpPage> {
     String? token = await getFCMToken();
     return Registration(_firstNameController.text, _lastNameController.text,
         _cnicController.text, _emailController.text, widget.phoneNumber, token);
+        
   }
 
   Future<void> _registerUser(Registration registrationData) async {
     try {
-      var response = await _otpService.registerUser(registrationData);
 
+   
+
+     var  response = await _otpService.registerUser(registrationData);
+
+  UserCredential userCredential= await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: widget.password);
+        _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
+          'uid':userCredential.user!.uid,
+          'email':_emailController.text
+        });
+        
       if (response.statusCode == 200) {
         showCustomToast('User registered successfully!');
         Navigator.push(

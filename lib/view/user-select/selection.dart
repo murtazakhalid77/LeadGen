@@ -14,15 +14,15 @@ import 'package:lead_gen/view/user-select/categoryRegistration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectionPage extends StatefulWidget {
-  final String phoneNumber;
-  const SelectionPage({Key? key, required this.phoneNumber}) : super(key: key);
+  final String email;
+  const SelectionPage({Key? key, required this.email}) : super(key: key);
 
   @override
   State<SelectionPage> createState() => _SelectionPageState();
 }
 
 class _SelectionPageState extends State<SelectionPage> {
-  late String phoneNumber;
+  late String email;
   late UserService userService;
   late UserType userType;
   late Bool option;
@@ -32,7 +32,7 @@ class _SelectionPageState extends State<SelectionPage> {
     super.initState();
     userService = UserService();
     userType = UserType();
-    phoneNumber = widget.phoneNumber;
+    email = widget.email;
     fetchData();
   }
 
@@ -74,10 +74,10 @@ class _SelectionPageState extends State<SelectionPage> {
   Future<void> fetchData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? phoneNumber = prefs.getString('phoneNumber');
+      String? email = prefs.getString('email');
 
-      if (phoneNumber != null) {
-        UserType? userType = await userService.getUserType(phoneNumber);
+      if (email != null) {
+        UserType? userType = await userService.getUserType(email);
 
         setState(() {
           this.userType = userType!;
@@ -112,7 +112,7 @@ class _SelectionPageState extends State<SelectionPage> {
                   ),
                   const SizedBox(height: 5),
                   buildElevatedButtons(
-                      context, widget.phoneNumber, this.userType.user_Type),
+                      context, widget.email, this.userType.user_Type),
                   if (isLoading)
                     // Positioned(
                       // bottom: -150,

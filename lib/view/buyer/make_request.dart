@@ -44,7 +44,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
   Categoryy? category; // Initialize category variable
   late LocationModel locationModel;
   late RequestModel requestModel;
-  String? phoneNumber;
+  String? email;
 
 String? selectedLocation; 
    late String selectedCategory;
@@ -84,7 +84,7 @@ String? selectedLocation;
 
       if (fetchedCategories.isNotEmpty) {
              SharedPreferences prefs = await SharedPreferences.getInstance();
-                   phoneNumber = prefs.getString('phoneNumber')!;
+                   email = prefs.getString('email')!;
                    // here i am also initiaizing the phone number
         setState(() {
           categories = fetchedCategories;
@@ -275,7 +275,7 @@ String? selectedLocation;
                       description: _description.text,
                       locationModel: locationModel.toString(),
                       category: category,
-                      number: phoneNumber,
+                      email: email,
                       condition: "new",
                       createdDate: DateTime.now().toString(),
                       price: _price.text);

@@ -40,7 +40,7 @@ dependencies:
   permission_handler: ^11.0.1
   video_player: ^2.2.17
   shared_preferences: ^2.0.10
-  firebase_core: ^2.7.0
+  firebase_core: ^2.24.2
   firebase_messaging: ^14.4.0
 
 
@@ -57,6 +57,8 @@ dependencies:
   readmore: ^2.2.0
   flutter_rating_bar: ^4.0.1
   firebase_analytics: ^10.8.0
+  firebase_auth: ^4.16.0
+  cloud_firestore: ^4.14.0
   
 
 flutter_native_splash:

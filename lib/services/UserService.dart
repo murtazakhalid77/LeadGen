@@ -16,10 +16,10 @@ import '../model/UserDetails.dart';
 
 class UserService extends ChangeNotifier {
 
-  Future setCategory(String phoneNumber, List<String> selectedCategories) async {
+  Future setCategory(String email, List<String> selectedCategories) async {
   try{
     final response = await http.put(
-      UrlConfig.buildUri('user/${phoneNumber}'),
+      UrlConfig.buildUri('user/${email}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -56,10 +56,10 @@ print(response.statusCode);
     }
   }
 
-  Future updatePassword(String phoneNumber, String password) async {
+  Future updatePassword(String email, String password) async {
   try{
     final response = await http.put(
-      UrlConfig.buildUri('user/updatePassword/${phoneNumber}/${password}'),
+      UrlConfig.buildUri('user/updatePassword/${email}/${password}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -72,10 +72,10 @@ print(response.statusCode);
     }
 }
 
-Future<UserType?> getUserType(String phoneNumber) async {
+Future<UserType?> getUserType(String email) async {
   try{
     final response = await http.get(
-      UrlConfig.buildUri('user/getUserType/${phoneNumber}'),
+      UrlConfig.buildUri('user/getUserType/${email}'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -93,10 +93,10 @@ Future<UserType?> getUserType(String phoneNumber) async {
     }
 }
 
-Future<User?> getLoggedInUser(String? emailOrNumber) async {
+Future<User?> getLoggedInUser(String? email)async {
     try {
       final response = await http.get(
-         UrlConfig.buildUri('user/getLoggedInUser/${emailOrNumber}'),
+         UrlConfig.buildUri('user/getLoggedInUser/${email}'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -116,7 +116,7 @@ Future<User?> getLoggedInUser(String? emailOrNumber) async {
   
 }
 
- Future<String?> login(String phone, String password) async {
+ Future<String?> login(String email, String password) async {
     try {
       final response = await http.post(
          UrlConfig.buildUri("login"),
@@ -124,7 +124,7 @@ Future<User?> getLoggedInUser(String? emailOrNumber) async {
           'Content-Type': 'application/json',
         },
         body: json.encode({
-          'phoneNumber': phone,
+          'email': email,
           'password': password,
         }),
       );
@@ -159,7 +159,7 @@ Future<User?> getLoggedInUser(String? emailOrNumber) async {
     return prefs.getString('token');
   }
 
-  Future<bool> setUserType(String phoneNumber, UserTypeEnum userTypeEnum) async {
+  Future<bool> setUserType(String email, UserTypeEnum userTypeEnum) async {
   try {
     // Convert enum value to string
     String userTypeString;
@@ -177,7 +177,7 @@ Future<User?> getLoggedInUser(String? emailOrNumber) async {
 
 
     final response = await http.post(
-      UrlConfig.buildUri('user/setUserType/$phoneNumber/$userTypeString'),
+      UrlConfig.buildUri('user/setUserType/$email/$userTypeString'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

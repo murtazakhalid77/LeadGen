@@ -11,7 +11,7 @@ class RequestModel {
   String condition;
   Categoryy? category;
   User? user;
-  String? number;
+  String? email;
   String createdDate;
   String price;
 
@@ -22,7 +22,7 @@ class RequestModel {
       required this.category,
       required this.condition,
       required this.price,
-      required this.number,
+      required this.email,
       required this.createdDate,
       this.user});
 
@@ -34,7 +34,7 @@ class RequestModel {
       locationModel: json['locationModel'] as String? ?? '',
       category: Categoryy.fromJson( json['categoryy'] ?? {}), 
            user: User.fromJson(json['user'] ?? {}), 
-          number: json['number'] as String? ?? '',
+          email: json['email'] as String? ?? '',
       createdDate: json['createdDate'] as String? ?? '',
 
       price: json['price'] as String? ?? '',
@@ -48,7 +48,7 @@ class RequestModel {
       'locationModel': locationModel,
       'createdDate': createdDate,
       'categoryy': category?.toJson(),
-      'number':number,
+      'email':email,
       'user':user?.toJson(),
       'condition': condition,
       'price': price

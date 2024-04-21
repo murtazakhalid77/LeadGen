@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/services/UserService.dart';
 
@@ -22,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   late UserService userService;
   bool _isLoading = false;
-
+  final FirebaseFirestore _firebaseFirestore =FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
@@ -53,15 +55,21 @@ class _LoginScreenState extends State<LoginScreen> {
           _emailController.text,
           _passwordController.text,
         );
-
+       
+        UserCredential userCredential= await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+        _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
+          'uid':userCredential.user!.uid,
+          'email':_emailController.text,
+        },SetOptions(merge: true));
+     
         if (token != null) {
            SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('phoneNumber', _emailController.text);
+        await prefs.setString('email', _emailController.text);
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  SelectionPage(phoneNumber: _emailController.text),
+                  SelectionPage(email: _emailController.text),
             ),
           );
         } else {

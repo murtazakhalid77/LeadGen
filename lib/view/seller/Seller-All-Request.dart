@@ -54,7 +54,7 @@ Future<void> fetchData() async {
       setState(() {
         this.fetchedRequests = fetchedRequests;
       });
-    } catch (error) {
+    } catch (error) { 
       print('Error fetching Requests: $error');
     }
   }
@@ -62,8 +62,8 @@ Future<void> fetchData() async {
   Future<void> fetchUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String phoneNumber = prefs.getString('phoneNumber')!;
-      user = await userService.getLoggedInUser(phoneNumber);
+      String email = prefs.getString('email')!;
+      user = await userService.getLoggedInUser(email);
 
       if (user != null) {
         setState(() {

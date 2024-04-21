@@ -37,7 +37,7 @@ class PasswordState extends State<Password> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  SignUpPage(phoneNumber: widget.phoneNumber),
+                  SignUpPage(phoneNumber: widget.phoneNumber, password: password,),
             ),
           );
         } else {

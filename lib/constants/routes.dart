@@ -51,12 +51,12 @@ final Map<String, WidgetBuilder> routes = {
   seller_request: (context) => const AllRequest(),
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(phoneNumber: '',),
-  user_Selection:(context) => const SelectionPage(phoneNumber: '',),
+  user_Selection:(context) => const SelectionPage(email: '',),
 
 };
 
 class UrlConfig {
-static const String baseUrl = "https://api.leadgen.stepwaysoftwares.com/api";
+static const String baseUrl = "http://192.168.1.104:8080/api";
 
 
   static Uri buildUri(String path) {

@@ -110,27 +110,6 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
     }
   }
 
- /* Future<void> fetchUser() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String phoneNumber = prefs.getString('phoneNumber')!;
-      User? loggedInUser =
-          await userService.getLoggedInUser(phoneNumber);
-
-      if (loggedInUser != null) {
-        setState(() {
-          user.firstName = loggedInUser.firstName;
-          user.email = loggedInUser.email;
-          user.location = loggedInUser.location;
-          user.phoneNumber = phoneNumber;
-          print(user.toJson());
-        });
-      }
-    } catch (error) {
-      print('Error fetching User: $error');
-      showCustomToast("error while fetching logged In User");
-    }
-  }*/
 
   @override
   Widget build(BuildContext context) {
