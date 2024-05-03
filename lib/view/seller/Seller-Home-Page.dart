@@ -41,8 +41,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
   Future<void> fetchUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String phoneNumber = prefs.getString('phoneNumber')!;
-      user = await userService.getLoggedInUser(phoneNumber);
+      String email = prefs.getString('email')!;
+      user = await userService.getLoggedInUser(email);
 
       if (user != null) {
         setState(() {
@@ -74,7 +74,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: user != null ? NavBar(userType: 'seller', user: user!) : null, // Check if user is not null
+         drawer: NavBar(userType: 'seller', user: user!),
       appBar: AppBar(
         automaticallyImplyLeading:
             false, // Disable the automatic leading widget

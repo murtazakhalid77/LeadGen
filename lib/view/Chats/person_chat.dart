@@ -1,7 +1,18 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lead_gen/services/ChatService.dart';
+import 'package:lead_gen/view/Chats/ChatBubble.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final String receiveUserEmail;
+  final String receivedUserId;
+  const ChatPage(
+      {super.key,
+      required this.receiveUserEmail,
+      required this.receivedUserId});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -11,253 +22,153 @@ class _ChatPageState extends State<ChatPage> {
   TextEditingController _messageController = TextEditingController();
   List<Map<String, dynamic>> messages = [];
 
+  final ChatService _chatService = new ChatService();
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  // Create a ScrollController
+  final ScrollController _scrollController = ScrollController();
 
   @override
-void dispose() {
-  _messageController.dispose();
-  super.dispose();
-}
+  void initState() {
+    super.initState();
+    // Add a listener to scroll to the bottom when the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+  }
+
+  void sendMessage() async {
+    if (_messageController.text.isNotEmpty) {
+      // Send the message using the ChatService
+      await _chatService.sendMessage(
+          widget.receivedUserId, _messageController.text);
+
+      // Clear the text in the message input field
+      _messageController.clear();
+
+  
+    }
+  }
+
+  @override
+  void dispose() {
+    // Dispose the ScrollController
+    _scrollController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  // Scroll to the last message
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                _topChat(),
-                _bodyChat(),
-                const SizedBox(
-                  height: 120,
-                )
-              ],
-            ),
-            _formChat(),
-          ],
-        ),
+      appBar: AppBar(
+        title: Text(widget.receiveUserEmail),
       ),
-    );
-  }
-
-  _topChat() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 25),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: Colors.white,
+      body: Column(
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 25,
-                  color: Colors.white,
-                ),
-              ),
-              const Text(
-                'Fiona',
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ],
+          Expanded(
+            child: _buildMessageList(),
           ),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.black12,
-                ),
-                child: const Icon(
-                  Icons.call,
-                  size: 25,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.black12,
-                ),
-                child: const Icon(
-                  Icons.videocam,
-                  size: 25,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          )
+          _buildMessageInput(),
+          const SizedBox(height: 25),
         ],
       ),
     );
   }
 
-  Widget _bodyChat() {
-  return Expanded(
-    child: Container(
-      padding: const EdgeInsets.only(left: 25, right: 25, top: 25),
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(45), topRight: Radius.circular(45)),
-        color: Colors.white,
+  // Build message list
+  Widget _buildMessageList() {
+    return StreamBuilder(
+      stream: _chatService.getMessages(
+        widget.receivedUserId, firebaseAuth.currentUser!.uid,
       ),
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: messages.length,
-        itemBuilder: (context, index) {
-          var chat = messages[index];
-          return _itemChat(
-            chat: chat['chat'],
-            avatar: chat['avatar'],
-            message: chat['message'],
-            time: chat['time'],
-          );
-        },
-      ),
-    ),
-  );
-}
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Text('Loading...');
+        }
+        // Scroll to the last message after new messages are received
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
 
-  // 0 = Send
-  // 1 = Recieved
-  _itemChat({int? chat, String? avatar, message, time}) {
-  return Row(
-    mainAxisAlignment: chat == 0 ? MainAxisAlignment.end : MainAxisAlignment.start,
-    crossAxisAlignment: CrossAxisAlignment.end,
-    children: [
-      if (avatar != null) Avatar(image: avatar, size: 50),
-      Flexible(
-        child: Container(
-          margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: chat == 0 ? Colors.indigo.shade100 : Colors.indigo.shade50,
-            borderRadius: chat == 0
-                ? const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                  )
-                : const BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-          ),
-          child: Text('$message'),
-        ),
-      ),
-      if (chat == 1) Text('$time', style: TextStyle(color: Colors.grey.shade400)),
-    ],
-  );
-}
-
-
- Widget _formChat() {
-  return Positioned(
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 120,
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-        color: Colors.white,
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Type your message...',
-                  filled: true,
-                  fillColor: Colors.blueGrey[50],
-                  labelStyle: const TextStyle(fontSize: 12),
-                  contentPadding: const EdgeInsets.all(20),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blueGrey),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blueGrey),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-                onChanged: (message) {
-                  // Remove the call to _sendMessage from here
-                },
-                controller: _messageController, // Add this line
-              ),
-            ),
-            const SizedBox(width: 5),
-            InkWell(
-              onTap: () {
-                _sendMessage(_messageController.text); // Call _sendMessage here
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.blueAccent,
-                ),
-                padding: const EdgeInsets.all(14),
-                child: const Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-
-  void _sendMessage([String? message]) {
-  print('Sending message: $message');
-  if (message != null && message.isNotEmpty) {
-    setState(() {
-      messages.add({
-        'chat': 0, // Assuming 0 is for sent messages
-        'message': message,
-        'time': '18.00',
-      });
-    });
-
-    // Clear the text field
-    _messageController.clear();
+        return ListView(
+          controller: _scrollController,
+          children: snapshot.data!.docs
+            .map((document) => _buildMessageItem(document))
+            .toList(),
+        );
+      },
+    );
   }
-}
-}
 
-class Avatar extends StatelessWidget {
-  final double size;
-  final image;
-  final EdgeInsets margin;
-  Avatar({this.image, this.size = 50, this.margin = const EdgeInsets.all(0)});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: margin,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: AssetImage(image),
-          ),
+  Widget _buildMessageItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+    // Align the messages to the right if the sender is the current user, otherwise to the left
+    var alignment = (data['senderId'] == firebaseAuth.currentUser!.uid)
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
+
+     return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0), // Adjust the vertical padding as desired
+        child: Container(
+            alignment: alignment,
+            child: Column(
+                crossAxisAlignment: (data['senderId'] == firebaseAuth.currentUser!.uid)
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                    // Display the sender's email
+               
+                    // Add horizontal padding to the chat bubble
+                    Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: ChatBubble(message: data['message']),
+                    ),
+                ],
+            ),
         ),
+    );
+  }
+
+  // Build message input
+  Widget _buildMessageInput() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _messageController,
+              obscureText: false,
+              decoration: const InputDecoration(
+                hintText: "Type your message",
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: sendMessage,
+            icon: const Icon(
+              Icons.arrow_upward,
+            ),
+            iconSize: 40,
+          ),
+        ],
       ),
     );
   }

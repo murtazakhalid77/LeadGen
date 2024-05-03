@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lead_gen/enums/UserTypeEnum.dart';
@@ -15,15 +16,15 @@ import 'package:lead_gen/view/user-select/categoryRegistration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SelectionPage extends StatefulWidget {
-  final String phoneNumber;
-  const SelectionPage({Key? key, required this.phoneNumber}) : super(key: key);
+  final String email;
+  const SelectionPage({Key? key, required this.email}) : super(key: key);
 
   @override
   State<SelectionPage> createState() => _SelectionPageState();
 }
 
 class _SelectionPageState extends State<SelectionPage> {
-  late String phoneNumber;
+  late String email;
   late UserService userService;
   late UserType userType;
   late Bool option;
@@ -33,13 +34,13 @@ class _SelectionPageState extends State<SelectionPage> {
     super.initState();
     userService = UserService();
     userType = UserType();
-    phoneNumber = widget.phoneNumber;
+    email = widget.email;
     fetchData();
   }
 
   Future<void> setUserType(UserTypeEnum userType) async {
     try {
-      await userService.setUserType(widget.phoneNumber, userType);
+      await userService.setUserType(widget.email, userType);
     } catch (error) {
       print('Error fetching User: $error');
       showCustomToast("Error while fetching logged In User");
@@ -60,7 +61,7 @@ class _SelectionPageState extends State<SelectionPage> {
           MaterialPageRoute(
             builder: (context) {
               return CategoryRegistration(
-                phoneNumber: phone,
+                email: email,
               );
             },
           ),
@@ -75,7 +76,7 @@ class _SelectionPageState extends State<SelectionPage> {
             builder: (context) {
               return MyHomePage(
                 option: option,
-                phoneNumber: phone,
+                email: email,
               );
             },
           ),
@@ -87,10 +88,10 @@ class _SelectionPageState extends State<SelectionPage> {
   Future<void> fetchData() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? phoneNumber = prefs.getString('phoneNumber');
+      String? email = prefs.getString('email');
 
-      if (phoneNumber != null) {
-        UserType? userType = await userService.getUserType(phoneNumber);
+      if (email != null) {
+        UserType? userType = await userService.getUserType(email);
 
         setState(() {
           this.userType = userType!;
@@ -125,7 +126,19 @@ class _SelectionPageState extends State<SelectionPage> {
                   ),
                   const SizedBox(height: 5),
                   buildElevatedButtons(
-                      context, widget.phoneNumber, this.userType.user_Type),
+                      context, widget.email, this.userType.user_Type),
+                  if (isLoading)
+                    // Positioned(
+                      // bottom: -150,
+                      // left: 0,
+                      // top: 180,
+                      // right: 0,
+                       Container(
+                        child: Center(
+                          child: LoaderWidget(isLoading: isLoading),
+                        ),
+                      ),
+                    // ),
                 ],
               ),
             ),
@@ -148,13 +161,13 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget buildElevatedButtons(
-      BuildContext context, String phoneNumber, String type) {
+      BuildContext context, String email, String type) {
     if (type == "BOTH") {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildElevatedButton(phoneNumber, context, true, true),
-          buildElevatedButton(phoneNumber, context, false, false),
+          buildElevatedButton(email, context, true, true),
+          buildElevatedButton(email, context, false, false),
         ],
       );
     } else {
@@ -164,12 +177,12 @@ class _SelectionPageState extends State<SelectionPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (type == "SELLER") ...[
-              buildElevatedButton(phoneNumber, context, true, true),
-              buildTextButton(phoneNumber, context, false, false),
+              buildElevatedButton(email, context, true, true),
+              buildTextButton(email, context, false, false),
             ],
             if (type == "BUYER") ...[
-              buildElevatedButton(phoneNumber, context, false, false),
-              buildTextButton(phoneNumber, context, true, true),
+              buildElevatedButton(email, context, false, false),
+              buildTextButton(email, context, true, true),
             ],
           ],
         ),
@@ -195,7 +208,7 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget buildElevatedButton(
-      String phoneNumber, BuildContext context, bool condition, bool option) {
+      String email ,BuildContext context, bool condition, bool option) {
     return ElevatedButton(
       onPressed: condition
           ? () => Navigator.push(
@@ -203,7 +216,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 MaterialPageRoute(
                     builder: (context) => MyHomePage(
                           option: option,
-                          phoneNumber: phoneNumber,
+                          email: email,
                         )),
                 // MaterialPageRoute(builder: (context) => SellerHomePage(option: option)),
               )
@@ -212,7 +225,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 MaterialPageRoute(
                     builder: (context) => MyHomePage(
                           option: option,
-                          phoneNumber: '',
+                          email: email,
                         )),
               ),
       style: ElevatedButton.styleFrom(

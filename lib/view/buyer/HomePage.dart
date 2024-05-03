@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 
   final bool option;
 
-  const MyHomePage({Key? key ,required this.option, required String phoneNumber})
+  const MyHomePage({Key? key ,required this.option, required String email})
       : super(key: key);
 
   @override
@@ -150,16 +150,17 @@ Color parseColor(String colorString) {
   Future<void> fetchUser() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-        String  phoneNumber = prefs.getString('phoneNumber')!;
+        String  email = prefs.getString('email')!;
       User? loggedInUser =
-          await userService.getLoggedInUser(phoneNumber);
+          await userService.getLoggedInUser(email);
 
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
           user.location = loggedInUser.location;
-          user.phoneNumber = phoneNumber;
+          user.email = email;
+          user.phoneNumber = loggedInUser.phoneNumber;
           print(user.toJson());
         });
       }

@@ -42,7 +42,7 @@ main() async {
         // ChangeNotifierProvider(create: (context) => Loc()),
         // ChangeNotifierProvider(create: (context) => SettingsService()),
       ],
-      child: const MyApp(),
+      child: const MyApp(), 
     ),
   );
 }
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: CategoryRegistration(phoneNumber: ''),
+      home: SplashScreen(),
       routes: routes,
     );
   }

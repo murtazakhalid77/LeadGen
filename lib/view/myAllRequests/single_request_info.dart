@@ -29,7 +29,7 @@ class MyRequestInfo extends StatelessWidget {
             FocusManager.instance.primaryFocus?.unfocus();
             Navigator.of(context).pop(
               MaterialPageRoute(
-                builder: (context) => MyHomePage(option: true, phoneNumber: '',), // goes to home page
+                builder: (context) => MyHomePage(option: true, email: '',), // goes to home page
               ),
             );
           },

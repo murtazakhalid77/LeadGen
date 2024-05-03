@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/RequestModel.dart';
@@ -10,16 +11,16 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import '../../model/LocationModel.dart';
 
 class MyRequests extends StatefulWidget {
-  final phoneNumber;
+  final email;
 
-  const MyRequests({Key? key, required this.phoneNumber, required bool option}) : super(key: key);
+  const MyRequests({Key? key, required this.email, required bool option}) : super(key: key);
 
   @override
   _MyRequestsState createState() => _MyRequestsState();
 }
 
 class _MyRequestsState extends State<MyRequests> {
-  late String phoneNumber;
+  late String email;
   List<RequestModel> fetchedRequests = [];
   late HelperService helperService;
 
@@ -27,14 +28,14 @@ class _MyRequestsState extends State<MyRequests> {
   void initState() {
     super.initState();
     helperService = HelperService();
-    phoneNumber = widget.phoneNumber;
+    email = widget.email;
     fetchData();
   }
 
   Future<void> fetchData() async {
     try {
       List<RequestModel> fetchedRequests =
-          await helperService.fetchUserRequest(widget.phoneNumber);
+          await helperService.fetchUserRequest(widget.email);
 
       setState(() {
         this.fetchedRequests = fetchedRequests;
@@ -61,7 +62,7 @@ class _MyRequestsState extends State<MyRequests> {
             FocusManager.instance.primaryFocus?.unfocus();
             Navigator.of(context).pop(
               MaterialPageRoute(
-                builder: (context) => MyHomePage(option: true, phoneNumber: '',), // goes to home page
+                builder: (context) => MyHomePage(option: true, email: email,), // goes to home page
               ),
             );
           },

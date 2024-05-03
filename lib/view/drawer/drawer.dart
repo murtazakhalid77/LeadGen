@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
-import 'package:lead_gen/view/Chats/person_chat.dart';
-import 'package:lead_gen/view/buyer/HomePage.dart';
+
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 
-import '../../constants/routes.dart';
 
 class NavBar extends StatelessWidget {
   final String userType;
@@ -90,7 +88,7 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        MyRequests(phoneNumber: user.phoneNumber, option: true,)),
+                        MyRequests(email: user.email, option: true,)),
               );
 
               }
@@ -114,14 +112,8 @@ class NavBar extends StatelessWidget {
                   builder: (context) => const AllChatsPage(),
                 ),
               );
-              // You can implement different logic based on user type
-              if (userType == 'seller') {
-                // Navigate to seller's requests page
-                //   Navigator.pushNamed(context, '/sellerRequests');
-              } else if (userType == 'buyer') {
-                // Navigate to buyer's requests page
-                Navigator.pushNamed(context, '/AllChatsPage');
-              }
+              
+              
             },
           ),
           ListTile(

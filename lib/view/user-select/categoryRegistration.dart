@@ -13,11 +13,11 @@ import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryRegistration extends StatefulWidget {
-  final String phoneNumber;
+  final String email;
 
   const CategoryRegistration({
     Key? key,
-    required this.phoneNumber,
+    required this.email,
   }) : super(key: key);
 
   @override
@@ -45,7 +45,7 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
   Future<void> setCategories() async {
     try {
       int response =
-          await userService.setCategory(widget.phoneNumber, selectedCategories);
+          await userService.setCategory(widget.email, selectedCategories);
 
       if (response == 200) {
         Navigator.of(context).push(
@@ -158,10 +158,10 @@ class _CategoryRegistrationState extends State<CategoryRegistration> {
             print('Error parsing color: $e');
           }
         }
-        return Colors
-            .transparent; // Default color in case of an error or unknown color string
+        return Colors.transparent;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

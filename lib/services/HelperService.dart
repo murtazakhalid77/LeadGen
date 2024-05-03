@@ -36,10 +36,10 @@ Future<RequestModel?> requestPost(RequestModel? requestModel) async {
 }
 
 
-Future<List<RequestModel>> fetchUserRequest(String phoneNumber) async {
+Future<List<RequestModel>> fetchUserRequest(String email) async {
   try {
     final response = await http.get(
-       UrlConfig.buildUri('userRequest/getAllUserRequests/$phoneNumber'),
+       UrlConfig.buildUri('userRequest/getAllUserRequests/$email'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
