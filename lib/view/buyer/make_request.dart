@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -18,14 +19,14 @@ import 'package:lead_gen/view/buyer/HomePage.dart';
 
 import 'package:lead_gen/view/conditionDropDown/conditionDropDown.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/loader.dart';
 import 'package:lead_gen/view/pictureClick/imagePickerwidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MakeRequestPage extends StatefulWidget {
   final String categoryName;
-  const MakeRequestPage(
-        {Key? key, required this.categoryName})
-        : super(key: key);
+  const MakeRequestPage({Key? key, required this.categoryName})
+      : super(key: key);
 
   @override
   State<MakeRequestPage> createState() => _MakeRequestPageState();
@@ -33,6 +34,7 @@ class MakeRequestPage extends StatefulWidget {
 
 class _MakeRequestPageState extends State<MakeRequestPage> {
   String? dropdownValue;
+  bool isLoading = false;
 
   late CategoryService _categoryService;
   late HelperService _helperService;
@@ -46,8 +48,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
   late RequestModel requestModel;
   String? email;
 
-String? selectedLocation; 
-   late String selectedCategory;
+  String? selectedLocation;
+  late String selectedCategory;
   late final TextEditingController _title;
   late final TextEditingController _description;
   late final TextEditingController _price;
@@ -62,7 +64,6 @@ String? selectedLocation;
 
     super.initState();
     fetchCategories();
- 
 
     dropdownValue = widget.categoryName;
   }
@@ -73,8 +74,6 @@ String? selectedLocation;
     _description.dispose();
     _price.dispose();
     super.dispose();
-
-
   }
 
   Future<void> fetchCategories() async {
@@ -98,6 +97,9 @@ String? selectedLocation;
   }
 
   Future<void> makeRequest(RequestModel? requestModel) async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       RequestModel? requestModel =
           await _helperService.requestPost(this.requestModel);
@@ -109,6 +111,11 @@ String? selectedLocation;
       print('Error fetching categories: $error');
       showCustomToast("error while posting request");
     }
+    Timer(const Duration(seconds: 5), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -138,175 +145,186 @@ String? selectedLocation;
           ),
         ),
         backgroundColor: Colors.white,
-        body: Form(
-            child: SingleChildScrollView(
-                // adds scrolling in page
-                child: Container(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.01,
-              right: 15,
-              left: 15,
-              bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 45),
-              buildTextField(
-                controller: _title,
-                labelText: 'Title *',
-                hintText: 'Enter title',
-                isReadOnly: false,
-                onTap: null,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Title field cannot be empty';
-                  }
-                  return null;
-                },
-                keyboardType: null,
-              ),
-              const SizedBox(height: 8),
-              buildTextField(
-                controller: _description,
-                labelText: 'Description *',
-                hintText: 'Enter description',
-                isReadOnly: false,
-                onTap: null,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Description field cannot be empty';
-                  }
-                  return null;
-                },
-                keyboardType: null,
-              ),
-              const SizedBox(height: 8),
-              buildTextField(
-                controller: TextEditingController(text: selectedLocation  ?? ''),
-                labelText: 'Location *',
-                hintText: 'Choose Location',
-                isReadOnly: true,
-                onTap: () async {
-                  // Request permission for location
-                  LocationPermission permission =
-                      await Geolocator.requestPermission();
-
-                  if (permission == LocationPermission.denied) {
-                    // Handle if permission is denied
-                    // You can show a message to the user informing that location permission is required.
-                    return;
-                  }
-
-                  if (permission == LocationPermission.deniedForever) {
-                    // Handle if permission is permanently denied
-                    // You can show a message to the user informing that location permission is required and direct them to settings.
-                    return;
-                  }
-
-                  // Fetch location
-                  Position position = await Geolocator.getCurrentPosition(
-                    desiredAccuracy: LocationAccuracy.high,
-                  );
-
-                  // Reverse geocoding to get address details from coordinates
-                  List<Placemark> placemarks = await placemarkFromCoordinates(
-                    position.latitude,
-                    position.longitude,
-                  );
-
-                  Placemark placemark = placemarks.first;
-                  setState(() {
-                     locationModel = LocationModel(
-                      administrativeArea: placemark.administrativeArea,
-                      locality: placemark.locality,
-                      subLocality: placemark.subLocality,
-                      country: placemark.country,
-                      subAdministrativeArea: placemark.subAdministrativeArea,
-                      street: placemark.street);
-                  });
-                
-                 
-                  setState(() {
-                    selectedLocation =
-                        '${placemark.administrativeArea ?? ''} ${placemark.locality ?? ''} ${placemark.subLocality ?? ''}';
-                  });
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Select Location';
-                  }
-                  return null;
-                },
-                keyboardType: null,
-              ),
-              const SizedBox(height: 8),
-              buildTextField(
-                controller: _price,
-                labelText: 'Price',
-                hintText: 'Enter the price',
-                isReadOnly: false,
-                onTap: null,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Enter the price';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 8),
-              buildDropdownWithHeading(),
-              const SizedBox(height: 8),
-              const Text(
-                'Condition',
-                style: TextStyle(
-                  color: Colors.lightBlue,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 5),
-              const ConditionDropdown(),
-              const SizedBox(height: 8),
-              ElevatedButton(
-                onPressed: () async {
-                  
-                  RequestModel requestModel = RequestModel(
-                      title: _title.text,
-                      description: _description.text,
-                      locationModel: locationModel.toString(),
-                      category: category,
-                      email: email,
-                      condition: "new",
-                      createdDate: DateTime.now().toString(),
-                      price: _price.text);
-                  this.requestModel = requestModel;
-                  await makeRequest(requestModel);
-                  print(requestModel.toJson());
-                    Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+        body: Stack(
+          children: [
+            Form(
+                child: SingleChildScrollView(
+                    // adds scrolling in page
+                    child: Container(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.01,
+                  right: 15,
+                  left: 15,
+                  bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 45),
+                  buildTextField(
+                    controller: _title,
+                    labelText: 'Title *',
+                    hintText: 'Enter title',
+                    isReadOnly: false,
+                    onTap: null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Title field cannot be empty';
+                      }
+                      return null;
+                    },
+                    keyboardType: null,
                   ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(18),
-                  child: Center(
-                    child: Text(
-                      'Send',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                  const SizedBox(height: 8),
+                  buildTextField(
+                    controller: _description,
+                    labelText: 'Description *',
+                    hintText: 'Enter description',
+                    isReadOnly: false,
+                    onTap: null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Description field cannot be empty';
+                      }
+                      return null;
+                    },
+                    keyboardType: null,
+                  ),
+                  const SizedBox(height: 8),
+                  buildTextField(
+                    controller:
+                        TextEditingController(text: selectedLocation ?? ''),
+                    labelText: 'Location *',
+                    hintText: 'Choose Location',
+                    isReadOnly: true,
+                    onTap: () async {
+                      // Request permission for location
+                      LocationPermission permission =
+                          await Geolocator.requestPermission();
+
+                      if (permission == LocationPermission.denied) {
+                        // Handle if permission is denied
+                        // You can show a message to the user informing that location permission is required.
+                        return;
+                      }
+
+                      if (permission == LocationPermission.deniedForever) {
+                        // Handle if permission is permanently denied
+                        // You can show a message to the user informing that location permission is required and direct them to settings.
+                        return;
+                      }
+
+                      // Fetch location
+                      Position position = await Geolocator.getCurrentPosition(
+                        desiredAccuracy: LocationAccuracy.high,
+                      );
+
+                      // Reverse geocoding to get address details from coordinates
+                      List<Placemark> placemarks =
+                          await placemarkFromCoordinates(
+                        position.latitude,
+                        position.longitude,
+                      );
+
+                      Placemark placemark = placemarks.first;
+                      setState(() {
+                        locationModel = LocationModel(
+                            administrativeArea: placemark.administrativeArea,
+                            locality: placemark.locality,
+                            subLocality: placemark.subLocality,
+                            country: placemark.country,
+                            subAdministrativeArea:
+                                placemark.subAdministrativeArea,
+                            street: placemark.street);
+                      });
+
+                      setState(() {
+                        selectedLocation =
+                            '${placemark.administrativeArea ?? ''} ${placemark.locality ?? ''} ${placemark.subLocality ?? ''}';
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Select Location';
+                      }
+                      return null;
+                    },
+                    keyboardType: null,
+                  ),
+                  const SizedBox(height: 8),
+                  buildTextField(
+                    controller: _price,
+                    labelText: 'Price',
+                    hintText: 'Enter the price',
+                    isReadOnly: false,
+                    onTap: null,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter the price';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 8),
+                  buildDropdownWithHeading(),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Condition',
+                    style: TextStyle(
+                      color: Colors.lightBlue,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  const ConditionDropdown(),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      RequestModel requestModel = RequestModel(
+                          title: _title.text,
+                          description: _description.text,
+                          locationModel: locationModel.toString(),
+                          category: category,
+                          email: email,
+                          condition: "new",
+                          createdDate: DateTime.now().toString(),
+                          price: _price.text);
+                      this.requestModel = requestModel;
+                      await makeRequest(requestModel);
+                      print(requestModel.toJson());
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(18),
+                      child: Center(
+                        child: Text(
+                          'Send',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                       ),
                     ),
                   ),
+                ],
+              ),
+            ))),
+            if (isLoading)
+              Container(
+                child: Center(
+                  child: LoaderWidget(isLoading: isLoading),
                 ),
               ),
-            ],
-          ),
-        ))));
+          ],
+        ));
   }
 
   Container buildTextField({
@@ -366,45 +384,46 @@ String? selectedLocation;
   }
 
   Column buildDropdownWithHeading() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Padding(
-        padding: EdgeInsets.only(bottom: 8.0),
-        child: Text(
-          'Category', // Heading text
-          style: TextStyle(
-            color: Colors.lightBlue,
-            fontSize: 20,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Category', // Heading text
+            style: TextStyle(
+              color: Colors.lightBlue,
+              fontSize: 20,
+            ),
           ),
         ),
-      ),
-      DropdownButton<Categoryy?>(
-        value: category ?? categories.firstWhereOrNull((cat) => cat.name == widget.categoryName),
-        icon: const Icon(Icons.arrow_drop_down),
-        style: const TextStyle(color: Colors.black),
-        onChanged: (Categoryy? newValue) {
-          setState(() {
-            category = newValue;
-            dropdownValue = newValue!.name;
-          });
-        },
-        isExpanded: true,
-        hint: const Text('Select Category'),
-        items: categories.map((Categoryy category) {
-          return DropdownMenuItem<Categoryy>(
-            value: category,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(category.name!),
-            ),
-          );
-        }).toList(),
-      ),
-    ],
-  );
-}
-
+        DropdownButton<Categoryy?>(
+          value: category ??
+              categories
+                  .firstWhereOrNull((cat) => cat.name == widget.categoryName),
+          icon: const Icon(Icons.arrow_drop_down),
+          style: const TextStyle(color: Colors.black),
+          onChanged: (Categoryy? newValue) {
+            setState(() {
+              category = newValue;
+              dropdownValue = newValue!.name;
+            });
+          },
+          isExpanded: true,
+          hint: const Text('Select Category'),
+          items: categories.map((Categoryy category) {
+            return DropdownMenuItem<Categoryy>(
+              value: category,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(category.name!),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
 
   // Future<LocationModel> _fetchLocation() async {
   //   try {
@@ -447,4 +466,3 @@ extension IterableExtensions<T> on Iterable<T> {
     return null;
   }
 }
-

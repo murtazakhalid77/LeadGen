@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:lead_gen/enums/UserTypeEnum.dart';
 import 'package:lead_gen/model/UserDetails.dart';
 import 'package:lead_gen/services/UserService.dart';
 
@@ -37,12 +38,23 @@ class _SelectionPageState extends State<SelectionPage> {
     fetchData();
   }
 
+  Future<void> setUserType(UserTypeEnum userType) async {
+    try {
+      await userService.setUserType(widget.email, userType);
+    } catch (error) {
+      print('Error fetching User: $error');
+      showCustomToast("Error while fetching logged In User");
+    }
+  }
+
   Future<void> changePage(bool option, String phone, bool condition) async {
     setState(() {
       isLoading = true;
     });
+
     Timer(Duration(seconds: 3), () {
       if (condition) {
+        setUserType(UserTypeEnum.SELLER);
         Navigator.pop(context); // Hide the loader
         Navigator.push(
           context,
@@ -55,6 +67,7 @@ class _SelectionPageState extends State<SelectionPage> {
           ),
         );
       } else {
+        setUserType(UserTypeEnum.BUYER);
         showCustomToast('Successfully registered as a Buyer');
         Navigator.pop(context); // Hide the loader
         Navigator.push(
@@ -130,6 +143,18 @@ class _SelectionPageState extends State<SelectionPage> {
               ),
             ),
           ),
+          if (isLoading)
+            // Positioned(
+            // bottom: -150,
+            // left: 0,
+            // top: 180,
+            // right: 0,
+            Container(
+              child: Center(
+                child: LoaderWidget(isLoading: isLoading),
+              ),
+            ),
+          // ),
         ],
       ),
     );
