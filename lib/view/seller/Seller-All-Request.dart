@@ -22,7 +22,7 @@ class AllRequest extends StatefulWidget {
     this.phone,
     this.address,
     this.email,
-    super.key});
+    super.key, required bidAmount});
 
   @override
   State<AllRequest> createState() => _AllRequestState();
@@ -84,6 +84,14 @@ Future<void> fetchData() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            // Unfocus the current focus node before popping the screen
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();// Add navigation functionality here
+          },
+        ),
         centerTitle: true,
         title: const Text("Welcome to Lead Gen"),
         backgroundColor: Colors.blue,
@@ -100,21 +108,33 @@ Future<void> fetchData() async {
         children: [
           const SizedBox(height: 20,),
           SizedBox(
-            height: 15,
-            child: Center(
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  FadeAnimatedText(
-                    'All Your Requests Are Listed Here',
-                    textStyle: const TextStyle(
-                      color: Colors.purple,
-                    )
+          height: 15,
+          child: Center(
+            child: fetchedRequests.isEmpty
+                ? AnimatedTextKit(
+                    animatedTexts: [
+                      FadeAnimatedText(
+                        "You don't have any requests",
+                        textStyle: const TextStyle(
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ],
+                    totalRepeatCount: 50000,
                   )
-                ],
-                totalRepeatCount: 50000,              
-                ),
-            ),
+                : AnimatedTextKit(
+                    animatedTexts: [
+                      FadeAnimatedText(
+                        'All Your Requests Are Listed Here',
+                        textStyle: const TextStyle(
+                          color: Colors.purple,
+                        ),
+                      )
+                    ],
+                    totalRepeatCount: 50000,
+                  ),
           ),
+        ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[

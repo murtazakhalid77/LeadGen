@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 
   final bool option;
 
-  const MyHomePage({Key? key ,required this.option, required String phoneNumber})
+  const MyHomePage({Key? key ,required this.option, required String email})
       : super(key: key);
 
   @override
@@ -160,6 +160,7 @@ Color parseColor(String colorString) {
           user.email = loggedInUser.email;
           user.location = loggedInUser.location;
           user.email = email;
+          user.phoneNumber = loggedInUser.phoneNumber;
           print(user.toJson());
         });
       }

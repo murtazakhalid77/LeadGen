@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 decoration: const InputDecoration(
                                   suffixIcon:
                                       Icon(Icons.check, color: Colors.grey),
-                                  labelText: 'PhoneNumber',
+                                  labelText: 'Email',
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Color.fromARGB(255, 26, 102, 216),

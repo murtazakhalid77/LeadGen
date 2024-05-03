@@ -17,10 +17,10 @@ import '../../model/Registration.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
-  final String phoneNumber;
+  final String phone;
   final String password;
 
-  const SignUpPage({Key? key, required this.phoneNumber,required this.password}) : super(key: key);
+  const SignUpPage({Key? key, required this.phone,required this.password}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -49,7 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<Registration> _constructRegistrationObject() async {
     String? token = await getFCMToken();
     return Registration(_firstNameController.text, _lastNameController.text,
-        _cnicController.text, _emailController.text, widget.phoneNumber, token);
+        _cnicController.text, _emailController.text, widget.phone, token);
         
   }
 
@@ -72,7 +72,7 @@ class _SignUpPageState extends State<SignUpPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserRegistrationSelection(
-                    phoneNumber: widget.phoneNumber,
+                    email: _emailController.text,
                   )),
         );
       } else {
@@ -80,7 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     } catch (e) {
       print('Error: $e');
-      showCustomToast('Error Creating User');
+      showCustomToast("Error Creating User Or User Cnic Already Exists");
     }
   }
 

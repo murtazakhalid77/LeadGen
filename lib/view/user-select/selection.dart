@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDetails.dart';
@@ -48,7 +49,7 @@ class _SelectionPageState extends State<SelectionPage> {
           MaterialPageRoute(
             builder: (context) {
               return CategoryRegistration(
-                phoneNumber: phone,
+                email: email,
               );
             },
           ),
@@ -62,7 +63,7 @@ class _SelectionPageState extends State<SelectionPage> {
             builder: (context) {
               return MyHomePage(
                 option: option,
-                phoneNumber: phone,
+                email: email,
               );
             },
           ),
@@ -135,13 +136,13 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget buildElevatedButtons(
-      BuildContext context, String phoneNumber, String type) {
+      BuildContext context, String email, String type) {
     if (type == "BOTH") {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildElevatedButton(phoneNumber, context, true, true),
-          buildElevatedButton(phoneNumber, context, false, false),
+          buildElevatedButton(email, context, true, true),
+          buildElevatedButton(email, context, false, false),
         ],
       );
     } else {
@@ -151,12 +152,12 @@ class _SelectionPageState extends State<SelectionPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (type == "SELLER") ...[
-              buildElevatedButton(phoneNumber, context, true, true),
-              buildTextButton(phoneNumber, context, false, false),
+              buildElevatedButton(email, context, true, true),
+              buildTextButton(email, context, false, false),
             ],
             if (type == "BUYER") ...[
-              buildElevatedButton(phoneNumber, context, false, false),
-              buildTextButton(phoneNumber, context, true, true),
+              buildElevatedButton(email, context, false, false),
+              buildTextButton(email, context, true, true),
             ],
           ],
         ),
@@ -182,7 +183,7 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget buildElevatedButton(
-      String phoneNumber, BuildContext context, bool condition, bool option) {
+      String email ,BuildContext context, bool condition, bool option) {
     return ElevatedButton(
       onPressed: condition
           ? () => Navigator.push(
@@ -190,7 +191,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 MaterialPageRoute(
                     builder: (context) => MyHomePage(
                           option: option,
-                          phoneNumber: phoneNumber,
+                          email: email,
                         )),
                 // MaterialPageRoute(builder: (context) => SellerHomePage(option: option)),
               )
@@ -199,7 +200,7 @@ class _SelectionPageState extends State<SelectionPage> {
                 MaterialPageRoute(
                     builder: (context) => MyHomePage(
                           option: option,
-                          phoneNumber: '',
+                          email: email,
                         )),
               ),
       style: ElevatedButton.styleFrom(

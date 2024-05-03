@@ -88,7 +88,7 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        MyRequests(phoneNumber: user.phoneNumber, option: true,)),
+                        MyRequests(email: user.email, option: true,)),
               );
 
               }

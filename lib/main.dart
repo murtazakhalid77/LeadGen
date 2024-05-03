@@ -18,9 +18,11 @@ import 'package:lead_gen/view/reigistration/phone.dart';
 import 'package:lead_gen/view/reigistration/verify.dart';
 import 'package:lead_gen/view/seller/Seller-All-Request.dart';
 import 'package:lead_gen/view/seller/Seller-Home-Page.dart';
+import 'package:lead_gen/view/seller/Seller-Single-Request.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 import 'package:lead_gen/view/splashScreen.dart';
+import 'package:lead_gen/view/user-select/categoryRegistration.dart';
 import 'package:lead_gen/view/user-select/selection.dart';
 import 'package:lead_gen/view/user-select/userTypeSelection.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +42,7 @@ main() async {
         // ChangeNotifierProvider(create: (context) => Loc()),
         // ChangeNotifierProvider(create: (context) => SettingsService()),
       ],
-      child: const MyApp(),
+      child: const MyApp(), 
     ),
   );
 }

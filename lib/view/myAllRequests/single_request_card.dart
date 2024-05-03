@@ -8,6 +8,7 @@ class MySingleRequestCard extends StatelessWidget {
   final String? locationText;
   final String? date;
   final String categoryName;
+  final String? bidAmount; // Add bidAmount parameter
 
   const MySingleRequestCard({
     required this.title,
@@ -15,6 +16,7 @@ class MySingleRequestCard extends StatelessWidget {
     required this.locationText,
     required this.categoryName,
     required this.date,
+    this.bidAmount, // Initialize bidAmount parameter
   });
 
   @override
@@ -24,7 +26,7 @@ class MySingleRequestCard extends StatelessWidget {
     return InkWell(
       child: Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height-170,
+        height: MediaQuery.of(context).size.height - 170,
         decoration: BoxDecoration(
           color: Colors.pink.shade200, // Soft blue color for the background
           borderRadius: BorderRadius.circular(20),
@@ -115,6 +117,7 @@ class MySingleRequestCard extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
+                
                 const SizedBox(height: 50),
                 Center(
                   child: Row(
@@ -152,7 +155,7 @@ class MySingleRequestCard extends StatelessWidget {
                         ),
                         onPressed: () {},
                         child: const Text(
-                          "Cancel Requset",
+                          "Cancel Request",
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white
@@ -161,8 +164,27 @@ class MySingleRequestCard extends StatelessWidget {
                       )
                     ],
                   ),
-                )
                 
+                ),
+                const SizedBox(height: 20),
+               const Text(
+                'Bids',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+                if (bidAmount != null) // Display bid amount if available
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      "Bid Amount: $bidAmount",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

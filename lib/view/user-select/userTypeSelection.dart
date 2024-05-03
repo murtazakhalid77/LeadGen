@@ -12,8 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../enums/UserTypeEnum.dart';
 
 class UserRegistrationSelection extends StatefulWidget {
-  final String phoneNumber;
-  const UserRegistrationSelection({Key? key, required this.phoneNumber})
+  final String email;
+  const UserRegistrationSelection({Key? key, required this.email})
       : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
         userType = UserTypeEnum.BUYER;
       }
 
-      var res = await userService.setUserType(widget.phoneNumber, userType);
+      var res = await userService.setUserType(widget.email, userType);
 
       if (res != null) {
         showCustomToast("User Type Selected: $res");
@@ -126,7 +126,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => CategoryRegistration(
-                              phoneNumber: widget.phoneNumber,
+                              email: widget.email,
                             ),
                           ),
                         );
@@ -137,7 +137,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => LoginScreen(
-                              phoneNumber: widget.phoneNumber,
+                              phoneNumber: widget.email,
                             ),
                           ),
                         );

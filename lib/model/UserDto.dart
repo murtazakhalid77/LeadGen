@@ -10,7 +10,7 @@ class User {
     return {
       'firstName': firstName,
       'email': email,
-      'phone': phoneNumber,
+      'phoneNumber': phoneNumber,
       'adress':location
     };
   }
@@ -19,7 +19,7 @@ class User {
     return User(
       firstName: json['firstName'] ?? '',
       email: json['email'] ?? '',
-      phoneNumber: json['phone'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
       location: json['adress'] ?? '',
     );
   }

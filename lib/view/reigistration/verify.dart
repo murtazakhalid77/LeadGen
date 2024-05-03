@@ -144,7 +144,7 @@ class _MyVerifyState extends State<Verify> {
               Navigator.push(
   context,
   MaterialPageRoute(
-    builder: (context) => Password(phoneNumber:phoneNumber), // Replace '123456' with the actual OTP value
+    builder: (context) => Password(phone:phoneNumber), // Replace '123456' with the actual OTP value
   ),
 );
             // PIN matches OTP, navigate to '/password'
