@@ -1,27 +1,77 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lead_gen/model/RequestModel.dart';
+import 'package:lead_gen/services/HelperService.dart';
+import 'package:lead_gen/view/buyer/HomePage.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
+import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_info.dart';
 
-class MySingleRequestCard extends StatelessWidget {
-  final String? title;
+class MySingleRequestCard extends StatefulWidget {
+  final bool option;
+  final String email;
+  final int? id;
+  final String title;
   final String requestText;
-  final String? locationText;
+  final String locationText;
   final String? date;
   final String categoryName;
   final String? bidAmount; // Add bidAmount parameter
 
   const MySingleRequestCard({
+    Key? key,
+    required this.option,
+    required this.email,
+    required this.id,
     required this.title,
     required this.requestText,
     required this.locationText,
     required this.categoryName,
     required this.date,
     this.bidAmount, // Initialize bidAmount parameter
-  });
+  }): super(key: key);
+
+  @override
+  _MySingleRequestCard createState() => _MySingleRequestCard();
+}
+
+class _MySingleRequestCard extends State<MySingleRequestCard> {
+  late HelperService helperService;
+  RequestModel? request;
+
+  @override
+  void initState() {
+    super.initState();
+    helperService = HelperService();
+  }
+ 
+  Future<void> cancelRequest()async {
+    try {
+      RequestModel? canceledRequest = 
+          await helperService.cancelSellerRequest(widget.id);
+
+      if(canceledRequest != null){
+        showCustomToast("Request Cancelled");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(option: widget.option, email: widget.email)
+              )
+          );
+      }else{
+        showCustomToast('Error fetching Requests');
+      }
+      
+    } catch (error) {
+      print('Error fetching Requests: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(date!));
+    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(widget.date!));
 
     return InkWell(
       child: Container(
@@ -54,7 +104,7 @@ class MySingleRequestCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "$title",
+                  widget.title,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -70,7 +120,7 @@ class MySingleRequestCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "$locationText",
+                  widget.locationText,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -98,7 +148,7 @@ class MySingleRequestCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  categoryName,
+                  widget.categoryName,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -112,7 +162,7 @@ class MySingleRequestCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "$requestText",
+                  widget.requestText,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
@@ -153,7 +203,9 @@ class MySingleRequestCard extends StatelessWidget {
                             )
                           )
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          cancelRequest();
+                        },
                         child: const Text(
                           "Cancel Request",
                           style: TextStyle(
@@ -174,11 +226,11 @@ class MySingleRequestCard extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
                 ),
-                if (bidAmount != null) // Display bid amount if available
+                if (widget.bidAmount != null) // Display bid amount if available
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      "Bid Amount: $bidAmount",
+                      "Bid Amount: $widget.bidAmount",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

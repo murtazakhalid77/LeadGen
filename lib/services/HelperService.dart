@@ -7,6 +7,32 @@ import 'package:lead_gen/model/RequestModel.dart';
 
 class HelperService extends ChangeNotifier {
 
+  Future<RequestModel?> cancelSellerRequest(int? id) async {
+    try {
+    final response = await http.put(
+      UrlConfig.buildUri('userRequest/cancelRequest/$id'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );   
+
+    if (response.statusCode == 200) {
+  
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      RequestModel updatedRequestModel = RequestModel.fromJson(responseData);
+
+      return updatedRequestModel;
+    } else {
+      
+      print('Request failed with status: ${response.statusCode}');
+      return null; 
+    }
+
+  } catch (error) {
+    print('Error fetching request: $error');
+  }
+  }
+
 
 Future<RequestModel?> requestPost(RequestModel? requestModel) async {
   try {

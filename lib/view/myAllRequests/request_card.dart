@@ -1,8 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_info.dart';
 
 class MyRequestCard extends StatelessWidget {
+  final bool? option;
+  final String? email;
+  final int? id;
   final String? title;
   final String? requestText;
   final String? locationText;
@@ -10,6 +15,9 @@ class MyRequestCard extends StatelessWidget {
   final String categoryName;
 
   const MyRequestCard({
+    required this.option,
+    required this.email,
+    required this.id,
     required this.title,
     required this.requestText,
     required this.locationText,
@@ -26,6 +34,9 @@ class MyRequestCard extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => MyRequestInfo(
+              option: option!,
+              email: email!,
+              id: id!,
               title: title!,
               requestText: requestText!,
               locationText: locationText!,

@@ -5,6 +5,7 @@ import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/model/category.dart';
 
 class RequestModel {
+  int id;
   String title;
   String description;
   String? locationModel;
@@ -16,7 +17,8 @@ class RequestModel {
   String price;
 
   RequestModel(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.description,
       required this.locationModel,
       required this.category,
@@ -28,6 +30,7 @@ class RequestModel {
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
     return RequestModel(
+      id: json['id'] as int,
       condition: json['condition'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -43,6 +46,7 @@ class RequestModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'description': description,
       'locationModel': locationModel,

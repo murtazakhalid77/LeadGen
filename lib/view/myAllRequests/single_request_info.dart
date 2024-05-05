@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
@@ -5,13 +7,19 @@ import 'package:lead_gen/view/myAllRequests/request_card.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_card.dart';
 
 class MyRequestInfo extends StatelessWidget {
-  final String? title;
+  final bool? option;
+  final String? email;
+  final int id;
+  final String title;
   final String? requestText;
   final String? locationText;
   final String? date;
   final String? categoryName;
 
   const MyRequestInfo({
+    required this.option,
+    required this.email,
+    required this.id,
     required this.title,
     required this.requestText,
     required this.locationText,
@@ -55,6 +63,9 @@ class MyRequestInfo extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     children: [ 
                       MySingleRequestCard(
+                          option: option!,
+                          email: email!,
+                          id: id, 
                           title: title,
                           requestText: requestText!,
                           locationText: locationText!,

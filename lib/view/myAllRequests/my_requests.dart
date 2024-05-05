@@ -12,8 +12,10 @@ import '../../model/LocationModel.dart';
 
 class MyRequests extends StatefulWidget {
   final email;
+  final option;
 
-  const MyRequests({Key? key, required this.email, required bool option}) : super(key: key);
+  const MyRequests({Key? key, required this.email, required this.option})
+      : super(key: key);
 
   @override
   _MyRequestsState createState() => _MyRequestsState();
@@ -49,7 +51,8 @@ class _MyRequestsState extends State<MyRequests> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Disable the automatic leading widget
+        automaticallyImplyLeading:
+            false, // Disable the automatic leading widget
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
         elevation: 0.2,
@@ -62,7 +65,10 @@ class _MyRequestsState extends State<MyRequests> {
             FocusManager.instance.primaryFocus?.unfocus();
             Navigator.of(context).pop(
               MaterialPageRoute(
-                builder: (context) => MyHomePage(option: true, email: email,), // goes to home page
+                builder: (context) => MyHomePage(
+                  option: true,
+                  email: email,
+                ), // goes to home page
               ),
             );
           },
@@ -123,9 +129,9 @@ class _MyRequestsState extends State<MyRequests> {
                         children: fetchedRequests.map((request) {
                           try {
                             // continue from here i have made an method for string to model then user it here to display all reqyest
-                           
-                           
-                            LocationModel location =  LocationModel.fromString(request.locationModel!);
+
+                            LocationModel location = LocationModel.fromString(
+                                request.locationModel!);
 
                             String locationText =
                                 '${location.administrativeArea ?? ''} '
@@ -134,6 +140,9 @@ class _MyRequestsState extends State<MyRequests> {
 
                             String categoryName = request.category!.name ?? '';
                             return MyRequestCard(
+                              option: widget.option,
+                              email: widget.email,
+                              id: request.id,
                               title: request.title,
                               requestText: request.description,
                               locationText: locationText,
@@ -145,6 +154,9 @@ class _MyRequestsState extends State<MyRequests> {
                             print('Error decoding location model: $e');
                             // Provide a placeholder or fallback behavior
                             return MyRequestCard(
+                              option: widget.option,
+                              email: widget.email,
+                              id: request.id,
                               title: request.title,
                               requestText: request.description,
                               locationText:

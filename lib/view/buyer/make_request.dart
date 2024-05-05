@@ -281,6 +281,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   ElevatedButton(
                     onPressed: () async {
                       RequestModel requestModel = RequestModel(
+                          id: 0,
                           title: _title.text,
                           description: _description.text,
                           locationModel: locationModel.toString(),
