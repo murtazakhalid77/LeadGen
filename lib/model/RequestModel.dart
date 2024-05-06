@@ -15,6 +15,7 @@ class RequestModel {
   String? email;
   String createdDate;
   String price;
+  String accepted;
 
   RequestModel(
       {required this.id,
@@ -26,6 +27,7 @@ class RequestModel {
       required this.price,
       required this.email,
       required this.createdDate,
+      required this.accepted,
       this.user});
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
@@ -39,7 +41,7 @@ class RequestModel {
            user: User.fromJson(json['user'] ?? {}), 
           email: json['email'] as String? ?? '',
       createdDate: json['createdDate'] as String? ?? '',
-
+      accepted:  json['accepted'] as String ??'',
       price: json['price'] as String? ?? '',
     );
   }
@@ -55,6 +57,7 @@ class RequestModel {
       'email':email,
       'user':user?.toJson(),
       'condition': condition,
+      'accepted': accepted,
       'price': price
     };
   }

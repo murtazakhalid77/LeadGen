@@ -9,7 +9,7 @@ import 'package:lead_gen/view/signupAndLogin/login.dart';
 
 class NavBar extends StatelessWidget {
   final String userType;
-  final User user;
+  final User? user;
 
   NavBar({Key? key, required this.userType, required this.user})
       : super(key: key);
@@ -21,8 +21,8 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(user.firstName),
-            accountEmail: Text(user.email),
+            accountName: Text(user!.firstName),
+            accountEmail: Text(user!.email),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.network(
@@ -88,7 +88,7 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        MyRequests(email: user.email, option: true,)),
+                        MyRequests(email: user!.email, option: true,)),
               );
 
               }
@@ -128,15 +128,15 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.indigo,
             onTap: () {
-              print(user.toJson());
+              print(user!.toJson());
               // Handle Requests tapped based on user type
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(
-                    name: user.firstName,
-                    phone: user.phoneNumber,
-                    email: user.email,
+                    name: user!.firstName,
+                    phone: user!.phoneNumber,
+                    email: user!.email,
                   ),
                 ),
               );

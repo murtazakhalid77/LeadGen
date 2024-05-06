@@ -25,7 +25,7 @@ class SellerHomePage extends StatefulWidget {
 
 class _SellerHomePageState extends State<SellerHomePage> {
   late UserService userService;
-  User? user;
+   User? user;
   List<RequestModel> fetchedRequests = [];
   late HelperService helperService;
 
@@ -74,7 +74,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-         drawer: NavBar(userType: 'seller', user: user!),
+         drawer: NavBar(userType: 'seller', user: user),
       appBar: AppBar(
         automaticallyImplyLeading:
             false, // Disable the automatic leading widget
@@ -138,16 +138,24 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     alignment: WrapAlignment.center,
                     children: fetchedRequests.map((request) {
                       LocationModel location =
-                          LocationModel.fromString(request.locationModel!);
-                      String locationText =
-                          '${location.administrativeArea ?? ''} '
-                          '${location.street ?? ''} '
-                          '${location.subLocality ?? ''}';
+                          LocationModel.fromString(request.locationModel!); 
+                         String locationText =
+                          '${location.locality ?? ''} '
+                          '${location.subLocality ?? ''} '
+                          '${location.subAdministrativeArea ?? ''} '
+                          '${location.country ?? ''} '
+                           '${location.street ?? ''}';
                       String categoryName = request.category!.name ?? '';
                       return SellerCard(
                         name: request.user!.firstName, // Pass name
                         description: request.description, // Pass description
-                        locationText: locationText, // Pass location text
+                        locationText: locationText,
+                         price: request.price, 
+                        date: request.createdDate,// Pass location text
+                        title: request.title,
+                        category: request.category?.name,
+                        requestId: request.id.toString(),
+                        accept: request.
                       );
                     }).toList(),
                   ),
