@@ -166,14 +166,22 @@ Future<void> fetchData() async {
                       LocationModel location =
                           LocationModel.fromString(request.locationModel!);
                       String locationText =
-                          '${location.administrativeArea ?? ''} '
-                          '${location.street ?? ''} '
-                          '${location.subLocality ?? ''}';
+                          '${location.locality ?? ''} '
+                          '${location.subLocality ?? ''} '
+                          '${location.subAdministrativeArea ?? ''}'
+                          '${location.country ?? ''}'
+                           '${location.street ?? ''}';
                       String categoryName = request.category!.name ?? '';
-                      return SellerCard(
+                       return SellerCard(
                         name: request.user!.firstName, // Pass name
                         description: request.description, // Pass description
-                        locationText: locationText, // Pass location text
+                        locationText: locationText,
+                        price: request.price, 
+                    
+                        date: request.createdDate,// Pass location text
+                        title: request.title,
+                        category: request.category?.name,
+                       requestId: request.id.toString(),
                       );
                     }).toList(),
                   ),

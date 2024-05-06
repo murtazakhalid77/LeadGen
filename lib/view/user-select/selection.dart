@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class _SelectionPageState extends State<SelectionPage> {
   late String email;
   late UserService userService;
   late UserType userType;
-  late Bool option;
+  late bool option;
   bool isLoading = false;
   @override
   void initState() {

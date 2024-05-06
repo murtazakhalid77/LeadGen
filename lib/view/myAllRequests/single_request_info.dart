@@ -1,4 +1,4 @@
-import 'dart:ffi';
+
 
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
@@ -15,7 +15,7 @@ class MyRequestInfo extends StatelessWidget {
   final String? locationText;
   final String? date;
   final String? categoryName;
-
+  final String requestId;
   const MyRequestInfo({
     required this.option,
     required this.email,
@@ -25,6 +25,7 @@ class MyRequestInfo extends StatelessWidget {
     required this.locationText,
     required this.date,
     required this.categoryName,
+    required this.requestId,
   });
 
   @override
@@ -70,7 +71,9 @@ class MyRequestInfo extends StatelessWidget {
                           requestText: requestText!,
                           locationText: locationText!,
                           date: date!,
-                          categoryName: categoryName!)
+                          categoryName: categoryName!,
+                          requestId: requestId,
+                      )
                           ],
       
                     //  fetchedRequests.map((request) {

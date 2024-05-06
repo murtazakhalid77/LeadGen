@@ -47,11 +47,11 @@ class SellerSingleRequest extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 170,
                   decoration: BoxDecoration(
-                    color: Colors.pink.shade200,
+                    color: Colors.blueAccent.shade100,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.pink.shade400.withOpacity(0.4),
+                        color: Colors.pink.shade300,
                         spreadRadius: 4,
                         blurRadius: 10,
                         offset: Offset(0, 4),
@@ -117,32 +117,7 @@ class SellerSingleRequest extends StatelessWidget {
                                   style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
-                                            Colors.pinkAccent),
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.white),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    "Offer",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.pinkAccent),
+                                            Colors.green),
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.white),
@@ -173,7 +148,7 @@ class SellerSingleRequest extends StatelessWidget {
                                                 const Text(
                                                   'Enter Bid Amount',
                                                   style: TextStyle(
-                                                    color: Colors.pinkAccent,
+                                                    color: Colors.blue,
                                                     fontSize: 18.0,
                                                     fontWeight: FontWeight.bold,
                                                   ),
@@ -210,7 +185,7 @@ class SellerSingleRequest extends StatelessWidget {
                                                         'Cancel',
                                                         style: TextStyle(
                                                           color:
-                                                              Colors.pinkAccent,
+                                                              Colors.redAccent,
                                                           fontSize: 16.0,
                                                         ),
                                                       ),
@@ -220,7 +195,7 @@ class SellerSingleRequest extends StatelessWidget {
                                                         backgroundColor:
                                                             MaterialStateProperty
                                                                 .all<Color>(Colors
-                                                                    .pinkAccent),
+                                                                    .greenAccent),
                                                         foregroundColor:
                                                             MaterialStateProperty
                                                                 .all<Color>(
@@ -272,6 +247,33 @@ class SellerSingleRequest extends StatelessWidget {
                                     });
                                   },
                                   child: const Text(
+                                    "Offer",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.lightGreen),
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    
+                                  },
+                                  child: const Text(
                                     "Accept",
                                     style: TextStyle(
                                       fontSize: 16,
@@ -283,7 +285,7 @@ class SellerSingleRequest extends StatelessWidget {
                                   style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all<Color>(
-                                            Colors.pinkAccent),
+                                            Colors.red),
                                     foregroundColor:
                                         MaterialStateProperty.all<Color>(
                                             Colors.white),

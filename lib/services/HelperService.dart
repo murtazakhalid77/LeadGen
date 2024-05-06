@@ -129,6 +129,29 @@ Future<List<RequestModel>> fetchUserRequest(String email) async {
 
 
 
+Future<bool> acceptRequest(String RequestId) async {
+  try {
+    final response = await http.post(
+         UrlConfig.buildUri('userRequest/accept/$RequestId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+    
+    if (response.statusCode == 200) {
+  
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      RequestModel updatedRequestModel = RequestModel.fromJson(responseData);
 
+      return true;
+    } else {
+      
+      print('Request failed with status: ${response.statusCode}');
+      return false; 
+    }
+  } catch (error) {
+    print('Error: $error');
+    rethrow; 
+  }
+}
 
 }
