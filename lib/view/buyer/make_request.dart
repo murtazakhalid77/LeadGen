@@ -288,6 +288,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                           category: category,
                           email: email,
                           condition: "new",
+                          accepted: "",
                           createdDate: DateTime.now().toString(),
                           price: _price.text);
                       this.requestModel = requestModel;
@@ -320,8 +321,11 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
             ))),
             if (isLoading)
               Container(
-                child: Center(
-                  child: LoaderWidget(isLoading: isLoading),
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black
+                  ),
                 ),
               ),
           ],

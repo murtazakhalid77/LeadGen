@@ -26,9 +26,13 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
 
   bool _isSellerSelected = false;
   bool _isBuyerSelected = false;
+  bool isLoading = false;
 
   Future<void> setUserType() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       // Determine the UserType based on _isSellerSelected and _isBuyerSelected
       UserTypeEnum userType;
       if (_isSellerSelected && _isBuyerSelected) {
@@ -42,12 +46,21 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
       var res = await userService.setUserType(widget.email, userType);
 
       if (res != null) {
+        setState(() {
+          isLoading = false;
+        });
         showCustomToast("User Type Selected: $res");
       } else {
+        setState(() {
+          isLoading = false;
+        });
         showCustomToast("User Type Can't be selected");
       }
     } catch (error) {
       print('Error fetching User: $error');
+      setState(() {
+        isLoading = false;
+      });
       showCustomToast("Error while fetching logged In User");
     }
   }
@@ -120,7 +133,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
 
                       // Perform navigation based on conditions
                       if (_isSellerSelected) {
-                       setUserType();
+                        setUserType();
 
                         Navigator.pushReplacement(
                           context,
@@ -161,6 +174,15 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
               ),
             ),
           ),
+          if (isLoading)
+            Container(
+              color: Colors.grey.withOpacity(0.6),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              ),
+            ),
         ],
       ),
     );
