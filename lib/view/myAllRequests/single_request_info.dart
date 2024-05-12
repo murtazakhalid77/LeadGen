@@ -15,7 +15,10 @@ class MyRequestInfo extends StatelessWidget {
   final String? locationText;
   final String? date;
   final String? categoryName;
+  final String? accepted;
   final String requestId;
+  final String acceptedSellerEmail;
+  final String acceptedSellerUid;
   const MyRequestInfo({
     required this.option,
     required this.email,
@@ -24,8 +27,11 @@ class MyRequestInfo extends StatelessWidget {
     required this.requestText,
     required this.locationText,
     required this.date,
+    required this.accepted,
     required this.categoryName,
     required this.requestId,
+     required this.acceptedSellerEmail,
+      required this.acceptedSellerUid,
   });
 
   @override
@@ -73,6 +79,9 @@ class MyRequestInfo extends StatelessWidget {
                           date: date!,
                           categoryName: categoryName!,
                           requestId: requestId,
+                          accepted:accepted
+                          ,acceptedSellerEmail: acceptedSellerEmail,
+                          acceptedSellerUid:acceptedSellerUid,
                       )
                           ],
       

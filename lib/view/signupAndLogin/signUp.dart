@@ -52,19 +52,22 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<Registration> _constructRegistrationObject() async {
     String? token = await getFCMToken();
+    String? uid="";
     return Registration(_firstNameController.text, _lastNameController.text,
-        _cnicController.text, _emailController.text, widget.phone, token);
+        _cnicController.text, _emailController.text, widget.phone, token!,uid);
   }
 
   Future<void> _registerUser(Registration registrationData) async {
     try {
-      var response = await _otpService.registerUser(registrationData);
-
-      UserCredential userCredential = await FirebaseAuth.instance
+       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: widget.password);
       _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set(
           {'uid': userCredential.user!.uid, 'email': _emailController.text});
+        registrationData.uid=userCredential.user!.uid;
+      var response = await _otpService.registerUser(registrationData);
+
+  
 
       if (response.statusCode == 200) {
         setState(() {

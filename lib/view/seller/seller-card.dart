@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lead_gen/services/ChatService.dart';
+import 'package:lead_gen/view/Chats/person_chat.dart';
 import 'package:lead_gen/view/seller/Seller-Single-Request.dart';
 
 class SellerCard extends StatelessWidget {
@@ -13,11 +15,12 @@ class SellerCard extends StatelessWidget {
   final String price;
   final String date;
   final String? category;
-  final String accept;
-  
+  final bool isSellerAccepted; // New parameter
+  final int acceptedAmount;
+  final String buyerUid;
+  final String buyerEmail;
 
   const SellerCard({
-  
     required this.name,
     required this.description,
     required this.locationText,
@@ -25,8 +28,11 @@ class SellerCard extends StatelessWidget {
     required this.date,
     required this.category,
     required this.title,
-    required this.accept,
-  required this.requestId,
+    required this.requestId,
+    required this.acceptedAmount,
+    required this.isSellerAccepted,
+    required this.buyerEmail,
+    required this.buyerUid,
     Key? key,
   }) : super(key: key);
 
@@ -50,7 +56,10 @@ class SellerCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.blue.shade100,
+            color: isSellerAccepted
+                ? Colors.green.shade100
+                : Colors
+                    .blue.shade100, // Conditionally set the background color
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -74,7 +83,27 @@ class SellerCard extends StatelessWidget {
                       color: Colors.black87,
                     ),
                   ),
-                  
+                  if (isSellerAccepted)
+                    IconButton(
+                      onPressed: () {
+                        print(buyerEmail);
+                        print(buyerUid);
+                        sendMessage(context, description, buyerEmail, buyerUid);
+                      },
+                      icon: Icon(
+                        Icons.message,
+                        color: Colors.green,
+                      ),
+                      iconSize: 24,
+                    ),
+                  Text(
+                    'Accepted Amount: \$${acceptedAmount.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors
+                          .green, // Customize the color for the accepted amount
+                    ),
+                  ),
                 ],
               ),
               SizedBox(height: 5),
@@ -87,7 +116,8 @@ class SellerCard extends StatelessWidget {
               SizedBox(height: 5),
               Text(
                 'Location: $locationText',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black87),
               ),
               SizedBox(height: 5),
               Row(
@@ -95,7 +125,8 @@ class SellerCard extends StatelessWidget {
                 children: [
                   Text(
                     'Category: $category',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   Text(
                     'Price: \$${price}', // Display price with currency symbol
@@ -115,10 +146,9 @@ class SellerCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  
                   TextButton(
                     onPressed: () {
-                         _showOfferDialog(context, requestId);
+                      _showOfferDialog(context, requestId);
                     },
                     child: Text(
                       'Offer',
@@ -129,14 +159,13 @@ class SellerCard extends StatelessWidget {
                     ),
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.blue.withOpacity(0.1),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
-                 
                   SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
@@ -151,7 +180,8 @@ class SellerCard extends StatelessWidget {
                     ),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -165,7 +195,28 @@ class SellerCard extends StatelessWidget {
       ),
     );
   }
-   void _showOfferDialog(BuildContext context, String requestId) {
+
+  void sendMessage(BuildContext context, String requestDescription,
+      String receiveUserEmail, String receivedUserId) async {
+
+    String message =
+        "Hey, I heard about you needing this: \"$requestDescription\". Can we talk?";
+    ChatService chatService = new ChatService();
+    // Send the predefined message using the ChatService
+    await chatService.sendMessage(receivedUserId, message);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatPage(
+          receiveUserEmail: receiveUserEmail,
+          receivedUserId: receivedUserId,
+        ),
+      ),
+    );
+  }
+
+  void _showOfferDialog(BuildContext context, String requestId) {
     TextEditingController offerController = TextEditingController();
 
     showDialog(
@@ -224,8 +275,13 @@ class SellerCard extends StatelessWidget {
 
       try {
         // Add a bid document to the specific request's bids subcollection
-        await firestore.collection('requests').doc(requestId).collection('bids').doc(userId).set({
-          'userName':currentUser.email,
+        await firestore
+            .collection('requests')
+            .doc(requestId)
+            .collection('bids')
+            .doc(userId)
+            .set({
+          'userName': currentUser.email,
           'amount': amount,
           'timestamp': FieldValue.serverTimestamp(),
         });

@@ -177,11 +177,14 @@ Future<void> fetchData() async {
                         description: request.description, // Pass description
                         locationText: locationText,
                         price: request.price, 
-                    
+                     acceptedAmount: request.acceptedAmount,
                         date: request.createdDate,// Pass location text
                         title: request.title,
                         category: request.category?.name,
                        requestId: request.id.toString(),
+                      isSellerAccepted: true
+                      ,   buyerEmail: request.user!.email,
+                         buyerUid:request.user!.email, 
                       );
                     }).toList(),
                   ),

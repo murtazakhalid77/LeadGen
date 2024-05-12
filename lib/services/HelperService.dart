@@ -103,7 +103,7 @@ Future<List<RequestModel>> fetchUserRequest(String email) async {
       },
     );
 
-    if (response.statusCode == 200) {
+    if (response. statusCode == 200) {
       // Check for null response body
       if (response.body != null) {
         List<dynamic>? fetchedRequest = jsonDecode(response.body);
@@ -129,19 +129,15 @@ Future<List<RequestModel>> fetchUserRequest(String email) async {
 
 
 
-Future<bool> acceptRequest(String RequestId) async {
+Future<bool> acceptRequest(String RequestId,String? emailOFAcceptedSeller, double? bidAmount) async {
   try {
     final response = await http.post(
-         UrlConfig.buildUri('userRequest/accept/$RequestId'),
+         UrlConfig.buildUri('userRequest/accept/$RequestId/$emailOFAcceptedSeller/$bidAmount'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       });
     
     if (response.statusCode == 200) {
-  
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      RequestModel updatedRequestModel = RequestModel.fromJson(responseData);
-
       return true;
     } else {
       

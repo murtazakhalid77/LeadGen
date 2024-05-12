@@ -288,9 +288,12 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                           category: category,
                           email: email,
                           condition: "new",
+                          acceptedSeller: null,
                           accepted: "",
+                          acceptedAmount: 0,
                           createdDate: DateTime.now().toString(),
-                          price: _price.text);
+                          price: _price.text
+                        );
                       this.requestModel = requestModel;
                       await makeRequest(requestModel);
                       print(requestModel.toJson());

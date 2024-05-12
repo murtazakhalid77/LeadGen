@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lead_gen/view/myAllRequests/single_request_info.dart';
@@ -13,35 +11,47 @@ class MyRequestCard extends StatelessWidget {
   final String? locationText;
   final String? date;
   final String categoryName;
+  final String accepted;
+  final String acceptedSellerEmail;
+  final String acceptedSellerUid;
 
-  const MyRequestCard({
-    required this.option,
-    required this.email,
-    required this.id,
-    required this.title,
-    required this.requestText,
-    required this.locationText,
-    required this.categoryName,
-    required this.date,
-  });
+  const MyRequestCard(
+      {required this.option,
+      required this.email,
+      required this.id,
+      required this.title,
+      required this.requestText,
+      required this.locationText,
+      required this.categoryName,
+      required this.date,
+      required this.accepted, 
+      required this.acceptedSellerEmail, 
+      required this.acceptedSellerUid});
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(date!));
+    String formattedDate =
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(date!));
 
     return InkWell(
       onTap: () {
+    
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => MyRequestInfo(
               option: option!,
               email: email!,
+              accepted:accepted,
               id: id!,
               title: title!,
               requestText: requestText!,
               locationText: locationText!,
               date: date!,
-              categoryName: categoryName,requestId: id.toString(),
+              categoryName: categoryName,
+              requestId: id.toString(),
+              acceptedSellerEmail:acceptedSellerEmail,
+              acceptedSellerUid:acceptedSellerUid
+
             ),
           ),
         );
@@ -50,16 +60,25 @@ class MyRequestCard extends StatelessWidget {
         width: 180,
         height: 200,
         decoration: BoxDecoration(
-          color: Colors.pink.shade200, // Soft blue color for the background
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.shade400.withOpacity(0.4), // Semi-transparent blue shadow
-              spreadRadius: 3,
-              blurRadius: 6,
-              offset: Offset(0, 4), // Slightly shifted shadow for a lifted effect
-            ),
-          ],
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: accepted == "true"
+              ? [
+                  BoxShadow(
+                    color: Colors.green.shade400.withOpacity(0.4),
+                    spreadRadius: 3,
+                    blurRadius: 6,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.pink.shade400.withOpacity(0.4),
+                    spreadRadius: 3,
+                    blurRadius: 6,
+                    offset: Offset(0, 4),
+                  ),
+                ],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
