@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:lead_gen/view/Chats/person_chat.dart';
+import 'package:lead_gen/view/ReviewAndRating/RatingPage.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/myAllRequests/BidListWidget.dart';
@@ -16,7 +18,10 @@ class MySingleRequestCard extends StatefulWidget {
   final String locationText;
   final String? date;
   final String categoryName;
-  final String requestId; // Add requestId parameter
+  final String requestId;
+  final String acceptedSellerEmail;
+  final String acceptedSellerUid;
+  final String? accepted; // Add requestId parameter
 
   const MySingleRequestCard({
     Key? key,
@@ -28,6 +33,9 @@ class MySingleRequestCard extends StatefulWidget {
     required this.locationText,
     required this.categoryName,
     required this.date,
+    required this.accepted,
+    required this.acceptedSellerEmail,
+    required this.acceptedSellerUid,
     required this.requestId, // Initialize requestId parameter
   }) : super(key: key);
 
@@ -72,18 +80,25 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 170,
         decoration: BoxDecoration(
-          color: Colors.pink.shade200, // Soft blue color for the background
+          color: Colors.white70, // Soft blue color for the background
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.pink.shade400
-                  .withOpacity(0.4), // Semi-transparent blue shadow
-              spreadRadius: 4,
-              blurRadius: 10,
-              offset:
-                  Offset(0, 4), // Slightly shifted shadow for a lifted effect
-            ),
-          ],
+          boxShadow: widget.accepted == "true"
+              ? [
+                  BoxShadow(
+                    color: Colors.green.shade400.withOpacity(0.4),
+                    spreadRadius: 3,
+                    blurRadius: 6,
+                    offset: Offset(0, 4),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.pink.shade400.withOpacity(0.4),
+                    spreadRadius: 3,
+                    blurRadius: 6,
+                    offset: Offset(0, 4),
+                  ),
+                ],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -164,58 +179,91 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
                   ),
                 ),
                 const SizedBox(height: 50),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the BidListWidget to display all bids for the given requestId
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BidListWidget(requestId: widget.requestId),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.pinkAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                        ),
-                        child: const Text(
-                          "View All Bids",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.pinkAccent),
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                              Colors.white), // Change color of text/foreground
-                          shape: MaterialStateProperty.all<OutlinedBorder?>(
-                            RoundedRectangleBorder(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment
+                          .spaceEvenly, // Adjust the spacing between buttons
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RatingPage(sellerName: widget.acceptedSellerEmail,)),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             ),
                           ),
-                        ),
-                        onPressed: () {
-                          // Your onPressed function here
-                        },
-                        child: const Text(
-                          "Button Text",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white, // Text color
+                          child: Text(
+                            'Rate Seller',
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the BidListWidget to display all bids for the given requestId
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    BidListWidget(requestId: widget.requestId),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.pink,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                          ),
+                          child: const Text(
+                            "View All Bids",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                        height:
+                            10), // Adjust the vertical spacing between the row of buttons and the third button
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
                       ),
-                    ],
-                  ),
+                      onPressed: () {
+                        if (widget.accepted == "true") {
+                          // Navigate to the ChatPage with necessary parameters
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                receiveUserEmail: widget.acceptedSellerEmail,
+                                receivedUserId: widget.acceptedSellerUid,
+                              ),
+                            ),
+                          );
+                        } else {
+                          // Handle button action when request is not accepted
+                          // For example, show a toast notification
+                          showCustomToast("Request not accepted yet");
+                        }
+                      },
+                      child: Text(
+                        widget.accepted == "true" ? "Message" : "Not Accepted",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 20),
                 const Text(
                   'Bids',

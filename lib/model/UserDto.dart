@@ -3,15 +3,17 @@ class User {
   String email;
   String phoneNumber;
   String location;
+  String uid;
   
-  User({this.firstName = '', this.email = '', this.phoneNumber = '',this.location=''});
+  User({this.firstName = '', this.email = '', this.phoneNumber = '',this.location='',this.uid=''});
 
   Map<String, dynamic> toJson() {
     return {
       'firstName': firstName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'adress':location
+      'adress':location,
+      'uid':uid
     };
   }
 
@@ -21,6 +23,7 @@ class User {
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       location: json['adress'] ?? '',
+      uid: json['uid'] ?? ''
     );
   }
 }

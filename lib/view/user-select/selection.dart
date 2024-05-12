@@ -47,12 +47,49 @@ class _SelectionPageState extends State<SelectionPage> {
     }
   }
 
+  Future<void> moveToSelectedPage(bool option, bool condition) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    
+      Timer(Duration(seconds: 3), () {
+        setState(() {
+        isLoading = false; // Set isLoading to false after 3 seconds
+      });
+      if (condition) {
+        showCustomToast('Welcome To Seller Home Page');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                    option: option,
+                    email: email,
+                  )),
+        );
+      } else {
+        showCustomToast('Welcome To Buyer Home Page');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(
+                    option: option,
+                    email: email,
+                  )),
+        );
+      }
+    });
+  }
+
   Future<void> changePage(bool option, String phone, bool condition) async {
     setState(() {
       isLoading = true;
     });
 
     Timer(Duration(seconds: 3), () {
+       setState(() {
+        isLoading = false; // Set isLoading to false after 3 seconds
+      });
       if (condition) {
         setUserType(UserTypeEnum.SELLER);
         Navigator.pop(context); // Hide the loader
@@ -127,31 +164,18 @@ class _SelectionPageState extends State<SelectionPage> {
                   const SizedBox(height: 5),
                   buildElevatedButtons(
                       context, widget.email, this.userType.user_Type),
-                  if (isLoading)
-                    // Positioned(
-                      // bottom: -150,
-                      // left: 0,
-                      // top: 180,
-                      // right: 0,
-                       Container(
-                        child: Center(
-                          child: LoaderWidget(isLoading: isLoading),
-                        ),
-                      ),
-                    // ),
+
                 ],
               ),
             ),
           ),
           if (isLoading)
-            // Positioned(
-            // bottom: -150,
-            // left: 0,
-            // top: 180,
-            // right: 0,
             Container(
-              child: Center(
-                child: LoaderWidget(isLoading: isLoading),
+              color: Colors.grey.withOpacity(0.6),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               ),
             ),
           // ),
@@ -160,8 +184,7 @@ class _SelectionPageState extends State<SelectionPage> {
     );
   }
 
-  Widget buildElevatedButtons(
-      BuildContext context, String email, String type) {
+  Widget buildElevatedButtons(BuildContext context, String email, String type) {
     if (type == "BOTH") {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -208,26 +231,11 @@ class _SelectionPageState extends State<SelectionPage> {
   }
 
   Widget buildElevatedButton(
-      String email ,BuildContext context, bool condition, bool option) {
+      String email, BuildContext context, bool condition, bool option) {
     return ElevatedButton(
-      onPressed: condition
-          ? () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                          option: option,
-                          email: email,
-                        )),
-                // MaterialPageRoute(builder: (context) => SellerHomePage(option: option)),
-              )
-          : () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MyHomePage(
-                          option: option,
-                          email: email,
-                        )),
-              ),
+      onPressed: () {
+        moveToSelectedPage(option, condition);
+      },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(
             vertical: 20, horizontal: 30), // Adjust padding as needed

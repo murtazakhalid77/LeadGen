@@ -288,8 +288,12 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                           category: category,
                           email: email,
                           condition: "new",
+                          acceptedSeller: null,
+                          accepted: "",
+                          acceptedAmount: 0,
                           createdDate: DateTime.now().toString(),
-                          price: _price.text);
+                          price: _price.text
+                        );
                       this.requestModel = requestModel;
                       await makeRequest(requestModel);
                       print(requestModel.toJson());
@@ -320,8 +324,11 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
             ))),
             if (isLoading)
               Container(
-                child: Center(
-                  child: LoaderWidget(isLoading: isLoading),
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black
+                  ),
                 ),
               ),
           ],

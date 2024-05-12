@@ -139,7 +139,10 @@ class _MyRequestsState extends State<MyRequests> {
                                 '${location.subLocality ?? ''}';
 
                             String categoryName = request.category!.name ?? '';
+                            print(request.acceptedSeller!.email);
+                            print(request.acceptedSeller!.uid);
                             return MyRequestCard(
+                                  accepted:request.accepted,
                               option: widget.option,
                               email: widget.email,
                               id: request.id,
@@ -148,12 +151,17 @@ class _MyRequestsState extends State<MyRequests> {
                               locationText: locationText,
                               date: request.createdDate,
                               categoryName: categoryName,
+                              acceptedSellerUid:request.acceptedSeller!.uid,
+                              acceptedSellerEmail:request.acceptedSeller!.email
+                              
+                        
                             );
                           } catch (e) {
                             // Handle decoding error
                             print('Error decoding location model: $e');
                             // Provide a placeholder or fallback behavior
                             return MyRequestCard(
+                              accepted:request.accepted,
                               option: widget.option,
                               email: widget.email,
                               id: request.id,
@@ -163,6 +171,8 @@ class _MyRequestsState extends State<MyRequests> {
                                   'Location information not available',
                               date: request.createdDate,
                               categoryName: request.category?.name ?? '',
+                                acceptedSellerUid:request.acceptedSeller!.uid,
+                              acceptedSellerEmail:request.acceptedSeller!.email
                             );
                           }
                         }).toList(),

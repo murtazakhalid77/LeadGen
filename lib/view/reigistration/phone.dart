@@ -40,6 +40,7 @@ class PhoneState extends State<PhonePage> {
           showCustomToast('OTP sent');
 
           String otp = response.body;
+          // ignore: use_build_context_synchronously
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -165,15 +166,11 @@ class PhoneState extends State<PhonePage> {
             ),
           ),
           if (isLoading)
-            Positioned(
-              bottom: -100,
-              left: 0,
-              top: 280,
-              right: 0,
-              child: Container(
-                
-                child: Center(
-                  child: LoaderWidget(isLoading: isLoading),
+            Container(
+              color: Colors.grey.withOpacity(0.6),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
                 ),
               ),
             ),

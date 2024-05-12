@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
+import 'package:lead_gen/model/UserDto.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/model/RequestModel.dart';
@@ -25,7 +26,7 @@ class SellerHomePage extends StatefulWidget {
 
 class _SellerHomePageState extends State<SellerHomePage> {
   late UserService userService;
-   User? user;
+  User? user;
   List<RequestModel> fetchedRequests = [];
   late HelperService helperService;
 
@@ -74,7 +75,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-         drawer: NavBar(userType: 'seller', user: user),
+      drawer: NavBar(userType: 'seller', user: user),
       appBar: AppBar(
         automaticallyImplyLeading:
             false, // Disable the automatic leading widget
@@ -137,29 +138,61 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     runSpacing: 20,
                     alignment: WrapAlignment.center,
                     children: fetchedRequests.map((request) {
+                      // Extract location data
                       LocationModel location =
-                          LocationModel.fromString(request.locationModel!); 
-                         String locationText =
-                          '${location.locality ?? ''} '
-                          '${location.subLocality ?? ''} '
-                          '${location.subAdministrativeArea ?? ''} '
-                          '${location.country ?? ''} '
-                           '${location.street ?? ''}';
-                      String categoryName = request.category!.name ?? '';
-                      return SellerCard(
-                        name: request.user!.firstName, // Pass name
-                        description: request.description, // Pass description
-                        locationText: locationText,
-                         price: request.price, 
-                        date: request.createdDate,// Pass location text
-                        title: request.title,
-                        category: request.category?.name,
-                        requestId: request.id.toString(),
-                        accept: request.
-                      );
+                          LocationModel.fromString(request.locationModel!);
+                      String locationText =
+                          '${location.locality ?? ''} ${location.subLocality ?? ''} ${location.subAdministrativeArea ?? ''} ${location.country ?? ''} ${location.street ?? ''}';
+
+                      // Check if the accepted seller's email matches the logged-in user's email
+                      // Check if the seller is accepted by the current user
+                      bool isSellerAccepted = request.acceptedSeller?.email ==
+                          firebase_auth
+                              .FirebaseAuth.instance.currentUser?.email;
+
+                        print(request.user!.uid);
+// Display the seller card to all users if the seller is not accepted yet
+                      if (!(request.accepted=="true")) {
+                        return SellerCard(
+                          name: request.user!.firstName, // Pass name
+                          description: request.description, // Pass description
+                          locationText: locationText, // Pass location text
+                          price: request.price, // Pass price
+                          date: request.createdDate, // Pass date
+                          title: request.title, // Pass title
+                          category: request.category?.name, // Pass category
+                          requestId: request.id.toString(), // Pass requestId
+                          acceptedAmount: request.acceptedAmount,
+                          isSellerAccepted:isSellerAccepted, 
+                         buyerEmail: request.user!.email,
+                         buyerUid: request.user!.uid,
+                        );
+                      }
+// Display the seller card only to the accepted user
+                      else if (isSellerAccepted) {
+                        return SellerCard(
+                          name: request.user!.firstName, // Pass name
+                          description: request.description, // Pass description
+                          locationText: locationText, // Pass location text
+                          price: request.price, // Pass price
+                          date: request.createdDate, // Pass date
+                          title: request.title, // Pass title
+                          category: request.category?.name, // Pass category
+                          requestId: request.id.toString(), // Pass requestId
+                          acceptedAmount: request.acceptedAmount,
+                          isSellerAccepted:
+                              isSellerAccepted, 
+                                 buyerEmail:request.user!.email,
+                         buyerUid:request.user!.uid,
+                        );
+                      }
+// If the seller is accepted but not by the current user, don't display the seller card
+                      else {
+                        return SizedBox();
+                      }
                     }).toList(),
                   ),
-                )
+                ),
               ],
             ),
           ),

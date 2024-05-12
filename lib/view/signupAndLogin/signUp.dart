@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,16 +22,18 @@ class SignUpPage extends StatefulWidget {
   final String phone;
   final String password;
 
-  const SignUpPage({Key? key, required this.phone,required this.password}) : super(key: key);
+  const SignUpPage({Key? key, required this.phone, required this.password})
+      : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-    final FirebaseFirestore _firebaseFirestore =FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final OtpService _otpService = OtpService();
   final _firebaseMessaging = FirebaseMessaging.instance;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -48,26 +52,35 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<Registration> _constructRegistrationObject() async {
     String? token = await getFCMToken();
+    String? uid="";
     return Registration(_firstNameController.text, _lastNameController.text,
-        _cnicController.text, _emailController.text, widget.phone, token);
-        
+        _cnicController.text, _emailController.text, widget.phone, token!,uid);
   }
 
   Future<void> _registerUser(Registration registrationData) async {
     try {
+       UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text, password: widget.password);
+      _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set(
+          {'uid': userCredential.user!.uid, 'email': _emailController.text});
+        registrationData.uid=userCredential.user!.uid;
+      var response = await _otpService.registerUser(registrationData);
 
-   
+  
 
-     var  response = await _otpService.registerUser(registrationData);
-
-  UserCredential userCredential= await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _emailController.text, password: widget.password);
-        _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
-          'uid':userCredential.user!.uid,
-          'email':_emailController.text
-        });
-        
       if (response.statusCode == 200) {
+        setState(() {
+          isLoading = false;
+        });
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
         showCustomToast('User registered successfully!');
+
+        // ignore: use_build_context_synchronously
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -76,11 +89,21 @@ class _SignUpPageState extends State<SignUpPage> {
                   )),
         );
       } else {
+        setState(() {
+          isLoading = false;
+        });
         showCustomToast('User registration failed!');
       }
     } catch (e) {
       print('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
       showCustomToast("Error Creating User Or User Cnic Already Exists");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -383,6 +406,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     ElevatedButton(
                       onPressed: () async {
+                        setState(() {
+                          isLoading =
+                              true; // Set isLoading to true using setState
+                        });
                         if (_formKey.currentState?.validate() ?? false) {
                           FocusManager.instance.primaryFocus?.unfocus();
                           Registration registrationData =
@@ -442,6 +469,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
             ),
+            if (isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.black),
+                ),
+              ),
           ],
         ),
       ),
