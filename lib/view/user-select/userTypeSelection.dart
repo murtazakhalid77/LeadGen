@@ -100,7 +100,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
                     children: [
                       _buildSelectionButton(
                         icon: Icons.shopping_cart_rounded,
-                        text: 'Want to sell \nsomething',
+                        text: 'Want to become a\n Seller!',
                         isSelected: _isSellerSelected,
                         onPressed: () {
                           setState(() {
@@ -110,7 +110,7 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
                       ),
                       _buildSelectionButton(
                         icon: Icons.search,
-                        text: 'Looking for \nsomething',
+                        text: 'Want to become a \nbuyer',
                         isSelected: _isBuyerSelected,
                         onPressed: () {
                           setState(() {

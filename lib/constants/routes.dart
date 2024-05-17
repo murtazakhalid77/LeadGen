@@ -56,7 +56,7 @@ final Map<String, WidgetBuilder> routes = {
 };
 
 class UrlConfig {
-static const String baseUrl = "http://192.168.1.104:9090/api";
+static const String baseUrl = "http://192.168.1.106:8080/api";
 
 
   static Uri buildUri(String path) {
