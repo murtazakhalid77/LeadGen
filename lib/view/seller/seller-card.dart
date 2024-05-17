@@ -96,14 +96,15 @@ class SellerCard extends StatelessWidget {
                       ),
                       iconSize: 24,
                     ),
-                  Text(
-                    'Accepted Amount: \$${acceptedAmount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors
-                          .green, // Customize the color for the accepted amount
+                  if (isSellerAccepted)
+                    Text(
+                      'Accepted Amount: \$${acceptedAmount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors
+                            .green, // Customize the color for the accepted amount
+                      ),
                     ),
-                  ),
                 ],
               ),
               SizedBox(height: 5),
@@ -143,13 +144,19 @@ class SellerCard extends StatelessWidget {
                 style: TextStyle(color: Colors.black54),
               ),
               SizedBox(height: 10),
+             
+
+             
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      _showOfferDialog(context, requestId);
-                    },
+                    onPressed: isSellerAccepted
+                        ? null
+                        : () {
+                            _showOfferDialog(
+                                context, requestId, double.parse(price));
+                          },
                     child: Text(
                       'Offer',
                       style: TextStyle(
@@ -167,26 +174,28 @@ class SellerCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Handle deny button tap
-                    },
-                    child: Text(
-                      'Deny',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
+                  // ElevatedButton(
+                  //   onPressed: isSellerAccepted
+                  //       ? null
+                  //       : () {
+                  //           // Handle deny button tap
+                  //         },
+                  //   child: Text(
+                  //     'Deny',
+                  //     style: TextStyle(
+                  //       fontSize: 14,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  //   style: ElevatedButton.styleFrom(
+                  //     primary: Colors.blue,
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal: 16, vertical: 8),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(8),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ],
@@ -198,7 +207,6 @@ class SellerCard extends StatelessWidget {
 
   void sendMessage(BuildContext context, String requestDescription,
       String receiveUserEmail, String receivedUserId) async {
-
     String message =
         "Hey, I heard about you needing this: \"$requestDescription\". Can we talk?";
     ChatService chatService = new ChatService();
@@ -216,21 +224,32 @@ class SellerCard extends StatelessWidget {
     );
   }
 
-  void _showOfferDialog(BuildContext context, String requestId) {
+  void _showOfferDialog(BuildContext context, String requestId, double price) {
     TextEditingController offerController = TextEditingController();
+    double minOffer = price * 0.9; // Minimum 90% of the price
+    double maxOffer = price * 1.1; // Maximum 110% of the price
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('Enter Your Offer'),
-          content: TextField(
-            controller: offerController,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Amount',
-              border: OutlineInputBorder(),
-            ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Offer must be between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}',
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: offerController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -238,14 +257,22 @@ class SellerCard extends StatelessWidget {
                 // Retrieve the bid amount from the offer controller
                 double? bidAmount = double.tryParse(offerController.text);
 
-                // If the bid amount is valid, call addBidToRequest
-                if (bidAmount != null) {
-                  // Call addBidToRequest with the provided requestId and bid amount
+                // If the bid amount is valid and within the range, call addBidToRequest
+                if (bidAmount != null &&
+                    bidAmount >= minOffer &&
+                    bidAmount <= maxOffer) {
                   addBidToRequest(requestId, bidAmount);
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                } else {
+                  // Show an error message if the amount is out of range
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
+                    ),
+                  );
                 }
-
-                // Close the dialog
-                Navigator.of(context).pop();
               },
               child: Text('Submit'),
             ),
@@ -274,6 +301,7 @@ class SellerCard extends StatelessWidget {
       String userId = currentUser.uid;
 
       try {
+     
         // Add a bid document to the specific request's bids subcollection
         await firestore
             .collection('requests')
