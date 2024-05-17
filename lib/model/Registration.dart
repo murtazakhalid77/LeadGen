@@ -6,9 +6,9 @@ class Registration{
   String phoneNumber;
   String? fcmToken;
   String uid;
-  Registration(this.uid,this.firstName, this.lastName,this.cnic,this.email,this.phoneNumber,this.fcmToken);
+  Registration(this.firstName, this.lastName,this.cnic,this.email,this.phoneNumber,this.fcmToken,this.uid,);
 
-   Map<String, dynamic> toJson() {
+   Map<String, dynamic>   toJson() {
     return {
       'firstName': firstName,
       'lastName': lastName,

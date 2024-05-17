@@ -82,9 +82,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           await _categoryService.fetchCategories();
 
       if (fetchedCategories.isNotEmpty) {
-             SharedPreferences prefs = await SharedPreferences.getInstance();
-                   email = prefs.getString('email')!;
-                   // here i am also initiaizing the phone number
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        email = prefs.getString('email')!;
+        // here i am also initiaizing the phone number
         setState(() {
           categories = fetchedCategories;
         });
@@ -96,28 +96,62 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     }
   }
 
-  Future<void> makeRequest(RequestModel? requestModel) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      RequestModel? requestModel =
-          await _helperService.requestPost(this.requestModel);
+ Future<void> makeRequest(BuildContext context, RequestModel? requestModel) async {
 
-      if (requestModel != null) {
-        showCustomToast("Request Posted");
-      }
-    } catch (error) {
-      print('Error fetching categories: $error');
-      showCustomToast("error while posting request");
+  try {
+    RequestModel? requestModel =
+        await _helperService.requestPost(this.requestModel);
+
+    if (requestModel != null) {
+      // Show success dialog with a tick icon
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Success"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check_circle, color: Colors.green, size: 48),
+                SizedBox(height: 10),
+                Text("Request Posted"),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
-    Timer(const Duration(seconds: 5), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+  } catch (error) {
+    print('Error fetching categories: $error');
+    // Show error dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text("Error while posting request"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
+}
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -292,10 +326,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                           accepted: "",
                           acceptedAmount: 0,
                           createdDate: DateTime.now().toString(),
-                          price: _price.text
-                        );
+                          price: _price.text);
                       this.requestModel = requestModel;
-                      await makeRequest(requestModel);
+                      await makeRequest(context, requestModel);
                       print(requestModel.toJson());
                       Navigator.pop(context);
                     },
@@ -326,9 +359,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
               Container(
                 color: Colors.grey.withOpacity(0.6),
                 child: const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.black
-                  ),
+                  child: CircularProgressIndicator(color: Colors.black),
                 ),
               ),
           ],
