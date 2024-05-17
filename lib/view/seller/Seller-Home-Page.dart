@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:lead_gen/model/SummaryDto.dart';
 
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class SellerHomePage extends StatefulWidget {
 class _SellerHomePageState extends State<SellerHomePage> {
   late UserService userService;
   User? user;
+  SummarDto? summarDto;
   List<RequestModel> fetchedRequests = [];
   late HelperService helperService;
 
@@ -34,9 +36,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
   void initState() {
     userService = UserService();
     helperService = HelperService();
+    fetchSummary();
+
     super.initState();
     fetchUser();
+
     fetchData();
+  }
+
+  Future<void> fetchSummary() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString('email')!;
+      SummarDto? fetchedSummary = await helperService.getSummary(email);
+      setState(() {
+        summarDto = fetchedSummary;
+      });
+    } catch (error) {
+      print('Error fetching Summary: $error');
+    }
   }
 
   Future<void> fetchUser() async {
@@ -150,9 +168,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           firebase_auth
                               .FirebaseAuth.instance.currentUser?.email;
 
-                        print(request.user!.uid);
+                      print(request.user!.uid);
 // Display the seller card to all users if the seller is not accepted yet
-                      if (!(request.accepted=="true")) {
+                      if (!(request.accepted == "true")) {
                         return SellerCard(
                           name: request.user!.firstName, // Pass name
                           description: request.description, // Pass description
@@ -163,9 +181,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           category: request.category?.name, // Pass category
                           requestId: request.id.toString(), // Pass requestId
                           acceptedAmount: request.acceptedAmount,
-                          isSellerAccepted:isSellerAccepted, 
-                         buyerEmail: request.user!.email,
-                         buyerUid: request.user!.uid,
+                          isSellerAccepted: isSellerAccepted,
+                          buyerEmail: request.user!.email,
+                          buyerUid: request.user!.uid,
                         );
                       }
 // Display the seller card only to the accepted user
@@ -180,10 +198,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           category: request.category?.name, // Pass category
                           requestId: request.id.toString(), // Pass requestId
                           acceptedAmount: request.acceptedAmount,
-                          isSellerAccepted:
-                              isSellerAccepted, 
-                                 buyerEmail:request.user!.email,
-                         buyerUid:request.user!.uid,
+                          isSellerAccepted: isSellerAccepted,
+                          buyerEmail: request.user!.email,
+                          buyerUid: request.user!.uid,
                         );
                       }
 // If the seller is accepted but not by the current user, don't display the seller card
@@ -209,25 +226,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
                   ),
                 ),
               ),
-              const Padding(
+              Padding(
                   padding: EdgeInsets.only(right: 20, left: 20),
                   child: Row(
                     children: [
                       SizedBox(width: 20),
                       Text(
-                        "23",
+                        summarDto!.totalRequestServed.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),
                       SizedBox(width: 63),
                       Text(
-                        "4.3",
+                        summarDto!.overAllRating.toStringAsFixed(1),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),
                       Spacer(),
                       Text(
-                        "100k",
+                        summarDto!.totalEarning.toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),
