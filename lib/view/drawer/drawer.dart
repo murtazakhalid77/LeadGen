@@ -142,8 +142,8 @@ class NavBar extends StatelessWidget {
               );
               // You can implement different logic based on user type
               if (userType == 'seller') {
-                // Navigate to seller's requests page
-                //   Navigator.pushNamed(context, '/sellerRequests');
+                // Navigate to seller's profile page
+                   Navigator.pushNamed(context, '/profile_page');
               } else if (userType == 'buyer') {
                 // Navigate to buyer's requests page
                 Navigator.pushNamed(context, '/HomePage');

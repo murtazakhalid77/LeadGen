@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/LocationModel.dart';
@@ -9,14 +8,11 @@ import 'package:lead_gen/model/RequestModel.dart';
 import 'package:lead_gen/model/Subcategory.dart';
 import 'package:lead_gen/services/HelperService.dart';
 import 'package:lead_gen/services/categoryService.dart';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:lead_gen/model/category.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
-import 'package:lead_gen/view/buyer/HomePage.dart';
-
 import 'package:lead_gen/view/conditionDropDown/conditionDropDown.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/loader.dart';
@@ -66,6 +62,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     fetchCategories();
 
     dropdownValue = widget.categoryName;
+    category = categories.firstWhereOrNull((cat) => cat.name == widget.categoryName);
   }
 
   @override
@@ -87,6 +84,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         // here i am also initiaizing the phone number
         setState(() {
           categories = fetchedCategories;
+          //Set initial category here after fetching
+          category = categories.firstWhereOrNull((cat) => cat.name == widget.categoryName);
         });
         showCustomToast("category fetched");
       }
@@ -158,42 +157,33 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.lightBlue,
+          backgroundColor: Colors.blue,
           elevation: 0.2,
           title: const Text(
             'Request',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
           ),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-            onPressed: () {
-              // Unfocus the current focus node before popping the screen
-              FocusManager.instance.primaryFocus?.unfocus();
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(
-              //     builder: (context) => const MyHomePage(
-              //       phoneNumber: '03468288815', //TODO: to be done
-              //     ), // goes to home page
-              //   ),
-              // ); // Add navigation functionality here
-            },
-          ),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            // Unfocus the current focus node before popping the screen
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();// Add navigation functionality here
+          },
         ),
-        backgroundColor: Colors.white,
+        ),
+        backgroundColor: Colors.grey[200],
         body: Stack(
           children: [
             Form(
                 child: SingleChildScrollView(
                     // adds scrolling in page
                     child: Container(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.01,
-                  right: 15,
-                  left: 15,
-                  bottom: 20),
+              padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 45),
+                  const SizedBox(height: 30),
                   buildTextField(
                     controller: _title,
                     labelText: 'Title *',
@@ -208,7 +198,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                     },
                     keyboardType: null,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
                   buildTextField(
                     controller: _description,
                     labelText: 'Description *',
@@ -223,7 +213,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                     },
                     keyboardType: null,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
                   buildTextField(
                     controller:
                         TextEditingController(text: selectedLocation ?? ''),
@@ -284,7 +274,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                     },
                     keyboardType: null,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
                   buildTextField(
                     controller: _price,
                     labelText: 'Price',
@@ -299,19 +289,20 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                     },
                     keyboardType: TextInputType.number,
                   ),
-                  const SizedBox(height: 8),
-                  buildDropdownWithHeading(),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 15),
+                  buildDropdownWithHeading(), //category dropdown
+                  const SizedBox(height: 20),
                   const Text(
                     'Condition',
                     style: TextStyle(
-                      color: Colors.lightBlue,
+                      color: Colors.blueAccent,
                       fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 5),
                   const ConditionDropdown(),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
                       RequestModel requestModel = RequestModel(
@@ -333,21 +324,19 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightBlue,
+                      backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      padding: EdgeInsets.symmetric(vertical: 18),
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(18),
-                      child: Center(
-                        child: Text(
-                          'Send',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                    child: Center(
+                      child: Text(
+                        'Send',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -359,7 +348,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
               Container(
                 color: Colors.grey.withOpacity(0.6),
                 child: const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
+                  child: CircularProgressIndicator(color: Colors.blueAccent),
                 ),
               ),
           ],
@@ -382,9 +371,9 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, 5),
-            color: Colors.blueAccent.withOpacity(.3),
+            color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
-            blurRadius: 10,
+            blurRadius: 8,
           )
         ],
       ),
@@ -394,25 +383,26 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         onTap: onTap,
         validator: validator,
         keyboardType: keyboardType,
+        style: TextStyle(color: Colors.black),
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
-              color: Colors.lightBlue,
+              color: Colors.blueAccent,
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: const BorderSide(
-              color: Colors.lightBlue,
+              color: Colors.blueAccent,
             ),
           ),
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[600]),
           labelText: labelText,
           labelStyle: const TextStyle(
-            color: Colors.lightBlue,
-            fontSize: 20,
+            color: Colors.blueAccent,
+            fontSize: 16,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -431,68 +421,53 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           child: Text(
             'Category', // Heading text
             style: TextStyle(
-              color: Colors.lightBlue,
-              fontSize: 20,
+              color: Colors.blueAccent,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
-        DropdownButton<Categoryy?>(
-          value: category ??
-              categories
-                  .firstWhereOrNull((cat) => cat.name == widget.categoryName),
-          icon: const Icon(Icons.arrow_drop_down),
-          style: const TextStyle(color: Colors.black),
-          onChanged: (Categoryy? newValue) {
-            setState(() {
-              category = newValue;
-              dropdownValue = newValue!.name;
-            });
-          },
-          isExpanded: true,
-          hint: const Text('Select Category'),
-          items: categories.map((Categoryy category) {
-            return DropdownMenuItem<Categoryy>(
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 5),
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 8,
+              )
+            ],
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<Categoryy?>(
               value: category,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(category.name!),
-              ),
-            );
-          }).toList(),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+              style: const TextStyle(color: Colors.black),
+              dropdownColor: Colors.white,
+              onChanged: (Categoryy? newValue) {
+                setState(() {
+                  category = newValue;
+                  dropdownValue = newValue!.name;
+                });
+              },
+              isExpanded: true,
+              hint: const Text('Select Category', style: TextStyle(color: Colors.black)),
+              items: categories.map((Categoryy category) {
+                return DropdownMenuItem<Categoryy>(
+                  value: category,
+                  child: Text(category.name!, style: TextStyle(color: Colors.black)),
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  // Future<LocationModel> _fetchLocation() async {
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.high,
-  //     );
-
-  //     List<Placemark> placemarks = await placemarkFromCoordinates(
-  //       position.latitude,
-  //       position.longitude,
-  //     );
-  //     this.selectedLocation=
-  //     Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
-
-  //     LocationModel location = LocationModel(
-  //       locality: currentPlace?.locality ?? '',
-  //       subLocality: currentPlace?.subLocality ?? '',
-  //       street: currentPlace?.street ?? '',
-  //       country: currentPlace?.country ?? '',
-  //       subAdministrativeArea: currentPlace?.subAdministrativeArea ?? '',
-  //       administrativeArea: currentPlace?.administrativeArea ?? '',
-  //     );
-
-  //     return location;
-  //   } catch (error) {
-  //     print('Error fetching location: $error');
-
-  //     return LocationModel();
-  //   }
-  // }
 }
 
 extension IterableExtensions<T> on Iterable<T> {
