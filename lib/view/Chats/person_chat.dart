@@ -74,6 +74,14 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.receiveUserEmail),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            // Unfocus the current focus node before popping the screen
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();// Add navigation functionality here
+          },
+        ),
       ),
       backgroundColor: Colors.white,
       body: Column(

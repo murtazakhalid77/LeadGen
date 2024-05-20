@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/constants/routes.dart';
 import 'package:lead_gen/model/ProfanityCheckResponse.dart';
 import 'package:lead_gen/model/RequestModel.dart';
+import 'package:lead_gen/model/Review.dart';
 import 'package:lead_gen/model/SummaryDto.dart';
 
 class HelperService extends ChangeNotifier {
@@ -187,4 +188,28 @@ class HelperService extends ChangeNotifier {
     rethrow; // Rethrow the error to propagate it to the caller
   }
 }
+
+
+  Future<List<Review>> getReviews(String emailOFSeller) async {
+    try {
+      final response = await http.get(
+       UrlConfig.buildUri('userReviews/reviews/$emailOFSeller'), // Replace with your actual API URL
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse.map((reviewJson) => Review.fromJson(reviewJson)).toList();
+      } else {
+        print('Request failed with status: ${response.statusCode}');
+        return []; // Return an empty list on failure
+      }
+    } catch (error) {
+      print('Error: $error');
+      rethrow; // Rethrow the error to propagate it to the caller
+    }
+  }
+
 }

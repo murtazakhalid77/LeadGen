@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:lead_gen/services/HelperService.dart';
+import 'package:lead_gen/view/ReviewAndRating/reviews.dart';
 
 class BidListWidget extends StatefulWidget {
   final String requestId;
@@ -86,6 +87,15 @@ print(bidAmount);
     return SizeTransition(
       sizeFactor: animation,
       child: GestureDetector(
+         onTap: () {
+        // Navigate to another page when the list item is tapped
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReviewsPage(sellerName: userName,), // Replace AnotherPage with the page you want to navigate to
+          ),
+        );
+      },
         // Only allow long press if no bid has been accepted and the current bid is not accepted
         onLongPress: (accepted ?? true)
             ? () {

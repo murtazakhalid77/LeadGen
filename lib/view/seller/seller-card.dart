@@ -36,21 +36,22 @@ class SellerCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     // Convert date string to DateTime and format it
     final DateTime dateTime = DateTime.parse(date);
     final String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
 
-    return InkWell(
-      onTap: () {
-        // Handle card tap
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => SellerSingleRequest(),
-          ),
-        );
+    return GestureDetector(
+    
+      onLongPressStart: (details) {
+
+        Navigator.of(context).push(_buildPreviewRoute(context));
       },
+      onLongPressEnd: (details) {
+        Navigator.of(context).pop();
+      },   
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Container(
@@ -205,13 +206,39 @@ class SellerCard extends StatelessWidget {
     );
   }
 
+ Route _buildPreviewRoute(BuildContext context) {
+  
+    return PageRouteBuilder(
+      opaque: false,
+      pageBuilder: (BuildContext context, _, __) {
+        return GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.5),
+            body: Center(
+              child: SellerSingleRequest(
+                firstName: name,
+                description: description,
+                locationText: locationText,
+                isSellerAccepted: isSellerAccepted,
+                requestId:requestId,
+                price:price
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
   void sendMessage(BuildContext context, String requestDescription,
       String receiveUserEmail, String receivedUserId) async {
     String message =
         "Hey, I heard about you needing this: \"$requestDescription\". Can we talk?";
     ChatService chatService = new ChatService();
-    // Send the predefined message using the ChatService
+   print(receivedUserId);
     await chatService.sendMessage(receivedUserId, message);
+   
 
     Navigator.push(
       context,
@@ -225,22 +252,37 @@ class SellerCard extends StatelessWidget {
   }
 
   void _showOfferDialog(BuildContext context, String requestId, double price) {
-    TextEditingController offerController = TextEditingController();
-    double minOffer = price * 0.9; // Minimum 90% of the price
-    double maxOffer = price * 1.1; // Maximum 110% of the price
+  TextEditingController offerController = TextEditingController();
+  double minOffer = price * 0.9; // Minimum 90% of the price
+  double maxOffer = price * 1.1; // Maximum 110% of the price
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Enter Your Offer'),
-          content: Column(
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
+                'Enter Your Offer',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Text(
                 'Offer must be between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: offerController,
                 keyboardType: TextInputType.number,
@@ -249,45 +291,51 @@ class SellerCard extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
               ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      // Retrieve the bid amount from the offer controller
+                      double? bidAmount = double.tryParse(offerController.text);
+
+                      // If the bid amount is valid and within the range, call addBidToRequest
+                      if (bidAmount != null &&
+                          bidAmount >= minOffer &&
+                          bidAmount <= maxOffer) {
+                        addBidToRequest(requestId, bidAmount);
+                        // Close the dialog
+                        Navigator.of(context).pop();
+                      } else {
+                        // Show an error message if the amount is out of range
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Close the dialog without any action
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
+              ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Retrieve the bid amount from the offer controller
-                double? bidAmount = double.tryParse(offerController.text);
+        ),
+      );
+    },
+  );
+}
 
-                // If the bid amount is valid and within the range, call addBidToRequest
-                if (bidAmount != null &&
-                    bidAmount >= minOffer &&
-                    bidAmount <= maxOffer) {
-                  addBidToRequest(requestId, bidAmount);
-                  // Close the dialog
-                  Navigator.of(context).pop();
-                } else {
-                  // Show an error message if the amount is out of range
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                          'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
-                    ),
-                  );
-                }
-              },
-              child: Text('Submit'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Close the dialog without any action
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Future<void> addBidToRequest(String requestId, double amount) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -322,4 +370,3 @@ class SellerCard extends StatelessWidget {
       print('User not authenticated');
     }
   }
-}

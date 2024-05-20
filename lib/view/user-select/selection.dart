@@ -144,42 +144,48 @@ class _SelectionPageState extends State<SelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.04,
-                right: 15,
-                left: 15,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Image(
-                    image: AssetImage("lib/assets/logo.png"),
-                  ),
-                  const SizedBox(height: 5),
-                  buildElevatedButtons(
-                      context, widget.email, this.userType.user_Type),
-
-                ],
-              ),
-            ),
-          ),
-          if (isLoading)
-            Container(
-              color: Colors.grey.withOpacity(0.6),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent going back
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.lightBlueAccent,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.04,
+                  right: 15,
+                  left: 15,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Image(
+                      image: AssetImage("lib/assets/logo.png"),
+                    ),
+                    const SizedBox(height: 5),
+                    buildElevatedButtons(
+                        context, widget.email, this.userType.user_Type),
+    
+                  ],
                 ),
               ),
             ),
-          // ),
-        ],
+            if (isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            // ),
+          ],
+        ),
       ),
     );
   }

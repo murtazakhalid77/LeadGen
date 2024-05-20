@@ -188,11 +188,17 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
+                            if(widget.accepted=="false"){
+                              showCustomToast("You have not accepted any seller yet");
+                            }
+                            else{
+                              Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => RatingPage(sellerName: widget.acceptedSellerEmail,requestId:widget.id)),
                             );
+                            }
+                            
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,

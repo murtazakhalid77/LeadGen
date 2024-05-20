@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lead_gen/model/Review.dart';
+import 'package:lead_gen/services/HelperService.dart';
 import 'package:readmore/readmore.dart'; // Import the ReadMore package
 import 'package:flutter_rating_bar/flutter_rating_bar.dart'; // Import the Flutter Rating Bar package
-
-class Review {
-  final String sellerName;
-  final String reviewText;
-  final double rating;
-  final String profilePicturePath;
-
-  Review({
-    required this.sellerName,
-    required this.reviewText,
-    required this.rating,
-    required this.profilePicturePath,
-  });
-}
 
 class ReviewCard extends StatelessWidget {
   final Review review;
@@ -32,20 +20,27 @@ class ReviewCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage(review.profilePicturePath),
-                  radius: 20.0,
+                IconButton(
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                const SizedBox(width: 8.0),
-                Text(
-                  review.sellerName,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      review.reviewerName,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 8.0),
             ReadMoreText(
-              review.reviewText,
+              review.note,
               trimLines: 2,
               trimMode: TrimMode.Line,
               textAlign: TextAlign.justify,
@@ -89,7 +84,29 @@ class ReviewCard extends StatelessWidget {
   }
 }
 
-class ReviewsPage extends StatelessWidget {
+class ReviewsPage extends StatefulWidget {
+  final String sellerName;
+
+  const ReviewsPage({Key? key, required this.sellerName}) : super(key: key);
+
+  @override
+  _ReviewsPageState createState() => _ReviewsPageState();
+}
+
+class _ReviewsPageState extends State<ReviewsPage> {
+  late Future<List<Review>> futureReviews;
+
+  @override
+  void initState() {
+    super.initState();
+    futureReviews = _loadReviewsForSeller(widget.sellerName);
+  }
+
+  Future<List<Review>> _loadReviewsForSeller(String sellerName) async {
+    HelperService helperService = HelperService();
+    return await helperService.getReviews(sellerName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,32 +119,23 @@ class ReviewsPage extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Reviews'),
         ),
-        body: ListView(
-          children: [
-            ReviewCard(
-              review: Review(
-                sellerName: 'John Doe',
-                reviewText: 'Great seller! Highly recommended.',
-                rating: 4.5,
-                profilePicturePath: 'lib/assets/man.png',
-              ),
-            ),
-            ReviewCard(
-              review: Review(
-                sellerName: 'Jane Smith',
-                reviewText:
-                    'Product as described. Fast shipping. This is a long review that will need to be collapsed and expanded.',
-                rating: 5.0,
-                profilePicturePath: 'lib/assets/man.png',
-              ),
-            ),
-            
-            // Add more reviews as needed
-          ],
+        body: FutureBuilder<List<Review>>(
+          future: futureReviews,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text('No reviews found'));
+            } else {
+              return ListView(
+                children: snapshot.data!.map((review) => ReviewCard(review: review)).toList(),
+              );
+            }
+          },
         ),
       ),
     );
   }
 }
-
-

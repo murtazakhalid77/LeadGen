@@ -10,6 +10,7 @@ import 'package:lead_gen/view/drawer/drawer.dart';
 class ProfilePage extends StatefulWidget {
   final String? name;
   final String? phone;
+  final String? profilePicPath;
   final String? email;
 
   const ProfilePage({
@@ -17,6 +18,7 @@ class ProfilePage extends StatefulWidget {
     this.name,
     this.phone,
     this.email,
+    this.profilePicPath
   }) : super(key: key);
 
   @override
@@ -38,13 +40,16 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> fetchUser() async {
     try {
       // Replace the 'widget' with 'widget.' to access the properties of ProfilePage
-      User? loggedInUser = await userService.getLoggedInUser(widget.phone!);
+      User? loggedInUser = await userService.getLoggedInUser(widget.email!);
+     print(loggedInUser!.toJson());
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
+          user.uid=loggedInUser.uid;
           user.phoneNumber = widget.phone!;
-          print(user.toJson());
+          user.profilePicPath =widget.profilePicPath!;
+         
         });
       }
     } catch (error) {
@@ -89,10 +94,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              const CircleAvatar(
+               CircleAvatar(
                 radius: 70,
-                backgroundImage: AssetImage('lib/assets/man.png'),
-              ),
+                backgroundImage: NetworkImage(user.profilePicPath)
+               ),
+
               const SizedBox(height: 20),
               itemProfile('Name', widget.name ?? 'N/A', CupertinoIcons.person),
               const SizedBox(height: 10),
