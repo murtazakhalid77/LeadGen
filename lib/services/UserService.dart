@@ -34,27 +34,23 @@ print(response.statusCode);
     }
 }
 
-  Future editUserProfile(String name, String updatedPhone, String email, String userPhone) async {
-    try{
-      final response = await http.put(
-      UrlConfig.buildUri('user/updateProfile/${name}/${updatedPhone}/${email}/${userPhone}'),
+ Future editUserProfile(String name, String updatedPhone, String email, String imagePath) async {
+  try {
+    final response = await http.post(
+      UrlConfig.buildUri('user/updateProfile/$name/$updatedPhone/$email/$imagePath'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-      // final response = await http.put(
-      //   UrlConfig.buildUri('user/updatePassword/${updatedPhone}/${password}'),
-      //   headers: <String, String>{
-      //     'Content-Type': 'application/json; charset=UTF-8',
-      //   },
-      // );
 
-      return response;
-
-    }catch(e){
-      e.toString();
-    }
+    return response;
+  } catch (e) {
+    print(e.toString());
+    // Handle the error appropriately
+    throw e;
   }
+}
+
 
   Future updatePassword(String email, String password) async {
   try{
@@ -106,7 +102,7 @@ Future<User?> getLoggedInUser(String? email)async {
       
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       User loggedInUser = User.fromJson(responseData);
-            
+        
         return loggedInUser;
       }
     // ignore: empty_catches

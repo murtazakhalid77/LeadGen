@@ -36,21 +36,22 @@ class SellerCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     // Convert date string to DateTime and format it
     final DateTime dateTime = DateTime.parse(date);
     final String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
 
-    return InkWell(
-      onTap: () {
-        // Handle card tap
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => SellerSingleRequest(),
-          ),
-        );
+    return GestureDetector(
+    
+      onLongPressStart: (details) {
+
+        Navigator.of(context).push(_buildPreviewRoute(context));
       },
+      onLongPressEnd: (details) {
+        Navigator.of(context).pop();
+      },   
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Container(
@@ -205,13 +206,39 @@ class SellerCard extends StatelessWidget {
     );
   }
 
+ Route _buildPreviewRoute(BuildContext context) {
+  
+    return PageRouteBuilder(
+      opaque: false,
+      pageBuilder: (BuildContext context, _, __) {
+        return GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: Scaffold(
+            backgroundColor: Colors.black.withOpacity(0.5),
+            body: Center(
+              child: SellerSingleRequest(
+                firstName: name,
+                description: description,
+                locationText: locationText,
+                isSellerAccepted: isSellerAccepted,
+                requestId:requestId,
+                price:price
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
   void sendMessage(BuildContext context, String requestDescription,
       String receiveUserEmail, String receivedUserId) async {
     String message =
         "Hey, I heard about you needing this: \"$requestDescription\". Can we talk?";
     ChatService chatService = new ChatService();
-    // Send the predefined message using the ChatService
+   print(receivedUserId);
     await chatService.sendMessage(receivedUserId, message);
+   
 
     Navigator.push(
       context,
@@ -343,4 +370,3 @@ class SellerCard extends StatelessWidget {
       print('User not authenticated');
     }
   }
-}

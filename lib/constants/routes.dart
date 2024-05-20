@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 
 import 'package:lead_gen/view/buyer/all_categories.dart';
+import 'package:lead_gen/view/buyer/buyer-home.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/buyer/vehicles.dart';
@@ -44,7 +45,7 @@ final Map<String, WidgetBuilder> routes = {
   // otpPinEnter: (context) => const Verify(phoneNumber: '',),
   location: (context) => const Location(),
   
-  
+
   buyer_allCategories:(context) => const AllCategoriesPage(),
   buyer_vehicle:(context) => const VehiclesPage(),
    //seller_home: (context) => const SellerHomePage(categoryName: '',),
@@ -60,7 +61,7 @@ final Map<String, WidgetBuilder> routes = {
 };
 
 class UrlConfig {
-static const String baseUrl = "https://api.leadgen.stepwaysoftwares.com/api";
+static const String baseUrl = "http://192.168.1.103:8080/api";
 
 
   static Uri buildUri(String path) {

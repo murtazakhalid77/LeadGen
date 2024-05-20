@@ -63,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
           .createUserWithEmailAndPassword(
               email: _emailController.text, password: widget.password);
       _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set(
-          {'uid': userCredential.user!.uid, 'email': _emailController.text});
+          {'uid': userCredential.user!.uid, 'email': _emailController.text,'profilePic':''});
         registrationData.uid=userCredential.user!.uid;
         
       var response = await _otpService.registerUser(registrationData);

@@ -89,6 +89,16 @@ class _SellerHomePageState extends State<SellerHomePage> {
       print('Error fetching Requests: $error');
     }
   }
+   String formatEarnings(num? earnings) {
+    if (earnings == null) return '0';
+    if (earnings >= 1000000) {
+      return '${(earnings / 1000000).toStringAsFixed(1)}M';
+    } else if (earnings >= 1000) {
+      return '${(earnings / 1000).toStringAsFixed(1)}K';
+    } else {
+      return earnings.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,19 +242,22 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     children: [
                       SizedBox(width: 20),
                       Text(
-                        summarDto!.totalRequestServed.toString(),
+                        (summarDto?.totalRequestServed?.toString() ??
+                            '0'), // Default to '0' if null
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),
                       SizedBox(width: 63),
                       Text(
-                        summarDto!.overAllRating.toStringAsFixed(1),
+                        (summarDto?.overAllRating?.toStringAsFixed(1) ??
+                            '0.0'), // Default to '0.0' if null
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),
                       Spacer(),
                       Text(
-                        summarDto!.totalEarning.toString(),
+                        
+                          formatEarnings(summarDto?.totalEarning),
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 50, color: Colors.blue),
                       ),

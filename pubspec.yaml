@@ -59,6 +59,9 @@ dependencies:
   firebase_analytics: ^10.8.0
   firebase_auth: ^4.16.0
   cloud_firestore: ^4.14.0
+  firebase_storage: ^11.0.6
+  path_provider: ^2.0.11
+  path: ^1.8.1
   
 
 flutter_native_splash:

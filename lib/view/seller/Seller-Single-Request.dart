@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/view/seller/Seller-All-Request.dart';
 
@@ -5,12 +7,18 @@ class SellerSingleRequest extends StatelessWidget {
   final String? firstName;
   final String? description;
   final String? locationText;
+  final bool? isSellerAccepted;
+  final String? requestId;
+  final String? price;
 
   const SellerSingleRequest({
     Key? key,
     this.firstName,
+    this.isSellerAccepted,
     this.description,
     this.locationText,
+    this.requestId,
+    this.price,
   }) : super(key: key);
 
   @override
@@ -46,8 +54,10 @@ class SellerSingleRequest extends StatelessWidget {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.blue, Colors.blueAccent],
+                    gradient: LinearGradient(
+                      colors: isSellerAccepted != null && isSellerAccepted!
+                          ? [Colors.green.shade100, Colors.green.shade200]
+                          : [Colors.blue.shade100, Colors.blue.shade200],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -71,7 +81,7 @@ class SellerSingleRequest extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -79,7 +89,7 @@ class SellerSingleRequest extends StatelessWidget {
                           firstName ?? "N/A",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.white70,
+                            color: Colors.black,
                           ),
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
@@ -90,15 +100,15 @@ class SellerSingleRequest extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          description ?? "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                          description!,
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.white70,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -107,7 +117,7 @@ class SellerSingleRequest extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
@@ -115,7 +125,7 @@ class SellerSingleRequest extends StatelessWidget {
                           locationText ?? "N/A",
                           style: const TextStyle(
                             fontSize: 18,
-                            color: Colors.white70,
+                            color: Colors.black,
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -124,169 +134,22 @@ class SellerSingleRequest extends StatelessWidget {
                             children: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.deepPurple, backgroundColor: Colors.white,
+                                  foregroundColor: Colors.deepPurple,
+                                  backgroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 40, vertical: 15),
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0),
-                                        ),
-                                        backgroundColor: Colors.white,
-                                        elevation: 10.0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Text(
-                                                'Enter Bid Amount',
-                                                style: TextStyle(
-                                                  color: Colors.blue,
-                                                  fontSize: 18.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              TextField(
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      'Enter your bid amount',
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor:
-                                                      Colors.grey.shade200,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 20.0),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(
-                                                        color: Colors
-                                                            .redAccent,
-                                                        fontSize: 16.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      foregroundColor: Colors.white, backgroundColor: Colors
-                                                          .blue,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    18.0),
-                                                      ),
-                                                      padding:
-                                                          const EdgeInsets
-                                                                  .symmetric(
-                                                              horizontal: 20,
-                                                              vertical: 10),
-                                                    ),
-                                                    onPressed: () {
-                                                      // Get the bid amount from the TextField
-                                                      String bidAmount =
-                                                          ''; // Get the bid amount here
-                                                      Navigator.of(context)
-                                                          .pop(bidAmount);
-                                                    },
-                                                    child: const Text(
-                                                      'Bid',
-                                                      style: TextStyle(
-                                                        fontSize: 16.0,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ).then((value) {
-                                    // Pass the bid amount to the AllRequest widget
-                                    if (value != null) {
-                                      Navigator.of(context).pop(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AllRequest(
-                                            bidAmount: value,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  });
-                                },
+                                onPressed: isSellerAccepted!
+                                    ? null
+                                    : () {
+                                        _showOfferDialog(context, requestId!,
+                                            double.parse(price!));
+                                      },
                                 child: const Text(
                                   "Offer",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.green, backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 15),
-                                ),
-                                onPressed: () {
-                                  // Handle accept action
-                                },
-                                child: const Text(
-                                  "Accept",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.red, backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 15),
-                                ),
-                                onPressed: () {
-                                  // Handle deny action
-                                },
-                                child: const Text(
-                                  "Deny",
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),
@@ -305,5 +168,123 @@ class SellerSingleRequest extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+void _showOfferDialog(BuildContext context, String requestId, double price) {
+  TextEditingController offerController = TextEditingController();
+  double minOffer = price * 0.9; // Minimum 90% of the price
+  double maxOffer = price * 1.1; // Maximum 110% of the price
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 10.0,
+        child: Container(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Enter Your Offer',
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              Text(
+                'Offer must be between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}',
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: offerController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      // Retrieve the bid amount from the offer controller
+                      double? bidAmount = double.tryParse(offerController.text);
+
+                      // If the bid amount is valid and within the range, call addBidToRequest
+                      if (bidAmount != null &&
+                          bidAmount >= minOffer &&
+                          bidAmount <= maxOffer) {
+                        addBidToRequest(requestId, bidAmount);
+                        // Close the dialog
+                        Navigator.of(context).pop();
+                      } else {
+                        // Show an error message if the amount is out of range
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // Close the dialog without any action
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('Cancel'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Future<void> addBidToRequest(String requestId, double amount) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  // Get the current user
+  User? currentUser = firebaseAuth.currentUser;
+
+  if (currentUser != null) {
+    // Get the current user's UID
+    String userId = currentUser.uid;
+
+    try {
+      // Add a bid document to the specific request's bids subcollection
+      await firestore
+          .collection('requests')
+          .doc(requestId)
+          .collection('bids')
+          .doc(userId)
+          .set({
+        'userName': currentUser.email,
+        'amount': amount,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      print('Bid added to request ID: $requestId for user ID: $userId');
+    } catch (e) {
+      print('Error adding bid to request: $e');
+    }
+  } else {
+    print('User not authenticated');
   }
 }

@@ -1,17 +1,18 @@
-
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
+
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/services/UserService.dart';
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/customWidgets/customToast.dart';
 
 class EditProfile extends StatefulWidget {
-  
   final User user; // Define the user field here
 
   const EditProfile({Key? key, required this.user}) : super(key: key);
@@ -21,16 +22,18 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late TextEditingController nameController ;
+  late TextEditingController nameController;
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late UserService userService;
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
- @override
+  @override
   void initState() {
     super.initState();
+    print(widget.user.uid);
     nameController = TextEditingController(text: widget.user.firstName);
     phoneController = TextEditingController(text: widget.user.phoneNumber);
     emailController = TextEditingController(text: widget.user.email);
@@ -39,11 +42,43 @@ class _EditProfileState extends State<EditProfile> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Future<void> fetchUser(String name, String updatedPhone, String email, String userPhone, String image) async {
+  Future<void> uploadImageAndSaveUser() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+   
+    if (_imageFile != null) {
+      // Upload image to Firebase Storage
+      try {
+        String fileName = path.basename(_imageFile!.path);
+        Reference ref = _storage.ref().child('uploads/$fileName');
+        UploadTask uploadTask = ref.putFile(File(_imageFile!.path));
+        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+
+    
+        await fetchUser(nameController.text, phoneController.text,
+            emailController.text, downloadURL);
+          
+                await firestore.collection('users').doc(widget.user.uid).set({
+          'imagePath': downloadURL,
+        },SetOptions(merge: true));
+      } catch (e) {
+        print('Error uploading image: $e');
+        showCustomToast('Error uploading image');
+      }
+    } else {
+      // Save user data without image
+      await fetchUser(
+          nameController.text, phoneController.text, emailController.text, '');
+    }
+  }
+
+  Future<void> fetchUser(
+      String name, String updatedPhone, String email, String image) async {
     try {
-      print("Image Path :   ${image}");
-      var response = await userService.editUserProfile(name, updatedPhone, email, userPhone);
-      if(response.statusCode == 200){
+      print("Image Path: $image");
+      var response =
+          await userService.editUserProfile(name, updatedPhone, email, image);
+      if (response.statusCode == 200) {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfilePage(
             name: nameController.text,
@@ -51,10 +86,9 @@ class _EditProfileState extends State<EditProfile> {
             email: emailController.text,
           ),
         ));
-      }else{
+      } else {
         showCustomToast(response.body);
       }
-      
     } catch (error) {
       print('Error updating User: $error');
       showCustomToast("error while updating logged In User");
@@ -68,13 +102,8 @@ class _EditProfileState extends State<EditProfile> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
           onPressed: () {
-            // Unfocus the current focus node before popping the screen
             FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop(
-             MaterialPageRoute(
-                builder: (context) => const ProfilePage(), // goes to home page
-              ),
-            ); // Add navigation functionality here
+            Navigator.of(context).pop();
           },
         ),
         title: const Text(
@@ -97,13 +126,9 @@ class _EditProfileState extends State<EditProfile> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                       child: _imageFile != null
-                          ? Image(
-                              image: FileImage(File(_imageFile!.path)),
-                            )
-                          : Image.asset(
-                              'lib/assets/man.png',
-                        ),
+                      child: _imageFile != null
+                          ? Image.file(File(_imageFile!.path))
+                          : Image.asset('lib/assets/man.png'),
                     ),
                   ),
                   Positioned(
@@ -112,19 +137,14 @@ class _EditProfileState extends State<EditProfile> {
                     child: InkWell(
                       onTap: () {
                         showModalBottomSheet(
-                          context: context, 
-                          builder: ((builder) => UploadPicture())
+                          context: context,
+                          builder: ((builder) => UploadPicture()),
                         );
                       },
-                      // width: 35,
-                      // height: 35,
-                      // decoration: BoxDecoration(
-                      //   borderRadius: BorderRadius.circular(100), color: Colors.lightBlueAccent
-                      // ),
                       child: Icon(
-                        Icons.camera_alt, 
-                        color: Colors.teal, 
-                        size: 25
+                        Icons.camera_alt,
+                        color: Colors.teal,
+                        size: 25,
                       ),
                     ),
                   ),
@@ -135,36 +155,39 @@ class _EditProfileState extends State<EditProfile> {
               // -- Form Fields
               Form(
                 key: _formKey,
-  child: Column(
-    children: [
-      buildTextFormField('Name', nameController, CupertinoIcons.person),
-      const SizedBox(height: 10),
-      buildForPhoneNumber('Phone', phoneController, CupertinoIcons.phone),
-      const SizedBox(height: 10),
-      buildForEmail('Email', emailController, CupertinoIcons.mail),
-      const SizedBox(height: 30),
+                child: Column(
+                  children: [
+                    buildTextFormField(
+                        'Name', nameController, CupertinoIcons.person),
+                    const SizedBox(height: 10),
+                    buildForPhoneNumber(
+                        'Phone', phoneController, CupertinoIcons.phone),
+                    const SizedBox(height: 10),
+                    buildForEmail(
+                        'Email', emailController, CupertinoIcons.mail),
+                    const SizedBox(height: 30),
                     // -- Form Submit Button
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          fetchUser(nameController.text, phoneController.text, emailController.text, widget.user.phoneNumber, _imageFile!.path);
-                        }
-                          
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            uploadImageAndSaveUser();
+                          }
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            padding: const EdgeInsets.all(20),
-                            side: BorderSide.none,
-                            shape: const StadiumBorder()),
+                          backgroundColor: Colors.blueAccent,
+                          padding: const EdgeInsets.all(20),
+                          side: BorderSide.none,
+                          shape: const StadiumBorder(),
+                        ),
                         child: const Text(
-                          'Save', 
+                          'Save',
                           style: TextStyle(
                             color: Colors.white,
-                            ),
-                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -178,14 +201,11 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget UploadPicture(){
+  Widget UploadPicture() {
     return Container(
       height: 100.0,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20
-      ),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         children: [
           Text(
@@ -201,41 +221,36 @@ class _EditProfileState extends State<EditProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton.icon(
-                icon: Icon(
-                  Icons.camera,
-                ),
+                icon: Icon(Icons.camera),
                 onPressed: () {
                   takePhoto(ImageSource.camera);
                 },
                 label: Text("Camera"),
               ),
               TextButton.icon(
-                icon: Icon(
-                  Icons.image,
-                ),
+                icon: Icon(Icons.image),
                 onPressed: () {
                   takePhoto(ImageSource.gallery);
                 },
                 label: Text("Gallery"),
-              ),              
+              ),
             ],
           )
-        ]
+        ],
       ),
     );
   }
 
   void takePhoto(ImageSource imageSource) async {
-    final pickedfile = await _picker.pickImage(
-      source: imageSource
-    );
-
+    final pickedfile = await _picker.pickImage(source: imageSource);
     setState(() {
       _imageFile = pickedfile;
     });
   }
 
-  Widget buildTextFormField(String label, TextEditingController controller, IconData prefixIcon) {
+  Widget buildTextFormField(
+      String label, TextEditingController controller, IconData prefixIcon) {
+    print(controller.text);
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -272,7 +287,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget buildForEmail(String label, TextEditingController controller, IconData prefixIcon) {
+  Widget buildForEmail(
+      String label, TextEditingController controller, IconData prefixIcon) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -292,8 +308,7 @@ class _EditProfileState extends State<EditProfile> {
           if (value!.isEmpty) {
             return 'Email is empty';
           }
-          if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
-              .hasMatch(value)) {
+          if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").hasMatch(value)) {
             if (value.isNotEmpty) {
               return 'Enter a valid email';
             } else {
@@ -313,7 +328,8 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget buildForPhoneNumber(String label, TextEditingController controller, IconData prefixIcon) {
+  Widget buildForPhoneNumber(
+      String label, TextEditingController controller, IconData prefixIcon) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -331,9 +347,7 @@ class _EditProfileState extends State<EditProfile> {
         controller: controller,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         validator: (value) {
-          if (value == null ||
-              value.isEmpty ||
-              value.length != 11) {
+          if (value == null || value.isEmpty || value.length != 11) {
             return 'Enter a valid Phone Number with 11 digits';
           }
           return null;
@@ -348,5 +362,4 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
 }
