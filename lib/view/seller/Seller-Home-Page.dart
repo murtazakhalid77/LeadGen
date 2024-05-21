@@ -89,7 +89,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
       print('Error fetching Requests: $error');
     }
   }
-   String formatEarnings(num? earnings) {
+
+  String formatEarnings(num? earnings) {
     if (earnings == null) return '0';
     if (earnings >= 1000000) {
       return '${(earnings / 1000000).toStringAsFixed(1)}M';
@@ -110,14 +111,6 @@ class _SellerHomePageState extends State<SellerHomePage> {
         centerTitle: true,
         title: const Text("Welcome to Lead Gen"),
         backgroundColor: Colors.blue,
-        actions: <Widget>[
-          IconButton(
-            icon: Image.asset("lib/assets/leadGen.png"),
-            onPressed: () {
-              // do something
-            },
-          )
-        ],
       ),
       body: Column(
         children: [
@@ -137,7 +130,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         ),
                       ),
                     ),
-                    Padding(
+                     /*   Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -157,7 +150,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           ),
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
                 Center(
@@ -215,7 +208,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       }
 // If the seller is accepted but not by the current user, don't display the seller card
                       else {
-                        return SizedBox();
+                        return const SizedBox();
                       }
                     }).toList(),
                   ),
@@ -227,7 +220,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 40, left: 20),
+                padding: const EdgeInsets.only(top: 10, left: 20),
                 child: const Text(
                   "Summary",
                   style: TextStyle(
@@ -237,117 +230,76 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 ),
               ),
               Padding(
-                  padding: EdgeInsets.only(right: 20, left: 20),
+                  padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
                   child: Row(
                     children: [
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       Text(
                         (summarDto?.totalRequestServed?.toString() ??
                             '0'), // Default to '0' if null
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 50, color: Colors.blue),
+                        style: const TextStyle(
+                          fontSize: 40,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      SizedBox(width: 63),
+                      const SizedBox(width: 63),
                       Text(
                         (summarDto?.overAllRating?.toStringAsFixed(1) ??
                             '0.0'), // Default to '0.0' if null
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 50, color: Colors.blue),
+                        style: const TextStyle(
+                          fontSize: 40,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text(
-                        
-                          formatEarnings(summarDto?.totalEarning),
+                        formatEarnings(summarDto?.totalEarning),
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 50, color: Colors.blue),
+                        style: const TextStyle(
+                          fontSize: 40,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   )),
               const Padding(
-                  padding: EdgeInsets.only(right: 20, left: 20),
-                  child: Row(
-                    children: [
-                      Text(
-                        "Total Orders Taken",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                padding: EdgeInsets.only(right: 20, left: 20),
+                child: Row(
+                  children: [
+                    Text(
+                      "Total Orders Taken",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(width: 29),
-                      Text(
-                        "Overall Rating",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    SizedBox(width: 29),
+                    Text(
+                      "Overall Rating",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(width: 40),
-                      Text(
-                        "Total Earning",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    SizedBox(width: 40),
+                    Text(
+                      "Total Earning",
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  )),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 5),
-                child: Row(children: [
-                  const SizedBox(width: 20),
-                  TextButton(
-                      child: Text("Total Orders",
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.deepPurple),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
-                      onPressed: () => null),
-                  const SizedBox(width: 40),
-                  ElevatedButton(
-                      child: Text("Pending",
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.deepPurple),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
-                      onPressed: () => null),
-                  const SizedBox(width: 35),
-                  ElevatedButton(
-                      child: Text("Earnings",
-                          style: TextStyle(fontSize: 14, color: Colors.white)),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.deepPurple),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ))),
-                      onPressed: () => null),
-                ]),
+                    ),
+                    SizedBox(
+                      height: 48,
+                    ),
+                  ],
+                ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-                child: SizedBox(
-                    child: Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 30),
-                  /*    child: Text(
-                    "Advertisement",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-                  ),*/
-                )),
-              )
             ],
           )
         ],

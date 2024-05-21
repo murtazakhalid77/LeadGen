@@ -46,7 +46,10 @@ class NavBar extends StatelessWidget {
               child: ClipOval(
                 
                 child: Image.network(
-                  user!.profilePicPath
+                  user!.profilePicPath,
+                 width: 90, // Ensure width and height are the same
+                  height: 90,
+                  fit: BoxFit.cover,
                 ),
               ),
               backgroundColor: Colors.blue,
@@ -76,38 +79,32 @@ class NavBar extends StatelessWidget {
                   ),
                 );
               }
-            },
-            
+            },         
           ),
-          ListTile(
-            leading: const Icon(
-              Icons.feed,
-              color: Colors.purple,
-              size: 25,
-            ),
-            title: const Text(
-              'Requests',
-              style: TextStyle(fontSize: 18),
-            ),
-            textColor: Colors.purple,
-            onTap: () {
-              print('Requests tapped for $userType');
-              // You can implement different logic based on user type
-              if (userType == 'seller') {
-                // Navigate to seller's requests page
-                Navigator.pushNamed(context, '/seller-request');
-              } else if (userType == 'buyer') {
-                // Navigate to buyer's requests page
-              Navigator.push(
-                context,
-                MaterialPageRoute(
+          // Only show Requests option if the user is not a seller
+         if (userType == 'buyer')
+            ListTile(
+              leading: const Icon(
+                Icons.feed,
+                color: Colors.purple,
+                size: 25,
+              ),
+              title: const Text(
+                'Requests',
+                style: TextStyle(fontSize: 18),
+              ),
+              textColor: Colors.purple,
+              onTap: () {
+                print('Requests tapped for $userType');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) =>
-                        MyRequests(email: user!.email, option: true,)),
-              );
-
-              }
-            },
-          ),
+                        MyRequests(email: user!.email, option: true,),
+                  ),
+                );
+              },
+            ),
           ListTile(
             leading: const Icon(
               Icons.chat,

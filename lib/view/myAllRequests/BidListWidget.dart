@@ -20,21 +20,18 @@ class _BidListWidgetState extends State<BidListWidget> {
   @override
   void initState() {
     super.initState();
-    // Listen to changes in the bids subcollection
     FirebaseFirestore.instance
         .collection('requests')
         .doc(widget.requestId)
         .collection('bids')
-        .orderBy('amount', descending: false) // Sort by amount in ascending order
+        .orderBy('amount', descending: false)
         .snapshots()
         .listen((QuerySnapshot snapshot) {
       _updateList(snapshot.docs);
     });
   }
 
-  // Function to update the list with animations
   void _updateList(List<DocumentSnapshot> newDocs) {
-    // Determine the changes in the list
     for (int i = 0; i < _bids.length; i++) {
       if (!newDocs.contains(_bids[i])) {
         _removeItem(i);
@@ -51,84 +48,121 @@ class _BidListWidgetState extends State<BidListWidget> {
     _bids = newDocs;
   }
 
-  // Function to insert an item with animation
   void _insertItem(int index, DocumentSnapshot doc) {
     _bids.insert(index, doc);
     _listKey.currentState?.insertItem(index);
   }
 
-  // Function to remove an item with animation
   void _removeItem(int index) {
     DocumentSnapshot removedDoc = _bids[index];
     _listKey.currentState?.removeItem(
       index,
       (context, animation) => _buildItem(removedDoc, animation),
-      duration: Duration(milliseconds: 300), // Duration of the animation
+      duration: Duration(milliseconds: 300),
     );
     _bids.removeAt(index);
   }
 
-  // Function to build each item with animation
   Widget _buildItem(DocumentSnapshot doc, Animation<double> animation) {
     Map<String, dynamic> bidData = doc.data() as Map<String, dynamic>;
     double? bidAmount = bidData['amount'] as double?;
     Timestamp? bidTimestamp = bidData['timestamp'] as Timestamp?;
     bool? accepted = bidData['accepted'] as bool?;
     String userName = bidData['userName'] as String;
-   
 
-print(bidAmount);
-    // Format the bid timestamp to a readable date
     String bidDate = bidTimestamp != null
         ? DateFormat('dd-MM-yyyy HH:mm').format(bidTimestamp.toDate())
         : '';
 
-    // Build the list item with animation
     return SizeTransition(
       sizeFactor: animation,
-      child: GestureDetector(
-         onTap: () {
-        // Navigate to another page when the list item is tapped
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ReviewsPage(sellerName: userName,), // Replace AnotherPage with the page you want to navigate to
-          ),
-        );
-      },
-        // Only allow long press if no bid has been accepted and the current bid is not accepted
-        onLongPress: (accepted ?? true)
-            ? () {
-                // Show a dialog with an "Accept" button when long press is detected
-                _showAcceptDialog(context, bidId: doc.id, bidderEmail: userName,bidAmount:bidAmount);
-              }
-            : null, // Disable long press if the bid is accepted
-        child: Card(
-          elevation: 4, // Elevation for a shadow effect
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10), // Rounded corners
-          ),
-          margin: const EdgeInsets.all(8), // Margin for spacing between cards
-          child: ListTile(
-            leading: accepted == true
-                ? Icon(Icons.check_circle, color: Colors.green, size: 30) // Accepted icon
-                : Icon(Icons.circle_outlined, size: 30), // Unaccepted icon
-            title: Text(
-              'Bid Amount: \$${bidAmount?.toStringAsFixed(2) ?? 'N/A'}',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: accepted == true ? Colors.green : Colors.black), // Change color if accepted
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Bid Date: $bidDate'),
-                if (userName != null)
-                  Text('Bidder: $userName'),
-                if (accepted == true) // Show accepted status if true
-                  Text('Status: Accepted', style: TextStyle(color: Colors.green)),
-              ],
-            ),
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: accepted == true
+                    ? Icon(Icons.check_circle, color: Colors.green, size: 30)
+                    : Icon(Icons.circle_outlined, size: 30),
+                title: Text(
+                  'Bid Amount: \$${bidAmount?.toStringAsFixed(2) ?? 'N/A'}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: accepted == true ? Colors.green : Colors.black,
+                    fontSize: 18,
+                  ),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Bid Date: $bidDate',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                    if (userName != null)
+                      Text(
+                        'Bidder: $userName',
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                    if (accepted == true)
+                      Text(
+                        'Status: Accepted',
+                        style: TextStyle(color: Colors.green, fontSize: 14),
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 8),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReviewsPage(sellerName: userName),
+                          ),
+                        );
+                      },
+                      child: Text('Seller Reviews'),
+                      style: TextButton.styleFrom(
+                        primary: Colors.blue,
+                        textStyle: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: (accepted ?? false)
+                          ? null
+                          : () {
+                              _showAcceptDialog(context, bidId: doc.id, bidderEmail: userName, bidAmount: bidAmount);
+                            },
+                      child: Text('Accept Bid'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                        onPrimary: Colors.white,
+                        textStyle: TextStyle(fontSize: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -140,7 +174,14 @@ print(bidAmount);
     return Scaffold(
       appBar: AppBar(
         title: Text('Bids for Request ID: ${widget.requestId}'),
-        backgroundColor: Colors.blue, // Optional: Set a custom color for the app bar
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: AnimatedList(
         key: _listKey,
@@ -152,11 +193,8 @@ print(bidAmount);
     );
   }
 
-  // Function to show the "Accept" dialog
   void _showAcceptDialog(BuildContext context, {required String bidId, required String bidderEmail, double? bidAmount}) {
-    // Create an instance of HelperService
     HelperService helperService = HelperService();
-print(bidAmount);
     showDialog(
       context: context,
       builder: (context) {
@@ -166,7 +204,6 @@ print(bidAmount);
           actions: [
             TextButton(
               onPressed: () {
-                // Close the dialog without accepting the bid
                 Navigator.of(context).pop();
               },
               child: Text('Cancel'),
@@ -174,7 +211,6 @@ print(bidAmount);
             ElevatedButton(
               onPressed: () async {
                 try {
-                  // Use a Firestore transaction to accept the bid and set other bids' accepted fields to false
                   await FirebaseFirestore.instance.runTransaction((transaction) async {
                     DocumentReference bidDocRef = FirebaseFirestore.instance
                         .collection('requests')
@@ -182,17 +218,14 @@ print(bidAmount);
                         .collection('bids')
                         .doc(bidId);
 
-                    // Set the accepted field of the selected bid to true
                     transaction.update(bidDocRef, {'accepted': true});
 
-                    // Get all other bid documents in the request
                     QuerySnapshot allBidsSnapshot = await FirebaseFirestore.instance
                         .collection('requests')
                         .doc(widget.requestId)
                         .collection('bids')
                         .get();
 
-                    // Iterate through all bids and set their accepted fields to false (except the selected bid)
                     for (DocumentSnapshot doc in allBidsSnapshot.docs) {
                       if (doc.id != bidId) {
                         DocumentReference otherBidDocRef = doc.reference;
@@ -201,10 +234,8 @@ print(bidAmount);
                     }
                   });
 
-                  // Call acceptRequest from HelperService to accept the request
-                  bool success = await helperService.acceptRequest(widget.requestId, bidderEmail,bidAmount);
+                  bool success = await helperService.acceptRequest(widget.requestId, bidderEmail, bidAmount);
 
-                  // If the request is accepted successfully, close the dialog
                   if (success) {
                     Navigator.of(context).pop();
                   } else {
@@ -212,7 +243,6 @@ print(bidAmount);
                   }
                 } catch (error) {
                   print('Error accepting bid: $error');
-                  // Optionally, display an error message to the user
                 }
               },
               child: Text('Accept'),

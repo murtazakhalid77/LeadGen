@@ -118,6 +118,14 @@ class _ReviewsPageState extends State<ReviewsPage> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Reviews'),
+          leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+          onPressed: () {
+            // Unfocus the current focus node before popping the screen
+            FocusManager.instance.primaryFocus?.unfocus();
+            Navigator.of(context).pop();// Add navigation functionality here
+          },
+        ),
         ),
         body: FutureBuilder<List<Review>>(
           future: futureReviews,
