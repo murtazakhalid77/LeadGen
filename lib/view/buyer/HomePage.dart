@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     categoryService = CategoryService();
     super.initState();
     fetchUser();
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 5), () {
       setState(() {
         isLoading = false;
       });
