@@ -145,10 +145,12 @@ class NavBar extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(
-                    name: user!.firstName,
+                    name: user!.firstName + " " + user!.lastName,
                     phone: user!.phoneNumber,
                     email: user!.email,
                     profilePicPath: user!.profilePicPath,
+                    cnic: user!.cnic,
+                    userType: user!.userType,
                   ),
                 ),
               );

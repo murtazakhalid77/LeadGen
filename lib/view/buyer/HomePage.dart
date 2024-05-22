@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart ' as firebase_auth;
 import 'package:flutter/cupertino.dart';
@@ -27,17 +29,26 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late UserService userService;
   late CategoryService categoryService;
+  bool isLoading = false;
 
   late User user;
   late List<Map<String, dynamic>> categories =
       []; // Initialize categories as an empty list;
   @override
   void initState() {
+    setState(() {
+      isLoading = true; // Set isLoading to false after 3 seconds
+    });
     user = User();
     userService = UserService();
     categoryService = CategoryService();
     super.initState();
     fetchUser();
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   Future<void> fetchCategories() async {
@@ -157,148 +168,164 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchUser() async {
-  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String email = prefs.getString('email')!;
-    User? loggedInUser = await userService.getLoggedInUser(email);
-    
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString('email')!;
+      User? loggedInUser = await userService.getLoggedInUser(email);
 
-    if (firebaseAuth.currentUser != null) {
-      // Get the current user's UID
-      String userId = firebaseAuth.currentUser!.uid;
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      firebase_auth.FirebaseAuth firebaseAuth =
+          firebase_auth.FirebaseAuth.instance;
 
-      try {
-        // Retrieve image path from Firestore
-        DocumentSnapshot userSnapshot = await firestore.collection('users').doc(userId).get();
-        String imagePath = userSnapshot['imagePath'] as String;
+      if (firebaseAuth.currentUser != null) {
+        // Get the current user's UID
+        String userId = firebaseAuth.currentUser!.uid;
 
-        if (loggedInUser != null) {
-          setState(() {
-            user.firstName = loggedInUser.firstName;
-            user.email = loggedInUser.email;
-            user.location = loggedInUser.location;
-            user.email = email; // Is this assignment necessary?
-            user.phoneNumber = loggedInUser.phoneNumber;
-            user.categories = loggedInUser.categories;
-            user.profilePicPath = imagePath;
-            print(user.toJson());
-          });
+        try {
+          // Retrieve image path from Firestore
+          // DocumentSnapshot userSnapshot =
+          //     await firestore.collection('users').doc(userId).get();
+          // String imagePath = userSnapshot['imagePath'] as String;
+
+          if (loggedInUser != null) {
+            setState(() {
+              user.firstName = loggedInUser.firstName;
+              user.lastName = loggedInUser.lastName;
+              user.email = loggedInUser.email;
+              user.location = loggedInUser.location;
+              user.email = email; // Is this assignment necessary?
+              user.phoneNumber = loggedInUser.phoneNumber;
+              user.categories = loggedInUser.categories;
+              user.profilePicPath = "imagePath";
+              user.cnic = loggedInUser.cnic;
+              user.userType = loggedInUser.userType;
+              print(user.toJson());
+            });
+          }
+          fetchCategories();
+        } catch (error) {
+          print('Error fetching User: $error');
+          showCustomToast("Error while fetching logged in User");
         }
-        fetchCategories();
-      } catch (error) {
-        print('Error fetching User: $error');
-        showCustomToast("Error while fetching logged in User");
       }
+    } catch (error) {
+      print('Error fetching user: $error');
+      showCustomToast("Error while fetching user");
     }
-  } catch (error) {
-    print('Error fetching user: $error');
-    showCustomToast("Error while fetching user");
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, user_Selection);
-        return false; // Prevent default back button behavior
-      },
-      child: Scaffold(
-        drawer: NavBar(userType: 'buyer', user: user),
-        body: ListView(
-          padding: EdgeInsets.zero,
+        onWillPop: () async {
+          Navigator.pop(context, user_Selection);
+          return false; // Prevent default back button behavior
+        },
+        child: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(90),
-                ),
-              ),
-              child: Column(
+            Scaffold(
+              drawer: NavBar(userType: 'buyer', user: user),
+              body: ListView(
+                padding: EdgeInsets.zero,
                 children: [
-                  const SizedBox(height: 50),
-                  ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 30),
-                    title: Text(
-                      widget.option
-                          ? "Hello Seller ${user.firstName} !!"
-                          : "Hello Buyer ${user.firstName} !!",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: const BorderRadius.only(
+                        bottomRight: Radius.circular(90),
+                      ),
                     ),
-                    subtitle: Text('Good Morning',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(color: Colors.white54)),
-                    trailing:  CircleAvatar(
-                      radius: 30,
-                     backgroundImage: NetworkImage(user.profilePicPath ?? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'),
-                    ), // Use a local asset as default,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 30),
+                          title: Text(
+                            widget.option
+                                ? "Hello Seller ${user.firstName} !!"
+                                : "Hello Buyer ${user.firstName} !!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          subtitle: Text('Good Morning',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(color: Colors.white54)),
+                          trailing: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(user.profilePicPath ??
+                                'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'),
+                          ), // Use a local asset as default,
+                        ),
+                        const SizedBox(height: 30)
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 30)
+                  Container(
+                    color: Theme.of(context).primaryColor,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                        ),
+                      ),
+                      child: GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 40,
+                        mainAxisSpacing: 30,
+                        children: categories.map<Widget>((category) {
+                          return GestureDetector(
+                            onTap: () {
+                              // Navigate to another page here with the category name
+                              String categoryName =
+                                  category['categoryName'] as String;
+                              if (widget.option) {
+                                print(categoryName);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MakeRequestPage(
+                                        categoryName: categoryName),
+                                  ),
+                                );
+                              } else {
+                                MaterialPageRoute(
+                                  builder: (context) => SellerHomePage(
+                                      categoryName: categoryName),
+                                );
+                              }
+                            },
+                            child: itemDashboard(
+                              category['categoryName'] as String,
+                              getIconData(category['icons'] as String),
+                              parseColor(category['backgroundColor'] as String),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20)
                 ],
               ),
             ),
-            Container(
-              color: Theme.of(context).primaryColor,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                  ),
-                ),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 40,
-                  mainAxisSpacing: 30,
-                  children: categories.map<Widget>((category) {
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to another page here with the category name
-                        String categoryName =
-                            category['categoryName'] as String;
-                        if (widget.option) {
-                          print(categoryName);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  MakeRequestPage(categoryName: categoryName),
-                            ),
-                          );
-                        } else {
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                SellerHomePage(categoryName: categoryName),
-                          );
-                        }
-                      },
-                      child: itemDashboard(
-                        category['categoryName'] as String,
-                        getIconData(category['icons'] as String),
-                        parseColor(category['backgroundColor'] as String),
-                      ),
-                    );
-                  }).toList(),
+            if (isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.black),
                 ),
               ),
-            ),
-            const SizedBox(height: 20)
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   itemDashboard(String title, IconData iconData, Color background) => InkWell(
