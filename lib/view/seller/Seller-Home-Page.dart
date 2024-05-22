@@ -14,6 +14,7 @@ import 'package:lead_gen/view/seller/seller-card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../model/LocationModel.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class SellerHomePage extends StatefulWidget {
   final String categoryName;
@@ -123,7 +124,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     Container(
                       padding: const EdgeInsets.only(top: 20, left: 20),
                       child: const Text(
-                        "Request",
+                        "Seller Requests",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
@@ -154,7 +155,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
                   ],
                 ),
                 Center(
-                  child: Wrap(
+                 child: fetchedRequests.isNotEmpty
+                      ?  Wrap(
                     spacing: 12,
                     runSpacing: 20,
                     alignment: WrapAlignment.center,
@@ -211,6 +213,26 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         return const SizedBox();
                       }
                     }).toList(),
+                  )
+                  : Padding(
+                    padding: const EdgeInsets.only(top: 200),
+                    child: SizedBox(
+                            height: 40,
+                            child: AnimatedTextKit(
+                              animatedTexts: [
+                                FadeAnimatedText(
+                                  'You do not have any requests',
+                                  textStyle: const TextStyle(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ],
+                              totalRepeatCount: 50000,
+                              onTap: () {
+                                print("isRepeatingAnimation");
+                              },
+                            ),
+                          ),
                   ),
                 ),
               ],

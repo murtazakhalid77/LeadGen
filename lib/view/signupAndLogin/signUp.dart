@@ -439,33 +439,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 20),
-
-                    //Already have an account? login
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Already have an account? ",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        const SizedBox(width: 4),
-                        GestureDetector(
-                          onTap: () {
-                            // Navigate to SignUpPage when "Sign Up" is clicked
-                            Navigator.of(context).pop('logInPage');
-                          },
-                          child: const Text(
-                            'LogIn',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
