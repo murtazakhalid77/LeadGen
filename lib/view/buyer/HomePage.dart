@@ -182,10 +182,10 @@ class _MyHomePageState extends State<MyHomePage> {
         String userId = firebaseAuth.currentUser!.uid;
 
         try {
-          // Retrieve image path from Firestore
-          // DocumentSnapshot userSnapshot =
-          //     await firestore.collection('users').doc(userId).get();
-          // String imagePath = userSnapshot['imagePath'] as String;
+       
+          DocumentSnapshot userSnapshot =
+              await firestore.collection('users').doc(userId).get();
+          String imagePath = userSnapshot['imagePath'] as String;
 
           if (loggedInUser != null) {
             setState(() {
@@ -196,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               user.email = email; // Is this assignment necessary?
               user.phoneNumber = loggedInUser.phoneNumber;
               user.categories = loggedInUser.categories;
-              user.profilePicPath = "imagePath";
+              user.profilePicPath = imagePath;
               user.cnic = loggedInUser.cnic;
               user.userType = loggedInUser.userType;
               print(user.toJson());
