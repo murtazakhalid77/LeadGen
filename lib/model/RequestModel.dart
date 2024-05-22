@@ -18,6 +18,7 @@ class RequestModel {
   String accepted;
   User? acceptedSeller;
   int acceptedAmount;
+  bool status;
 
   RequestModel( 
       {required this.id,
@@ -32,6 +33,7 @@ class RequestModel {
       required this.accepted,
       required this.acceptedSeller,
       required this.acceptedAmount,
+      required this.status,
       this.user});
 
   factory RequestModel.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class RequestModel {
       price: json['price'] as String? ?? '',
       acceptedSeller:  User.fromJson(json['acceptedSeller'] ?? {}), 
       acceptedAmount: json['acceptedAmount'] as int? ?? 0,
+      status: json['status'] as bool,
     );
   }
 
@@ -66,7 +69,8 @@ class RequestModel {
       'accepted': accepted,
       'acceptedSeller':acceptedSeller,
       'acceptedAmount':acceptedAmount,
-      'price': price
+      'price': price,
+      'status': status
     };
   }
 }

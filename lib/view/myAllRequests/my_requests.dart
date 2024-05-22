@@ -152,7 +152,8 @@ class _MyRequestsState extends State<MyRequests> {
                               date: request.createdDate,
                               categoryName: categoryName,
                               acceptedSellerUid:request.acceptedSeller!.uid,
-                              acceptedSellerEmail:request.acceptedSeller!.email
+                              acceptedSellerEmail:request.acceptedSeller!.email,
+                              status: request.status,
                               
                         
                             );
@@ -172,7 +173,8 @@ class _MyRequestsState extends State<MyRequests> {
                               date: request.createdDate,
                               categoryName: request.category?.name ?? '',
                                 acceptedSellerUid:request.acceptedSeller!.uid,
-                              acceptedSellerEmail:request.acceptedSeller!.email
+                              acceptedSellerEmail:request.acceptedSeller!.email,
+                              status: request.status,
                             );
                           }
                         }).toList(),

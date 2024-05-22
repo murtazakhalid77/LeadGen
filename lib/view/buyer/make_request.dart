@@ -318,6 +318,7 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                           accepted: "",
                           acceptedAmount: 0,
                           createdDate: DateTime.now().toString(),
+                          status: false,
                           price: _price.text);
                       this.requestModel = requestModel;
                       await makeRequest(context, requestModel);

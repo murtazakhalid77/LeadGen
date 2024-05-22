@@ -14,6 +14,7 @@ class MyRequestCard extends StatelessWidget {
   final String accepted;
   final String acceptedSellerEmail;
   final String acceptedSellerUid;
+  final bool status;
 
   const MyRequestCard(
       {required this.option,
@@ -25,7 +26,8 @@ class MyRequestCard extends StatelessWidget {
       required this.categoryName,
       required this.date,
       required this.accepted, 
-      required this.acceptedSellerEmail, 
+      required this.acceptedSellerEmail,
+      required this.status,
       required this.acceptedSellerUid});
 
   @override
@@ -50,7 +52,8 @@ class MyRequestCard extends StatelessWidget {
               categoryName: categoryName,
               requestId: id.toString(),
               acceptedSellerEmail:acceptedSellerEmail,
-              acceptedSellerUid:acceptedSellerUid
+              acceptedSellerUid:acceptedSellerUid,
+              status: status,
 
             ),
           ),
@@ -62,23 +65,7 @@ class MyRequestCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: accepted == "true"
-              ? [
-                  BoxShadow(
-                    color: Colors.green.shade400.withOpacity(0.4),
-                    spreadRadius: 3,
-                    blurRadius: 6,
-                    offset: Offset(0, 4),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.pink.shade400.withOpacity(0.4),
-                    spreadRadius: 3,
-                    blurRadius: 6,
-                    offset: Offset(0, 4),
-                  ),
-                ],
+          boxShadow: _getBoxShadows(),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -132,6 +119,37 @@ class MyRequestCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<BoxShadow> _getBoxShadows() {
+    if (!status) {
+      return [
+        BoxShadow(
+          color: Colors.red.withOpacity(1),
+          spreadRadius: 3,
+          blurRadius: 6,
+          offset: Offset(0, 4),
+        ),
+      ];
+    }
+
+    return accepted == "true"
+        ? [
+            BoxShadow(
+              color: Colors.green.shade400.withOpacity(0.4),
+              spreadRadius: 3,
+              blurRadius: 6,
+              offset: Offset(0, 4),
+            ),
+          ]
+        : [
+            BoxShadow(
+              color: Colors.pink.shade400.withOpacity(0.4),
+              spreadRadius: 3,
+              blurRadius: 6,
+              offset: Offset(0, 4),
+            ),
+          ];
   }
 
   String _truncateText(String text) {
