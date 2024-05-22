@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 'Business & Finance':
         return Icons.attach_money;
       case 'Cars':
-        return Icons.directions_car;
+        return Icons.car_crash;
       case 'Real Estate':
         return Icons.home_work;
       case 'Electronics':
@@ -217,115 +217,103 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async {
-          Navigator.pop(context, user_Selection);
-          return false; // Prevent default back button behavior
-        },
-        child: Stack(
+      onWillPop: () async {
+        Navigator.pop(context, user_Selection);
+        return false; // Prevent default back button behavior
+      },
+      child: Scaffold(
+        drawer: NavBar(userType: 'buyer', user: user),
+        body: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            Scaffold(
-              drawer: NavBar(userType: 'buyer', user: user),
-              body: ListView(
-                padding: EdgeInsets.zero,
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(90),
+                ),
+              ),
+              child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(90),
-                      ),
+                  const SizedBox(height: 50),
+                  ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+                    title: Text(
+                      widget.option
+                          ? "Hello Seller ${user.firstName} !!"
+                          : "Hello Buyer ${user.firstName} !!",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(color: Colors.white),
                     ),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 50),
-                        ListTile(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 30),
-                          title: Text(
-                            widget.option
-                                ? "Hello Seller ${user.firstName} !!"
-                                : "Hello Buyer ${user.firstName} !!",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(color: Colors.white),
-                          ),
-                          subtitle: Text('Good Morning',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(color: Colors.white54)),
-                          trailing: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(user.profilePicPath ??
-                                'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'),
-                          ), // Use a local asset as default,
-                        ),
-                        const SizedBox(height: 30)
-                      ],
-                    ),
+                    subtitle: Text('Good Morning',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(color: Colors.white54)),
+                    trailing:  CircleAvatar(
+                      radius: 30,
+                     backgroundImage: NetworkImage(user.profilePicPath ?? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'),
+                    ), // Use a local asset as default,
                   ),
-                  Container(
-                    color: Theme.of(context).primaryColor,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(40),
-                        ),
-                      ),
-                      child: GridView.count(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 40,
-                        mainAxisSpacing: 30,
-                        children: categories.map<Widget>((category) {
-                          return GestureDetector(
-                            onTap: () {
-                              // Navigate to another page here with the category name
-                              String categoryName =
-                                  category['categoryName'] as String;
-                              if (widget.option) {
-                                print(categoryName);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MakeRequestPage(
-                                        categoryName: categoryName),
-                                  ),
-                                );
-                              } else {
-                                MaterialPageRoute(
-                                  builder: (context) => SellerHomePage(
-                                      categoryName: categoryName),
-                                );
-                              }
-                            },
-                            child: itemDashboard(
-                              category['categoryName'] as String,
-                              getIconData(category['icons'] as String),
-                              parseColor(category['backgroundColor'] as String),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20)
+                  const SizedBox(height: 30)
                 ],
               ),
             ),
-            if (isLoading)
-              Container(
-                color: Colors.grey.withOpacity(0.6),
-                child: const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
+            Container(
+              color: Theme.of(context).primaryColor,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                  ),
+                ),
+                child: GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 40,
+                  mainAxisSpacing: 30,
+                  children: categories.map<Widget>((category) {
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to another page here with the category name
+                        String categoryName =
+                            category['categoryName'] as String;
+                        if (widget.option) {
+                          print(categoryName);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  MakeRequestPage(categoryName: categoryName),
+                            ),
+                          );
+                        } else {
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SellerHomePage(categoryName: categoryName),
+                          );
+                        }
+                      },
+                      child: itemDashboard(
+                        category['categoryName'] as String,
+                        getIconData(category['icons'] as String),
+                        parseColor(category['backgroundColor'] as String),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
+            ),
+            const SizedBox(height: 20)
           ],
-        ));
+        ),
+      ),
+    );
   }
 
   itemDashboard(String title, IconData iconData, Color background) => InkWell(

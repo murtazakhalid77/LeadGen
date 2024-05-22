@@ -63,7 +63,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     fetchCategories();
 
     dropdownValue = widget.categoryName;
-    category = categories.firstWhereOrNull((cat) => cat.name == widget.categoryName);
+    category =
+        categories.firstWhereOrNull((cat) => cat.name == widget.categoryName);
   }
 
   @override
@@ -86,7 +87,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         setState(() {
           categories = fetchedCategories;
           //Set initial category here after fetching
-          category = categories.firstWhereOrNull((cat) => cat.name == widget.categoryName);
+          category = categories
+              .firstWhereOrNull((cat) => cat.name == widget.categoryName);
         });
         showCustomToast("category fetched");
       }
@@ -96,27 +98,48 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
     }
   }
 
- Future<void> makeRequest(BuildContext context, RequestModel? requestModel) async {
+  Future<void> makeRequest(
+      BuildContext context, RequestModel? requestModel) async {
+    try {
+      RequestModel? requestModel =
+          await _helperService.requestPost(this.requestModel);
 
-  try {
-    RequestModel? requestModel =
-        await _helperService.requestPost(this.requestModel);
-
-    if (requestModel != null) {
-      // Show success dialog with a tick icon
+      if (requestModel != null) {
+        // Show success dialog with a tick icon
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Success"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 48),
+                  SizedBox(height: 10),
+                  Text("Request Posted"),
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (error) {
+      print('Error fetching categories: $error');
+      // Show error dialog
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Success"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.check_circle, color: Colors.green, size: 48),
-                SizedBox(height: 10),
-                Text("Request Posted"),
-              ],
-            ),
+            title: Text("Error"),
+            content: Text("Error while posting request"),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
@@ -129,29 +152,8 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
         },
       );
     }
-  } catch (error) {
-    print('Error fetching categories: $error');
-    // Show error dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Error"),
-          content: Text("Error while posting request"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
-}
   @override
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
@@ -162,16 +164,17 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           elevation: 0.2,
           title: const Text(
             'Request',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
+            style: TextStyle(
+                fontSize: 24, fontWeight: FontWeight.w600, color: Colors.white),
           ),
           leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-          onPressed: () {
-            // Unfocus the current focus node before popping the screen
-            FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop();// Add navigation functionality here
-          },
-        ),
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+            onPressed: () {
+              // Unfocus the current focus node before popping the screen
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.of(context).pop(); // Add navigation functionality here
+            },
+          ),
         ),
         backgroundColor: Colors.grey[200],
         body: Stack(
@@ -200,20 +203,26 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                     keyboardType: null,
                   ),
                   const SizedBox(height: 15),
-                  buildTextField(
-                    controller: _description,
-                    labelText: 'Description *',
-                    hintText: 'Enter description',
-                    isReadOnly: false,
-                    onTap: null,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Description field cannot be empty';
-                      }
-                      return null;
-                    },
-                    keyboardType: null,
-                  ),
+                  TextFormField(
+                controller: _description,
+                readOnly: false,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Description field cannot be empty';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.multiline,
+                minLines: 5, // Initial number of lines when the text field is empty
+                maxLines: null, // Allow the text field to grow dynamically
+                decoration: InputDecoration(
+                  labelText: 'Description *',
+                  hintText: 'Enter description',
+                  border: OutlineInputBorder(),
+                  filled: true, // Ensures the background color is applied
+                  fillColor: Colors.white, // Set your desired fill color here
+                ),
+              ),
                   const SizedBox(height: 15),
                   buildTextField(
                     controller:
@@ -456,11 +465,13 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                 });
               },
               isExpanded: true,
-              hint: const Text('Select Category', style: TextStyle(color: Colors.black)),
+              hint: const Text('Select Category',
+                  style: TextStyle(color: Colors.black)),
               items: categories.map((Categoryy category) {
                 return DropdownMenuItem<Categoryy>(
                   value: category,
-                  child: Text(category.name!, style: TextStyle(color: Colors.black)),
+                  child: Text(category.name!,
+                      style: TextStyle(color: Colors.black)),
                 );
               }).toList(),
             ),
@@ -469,7 +480,6 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
       ],
     );
   }
-
 }
 
 extension IterableExtensions<T> on Iterable<T> {
