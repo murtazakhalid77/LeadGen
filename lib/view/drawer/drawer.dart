@@ -20,12 +20,11 @@ class NavBar extends StatelessWidget {
 
   // Function to log out
   void logout(BuildContext context) {
-   showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title:
-              Text('Logout', style: TextStyle(color: Colors.black)),
+          title: Text('Logout', style: TextStyle(color: Colors.black)),
           content: Text('Are you sure you want to logout?'),
           actions: [
             TextButton(
@@ -50,20 +49,20 @@ class NavBar extends StatelessWidget {
           ],
         );
       },
-    );// Clear shared preferences
+    ); // Clear shared preferences
   }
 
- Future<void> _performLogout(BuildContext context) async {
- final SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<void> _performLogout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-  
-  Navigator.of(context).pop();
-  Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => LoginScreen(phoneNumber: '')),
-    (route) => false,
-  );
 
- }
+    Navigator.of(context).pop();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen(phoneNumber: '')),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -114,57 +113,30 @@ class NavBar extends StatelessWidget {
               }
             },
           ),
-          if (user!.userType == 'BOTH') ...[
-            ListTile(
-              leading: const Icon(
-                Icons.feed,
-                color: Colors.purple,
-                size: 25,
-              ),
-              title: const Text(
-                'Buyer Request',
-                style: TextStyle(fontSize: 18),
-              ),
-              textColor: Colors.purple,
-              onTap: () {
-                print('Requests tapped for ${user!.userType}');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyRequests(
-                      email: user!.email,
-                      option: true,
-                    ),
-                  ),
-                );
-              },
+          ListTile(
+            leading: const Icon(
+              Icons.feed,
+              color: Colors.purple,
+              size: 25,
             ),
-          ] else if (user!.userType == 'both') ...[
-            ListTile(
-              leading: const Icon(
-                Icons.feed,
-                color: Colors.purple,
-                size: 25,
-              ),
-              title: const Text(
-                'Buyer Request',
-                style: TextStyle(fontSize: 18),
-              ),
-              textColor: Colors.purple,
-              onTap: () {
-                print('Requests tapped for ${user!.userType}');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyRequests(
-                      email: user!.email,
-                      option: true,
-                    ),
-                  ),
-                );
-              },
+            title: const Text(
+              'Buyer Request',
+              style: TextStyle(fontSize: 18),
             ),
-          ],
+            textColor: Colors.purple,
+            onTap: () {
+              print('Requests tapped for ${user!.userType}');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyRequests(
+                    email: user!.email,
+                    option: true,
+                  ),
+                ),
+              );
+            },
+          ),
           ListTile(
             leading: const Icon(
               Icons.chat,
@@ -226,7 +198,7 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-            logout(context); // Show the logout dialog
+              logout(context); // Show the logout dialog
             },
           ),
         ],
