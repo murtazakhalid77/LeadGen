@@ -104,7 +104,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(userType: 'seller', user: user),
+      drawer: NavBar(user: user),
       appBar: AppBar(
         automaticallyImplyLeading:
             false, // Disable the automatic leading widget

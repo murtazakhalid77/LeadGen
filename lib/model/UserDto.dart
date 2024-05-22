@@ -8,6 +8,7 @@ class User {
   String uid;
   List<String> categories;
  String profilePicPath;
+ String userType;
   
   User({
     this.firstName = '',
@@ -16,7 +17,8 @@ class User {
     this.location = '',
     this.uid = '',
     this.categories = const [],
-    this.profilePicPath=''
+    this.profilePicPath='',
+    this.userType=''
   });
 
   Map<String, dynamic> toJson() {
@@ -28,6 +30,7 @@ class User {
       'uid': uid,
       'categories': categories,
       'profilePicPath':profilePicPath,
+      'userType':userType
     };
   }
 
@@ -42,7 +45,8 @@ factory User.fromJson(Map<String, dynamic> json) {
             ?.map((category) => category as String) // Map each category name to a String
             .toList() ??
         [],
-    profilePicPath: json['profilePicPath'] ?? ''
+    profilePicPath: json['profilePicPath'] ?? '',
+    userType: json['userType']  ?? '',
   );
 }
 

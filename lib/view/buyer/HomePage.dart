@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 'Business & Finance':
         return Icons.attach_money;
       case 'Cars':
-        return Icons.directions_car;
+        return Icons.car_crash;
       case 'Real Estate':
         return Icons.home_work;
       case 'Electronics':
@@ -183,6 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
             user.phoneNumber = loggedInUser.phoneNumber;
             user.categories = loggedInUser.categories;
             user.profilePicPath = imagePath;
+            user.userType=loggedInUser.userType;
             print(user.toJson());
           });
         }
@@ -207,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return false; // Prevent default back button behavior
       },
       child: Scaffold(
-        drawer: NavBar(userType: 'buyer', user: user),
+        drawer: NavBar(user: user),
         body: ListView(
           padding: EdgeInsets.zero,
           children: [
