@@ -34,12 +34,17 @@ class User {
       'uid': uid,
       'categories': categories,
       'profilePicPath':profilePicPath,
+      'cnic':cnic,
+      'userType':userType,
     };
   }
 
 factory User.fromJson(Map<String, dynamic> json) {
   return User(
     firstName: json['firstName'] ?? '',
+    lastName: json['lastName'] ?? '',
+    cnic: json['cnic'] ?? '',
+    userType: json['userType'] ?? '',
     email: json['email'] ?? '',
     phoneNumber: json['phoneNumber'] ?? '',
     location: json['adress'] ?? '',

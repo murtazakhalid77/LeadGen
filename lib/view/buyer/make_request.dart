@@ -101,6 +101,10 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
   Future<void> makeRequest(
       BuildContext context, RequestModel? requestModel) async {
     try {
+      
+        setState(() {
+        isLoading = true; 
+    });
       RequestModel? requestModel =
           await _helperService.requestPost(this.requestModel);
 
@@ -151,6 +155,13 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
           );
         },
       );
+    }
+    finally{
+      Timer(Duration(seconds: 7), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     }
   }
 
@@ -204,25 +215,27 @@ class _MakeRequestPageState extends State<MakeRequestPage> {
                   ),
                   const SizedBox(height: 15),
                   TextFormField(
-                controller: _description,
-                readOnly: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Description field cannot be empty';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.multiline,
-                minLines: 5, // Initial number of lines when the text field is empty
-                maxLines: null, // Allow the text field to grow dynamically
-                decoration: InputDecoration(
-                  labelText: 'Description *',
-                  hintText: 'Enter description',
-                  border: OutlineInputBorder(),
-                  filled: true, // Ensures the background color is applied
-                  fillColor: Colors.white, // Set your desired fill color here
-                ),
-              ),
+                    controller: _description,
+                    readOnly: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Description field cannot be empty';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.multiline,
+                    minLines:
+                        5, // Initial number of lines when the text field is empty
+                    maxLines: null, // Allow the text field to grow dynamically
+                    decoration: InputDecoration(
+                      labelText: 'Description *',
+                      hintText: 'Enter description',
+                      border: OutlineInputBorder(),
+                      filled: true, // Ensures the background color is applied
+                      fillColor:
+                          Colors.white, // Set your desired fill color here
+                    ),
+                  ),
                   const SizedBox(height: 15),
                   buildTextField(
                     controller:
