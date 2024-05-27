@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
 
 import 'package:lead_gen/view/buyer/all_categories.dart';
-import 'package:lead_gen/view/buyer/buyer-home.dart';
 import 'package:lead_gen/view/buyer/make_request.dart';
-import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/buyer/vehicles.dart';
 import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/reigistration/phone.dart';
@@ -36,7 +34,7 @@ const String sign_up = '/signup';
 const String log_in = '/login';
 const String user_Selection = '/user_selection';
 const String my_requests = '/my_requests';
-const String Profile = '/profile_page';
+
 
 final Map<String, WidgetBuilder> routes = {
   phone: (context) =>  const PhonePage(),
@@ -45,18 +43,15 @@ final Map<String, WidgetBuilder> routes = {
   // otpPinEnter: (context) => const Verify(phoneNumber: '',),
   location: (context) => const Location(),
   
-
+  
   buyer_allCategories:(context) => const AllCategoriesPage(),
   buyer_vehicle:(context) => const VehiclesPage(),
-   //seller_home: (context) => const SellerHomePage(categoryName: '',),
+  // seller_home: (context) => const SellerHomePage(),
 
  
   // sign_up:(context) => const SignUpPage(),
   log_in:(context) => const LoginScreen(phoneNumber: '',),
   user_Selection:(context) => const SelectionPage(email: '',),
-
-  Profile:(context) => const ProfilePage(),
-  seller_home:(context) => SellerHomePage(categoryName: ''),
 
 };
 

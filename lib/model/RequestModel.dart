@@ -51,7 +51,7 @@ class RequestModel {
       price: json['price'] as String? ?? '',
       acceptedSeller:  User.fromJson(json['acceptedSeller'] ?? {}), 
       acceptedAmount: json['acceptedAmount'] as int? ?? 0,
-      status: json['status'] as bool,
+      status: json['status'] as bool? ?? true  ,
     );
   }
 

@@ -5,9 +5,9 @@ import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/signupAndLogin/signUp.dart';
 
 class Password extends StatefulWidget {
-  final String phone;
+  final String email;
 
-  const Password({Key? key, required this.phone}) : super(key: key);
+  const Password({Key? key, required this.email}) : super(key: key);
 
   @override
   State<Password> createState() => PasswordState();
@@ -30,14 +30,14 @@ class PasswordState extends State<Password> {
     if (password == confirm) {
       try {
         var response =
-            await _otpService.passwordCreation(confirm, widget.phone);
+            await _otpService.passwordCreation(confirm, widget.email);
 
         if (response.statusCode == 200) {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  SignUpPage(phone: widget.phone, password: password,),
+                  SignUpPage(email: widget.email, password: password,),
             ),
           );
         } else {

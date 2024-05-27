@@ -47,6 +47,8 @@ class _RatingPageState extends State<RatingPage> {
 
         if (success) {
           _showSuccessDialog();
+           Navigator.of(context).pop();
+            Navigator.of(context).pop();
         } else {
           _showErrorDialog();
         }

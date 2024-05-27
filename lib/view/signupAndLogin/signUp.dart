@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,10 +20,10 @@ import '../../model/Registration.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class SignUpPage extends StatefulWidget {
-  final String phone;
+  final String email;
   final String password;
 
-  const SignUpPage({Key? key, required this.phone, required this.password})
+  const SignUpPage({Key? key, required this.email, required this.password})
       : super(key: key);
 
   @override
@@ -48,27 +49,30 @@ class _SignUpPageState extends State<SignUpPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _cnicController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
 
   Future<Registration> _constructRegistrationObject() async {
     String? token = await getFCMToken();
-    String? uid="";
+    String? uid = "";
     return Registration(_firstNameController.text, _lastNameController.text,
-        _cnicController.text, _emailController.text, widget.phone, token!,uid);
+        _cnicController.text, _phoneNumberController.text, widget.email, token!, uid);
   }
 
   Future<void> _registerUser(Registration registrationData) async {
     try {
-       UserCredential userCredential = await FirebaseAuth.instance
+      print(widget.email);
+      UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: _emailController.text, password: widget.password);
-      _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set(
-          {'uid': userCredential.user!.uid, 'email': _emailController.text,'profilePic':''});
-        registrationData.uid=userCredential.user!.uid;
-        
-      var response = await _otpService.registerUser(registrationData);
+              email:  widget.email, password: widget.password);
+      _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'email': widget.email,
+        'profilePic': ''
+      });
+      //Todo: here.
+      registrationData.uid = userCredential.user!.uid;
 
-  
+      var response = await _otpService.registerUser(registrationData);
 
       if (response.statusCode == 200) {
         setState(() {
@@ -86,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
           context,
           MaterialPageRoute(
               builder: (context) => UserRegistrationSelection(
-                    email: _emailController.text,
+                    email: widget.email,
                   )),
         );
       } else {
@@ -362,7 +366,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     //Email Text
                     const Text(
-                      'Enter Your Email',
+                      'Enter Your phone Number',
                       style: TextStyle(
                         //  fontFamily: "UBUNTU",
                         color: Colors.blue,
@@ -375,27 +379,26 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     //Email Input
                     TextFormField(
+                      controller:
+                          _phoneNumberController, // Changed from _emailController
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ], // Allow only digits
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Email is empty';
+                        if (value == null || value.isEmpty) {
+                          return 'Phone number is empty';
                         }
-                        if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
-                            .hasMatch(value)) {
-                          if (value.isNotEmpty) {
-                            return 'Enter a valid email';
-                          } else {
-                            return null; // Return null if email is empty and no validation yet
-                          }
+                        if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                          return 'Enter a valid phone number with 11 digits';
                         }
-                        return null; // Return null for valid email
+                        return null;
                       },
-                      controller: _emailController,
                       decoration: InputDecoration(
                         focusColor: Colors.blue.shade100,
-                        hintText: 'google@mail.com',
+                        hintText:
+                            '03468288115', // Updated hint text to reflect phone number format
                         hintStyle: const TextStyle(
                           fontSize: 18,
-                          //    fontFamily: "UBUNTU",
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

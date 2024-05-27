@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth_user;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,6 +97,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> fetchUser(String name, String lastName, String updatedPhone,
       String updatedEmail, String email) async {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       setState(() {
           isLoading = true;
@@ -103,12 +105,18 @@ class _EditProfileState extends State<EditProfile> {
       // print("Image Path: $image");
       var response = await userService.editUserProfile(
           name, lastName, updatedPhone, updatedEmail, email);
+
+
+    
+ 
+     
       if (response.statusCode == 200) {
+
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfilePage(
               name: nameController.text + " " + lastNameController.text,
               phone: phoneController.text,
-              email: emailController.text,
+              email: updatedEmail,
               cnic: widget.user.cnic,
               userType: widget.user.userType),
         ));

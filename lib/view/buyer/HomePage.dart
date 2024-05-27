@@ -185,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
        
           DocumentSnapshot userSnapshot =
               await firestore.collection('users').doc(userId).get();
-          String imagePath = userSnapshot['imagePath'] as String;
+          String? imagePath = userSnapshot['imagePath'] as String?;
 
           if (loggedInUser != null) {
             setState(() {
@@ -196,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
               user.email = email; // Is this assignment necessary?
               user.phoneNumber = loggedInUser.phoneNumber;
               user.categories = loggedInUser.categories;
-              user.profilePicPath = imagePath;
+          user.profilePicPath = imagePath ?? 'assets/man.png'; // Correcting the ternary operator
               user.cnic = loggedInUser.cnic;
               user.userType = loggedInUser.userType;
               print(user.toJson());

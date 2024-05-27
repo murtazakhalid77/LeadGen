@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
@@ -55,6 +56,7 @@ class NavBar extends StatelessWidget {
   Future<void> _performLogout(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+
 
     Navigator.of(context).pop();
     Navigator.of(context).pushAndRemoveUntil(

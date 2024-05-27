@@ -3,19 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lead_gen/services/OtpService.dart';
+import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/reigistration/password.dart';
 import 'package:pinput/pinput.dart';
 
 class Verify extends StatefulWidget {
-  final String otp;
-  final String phoneNumber;
+  String otp;
+  final String email;
 
-  const Verify({Key? key, required this.otp, required this.phoneNumber})
-      : super(key: key);
+  Verify({Key? key, required this.otp, required this.email}) : super(key: key);
+
   @override
   State<Verify> createState() => _MyVerifyState();
 }
-
 final OtpService _otpService = OtpService();
 
 class _MyVerifyState extends State<Verify> {
@@ -36,16 +36,46 @@ class _MyVerifyState extends State<Verify> {
         context,
         MaterialPageRoute(
           builder: (context) => Password(
-              phone: phoneNumber), // Replace '123456' with the actual OTP value
+              email: widget.email), // Replace '123456' with the actual OTP value
         ),
       );
     });
   }
 
+   Future<void> resendOtp() async {
+    String email=widget.email;
+    if (widget.email!=null){
+      setState(() {
+        isLoading = true; // Show loader when sending OTP
+      });
+
+      try {
+        var response = await _otpService.otpSend(email);
+
+        if (response.statusCode == 200) {
+          showCustomToast('OTP sent again');
+
+          String otp = response.body;
+         
+         widget.otp=otp;
+        } else {
+          showCustomToast(response.body);
+        }
+      } catch (e) {
+        String errorMessage = "Failed to send OTP: $e";
+        showCustomToast(errorMessage);
+      } finally {
+        setState(() {
+          isLoading = false; // Hide loader when OTP sending is complete
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String otp = widget.otp;
-    String phoneNumber = widget.phoneNumber;
+    String phoneNumber = widget.email;
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -188,8 +218,7 @@ class _MyVerifyState extends State<Verify> {
                     ),
                     TextButton(
                       onPressed: () {
-                        //resend mail logic
-                      },
+                     resendOtp();                   },
                       style: TextButton.styleFrom(
                         backgroundColor: const Color.fromARGB(
                             255, 248, 248, 248), // Background color
