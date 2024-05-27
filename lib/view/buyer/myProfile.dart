@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
@@ -46,14 +47,18 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       // Replace the 'widget' with 'widget.' to access the properties of ProfilePage
       User? loggedInUser = await userService.getLoggedInUser(widget.email!);
-     print(loggedInUser!.toJson());
+       FirebaseFirestore firestore = FirebaseFirestore.instance;
+      DocumentSnapshot userSnapshot =
+              await firestore.collection('users').doc(loggedInUser!.uid).get();
+          String? imagePath = userSnapshot['profilePic'] as String?;
+
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
           user.email = loggedInUser.email;
           user.uid=loggedInUser.uid;
           user.phoneNumber = widget.phone!;
-          user.profilePicPath =widget.profilePicPath!;
+          user.profilePicPath =imagePath!;
           user.cnic = loggedInUser.cnic;
           user.userType = loggedInUser.userType;
           user.lastName = loggedInUser.lastName;

@@ -182,21 +182,21 @@ class _MyHomePageState extends State<MyHomePage> {
         String userId = firebaseAuth.currentUser!.uid;
 
         try {
-       
           DocumentSnapshot userSnapshot =
               await firestore.collection('users').doc(userId).get();
-          String? imagePath = userSnapshot['imagePath'] as String?;
+          String? imagePath = userSnapshot['profilePic'] as String?;
 
           if (loggedInUser != null) {
             setState(() {
               user.firstName = loggedInUser.firstName;
               user.lastName = loggedInUser.lastName;
-              user.email = loggedInUser.email;
               user.location = loggedInUser.location;
               user.email = email; // Is this assignment necessary?
               user.phoneNumber = loggedInUser.phoneNumber;
               user.categories = loggedInUser.categories;
-          user.profilePicPath = imagePath ?? 'assets/man.png'; // Correcting the ternary operator
+              user.profilePicPath = (imagePath == null || imagePath.isEmpty)
+                  ? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'
+                  : imagePath; // Correcting the ternary operator
               user.cnic = loggedInUser.cnic;
               user.userType = loggedInUser.userType;
               print(user.toJson());
