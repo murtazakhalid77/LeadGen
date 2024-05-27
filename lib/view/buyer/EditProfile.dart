@@ -30,6 +30,7 @@ class _EditProfileState extends State<EditProfile> {
   late TextEditingController emailController;
   late UserService userService;
   bool isLoading = false;
+  late String profilePicPath;
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -37,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    print(widget.user.uid);
+ 
     nameController = TextEditingController(text: widget.user.firstName);
     lastNameController = TextEditingController(text: widget.user.lastName);
     phoneController = TextEditingController(text: widget.user.phoneNumber);
@@ -60,13 +61,13 @@ class _EditProfileState extends State<EditProfile> {
         Reference ref = _storage.ref().child('uploads/$fileName');
         UploadTask uploadTask = ref.putFile(File(_imageFile!.path));
         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
-        String downloadURL = await taskSnapshot.ref.getDownloadURL();
+        profilePicPath = await taskSnapshot.ref.getDownloadURL();
 
         await fetchUser(nameController.text, lastNameController.text,
             phoneController.text, emailController.text, widget.user.email);
 
         await firestore.collection('users').doc(widget.user.uid).set({
-          'imagePath': downloadURL,
+          'profilePic': profilePicPath,
         }, SetOptions(merge: true));
 
         Timer(Duration(seconds: 5), () {
@@ -109,17 +110,20 @@ class _EditProfileState extends State<EditProfile> {
 
     
  
-     
+ 
       if (response.statusCode == 200) {
 
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => ProfilePage(
               name: nameController.text + " " + lastNameController.text,
               phone: phoneController.text,
               email: updatedEmail,
+              profilePicPath: profilePicPath,
               cnic: widget.user.cnic,
               userType: widget.user.userType),
         ));
+
+         Navigator.pop(context);
       } else {
         Timer(Duration(seconds: 5), () {
           setState(() {
