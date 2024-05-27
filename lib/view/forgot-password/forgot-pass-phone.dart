@@ -5,7 +5,6 @@ import 'package:lead_gen/view/customWidgets/customToast.dart';
 import 'package:lead_gen/view/forgot-password/forgot-pass-verify.dart';
 import 'package:lead_gen/view/loader.dart';
 
-
 class ForgotPassPhonePage extends StatefulWidget {
   const ForgotPassPhonePage({Key? key}) : super(key: key);
 
@@ -16,38 +15,39 @@ class ForgotPassPhonePage extends StatefulWidget {
 class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
   final OtpService _otpService = OtpService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _emailController= TextEditingController();
   bool isLoading = false;
 
   @override
   void dispose() {
-    _phoneNumberController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
   Future<void> sendOtp() async {
     if (_formKey.currentState!.validate()) {
-      String phoneNumber = _phoneNumberController.text;
+      String email = _emailController.text;
 
       setState(() {
         isLoading = true; // Show loader when sending OTP
       });
 
       try {
-        var response = await _otpService.forgotPassword(phoneNumber);
+        var PasswordAndDto= await _otpService.forgotPassword(email);
 
-        if (response.statusCode == 200) {
+        if (PasswordAndDto!=null) {
           showCustomToast('OTP sent');
 
-          String otp = response.body;
+          String otp = PasswordAndDto.otp;
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ForgotPassVerify(otp: otp, phoneNumber: phoneNumber),
+              builder: (context) =>
+                  ForgotPassVerify(otp: otp, email: email, password: PasswordAndDto.password,),
             ),
           );
         } else {
-          showCustomToast(response.body);
+          showCustomToast("some error occured");
         }
       } catch (e) {
         String errorMessage = "Failed to send OTP: $e";
@@ -72,7 +72,8 @@ class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
                 top: MediaQuery.of(context).size.height * 0.08,
                 right: 35,
                 left: 35,
-                bottom: MediaQuery.of(context).size.height * 0.1, // Adjusted bottom padding
+                bottom: MediaQuery.of(context).size.height *
+                    0.1, // Adjusted bottom padding
               ),
               child: Column(
                 children: [
@@ -83,7 +84,7 @@ class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
                       children: [
                         const SizedBox(height: 150),
                         const Text(
-                          'Phone Number',
+                          'Email',
                           style: TextStyle(
                             color: Colors.lightBlue,
                             fontSize: 25,
@@ -92,26 +93,30 @@ class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
                         ),
                         const SizedBox(height: 15),
                         TextFormField(
-                          controller: _phoneNumberController,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          controller: _emailController,
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length != 11) {
-                              return 'Enter a valid Phone Number with 11 digits';
+                            if (value == null || value.isEmpty) {
+                              return 'Enter an email';
+                            }
+                            // Basic email format validation
+                            final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                            if (!emailRegex.hasMatch(value)) {
+                              return 'Enter a valid email';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.lightBlue),
+                              borderSide:
+                                  const BorderSide(color: Colors.lightBlue),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.lightBlue),
+                              borderSide:
+                                  const BorderSide(color: Colors.lightBlue),
                             ),
-                            hintText: '03382644867',
+                            hintText: 'example@example.com',
                             hintStyle: TextStyle(color: Colors.grey[600]),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -122,7 +127,7 @@ class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
                         Container(
                           padding: const EdgeInsets.only(left: 0, right: 115),
                           child: const Text(
-                            "We'll send a confirmation code to your Phone Number",
+                            "We'll send a confirmation code to your email address",
                             style: TextStyle(
                               fontFamily: "UBUNTU",
                               fontSize: 13,
@@ -171,7 +176,6 @@ class ForgotPassPhoneState extends State<ForgotPassPhonePage> {
               top: 280,
               right: 0,
               child: Container(
-                
                 child: Center(
                   child: LoaderWidget(isLoading: isLoading),
                 ),

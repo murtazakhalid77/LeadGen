@@ -22,6 +22,7 @@ class MySingleRequestCard extends StatefulWidget {
   final String acceptedSellerEmail;
   final String acceptedSellerUid;
   final String? accepted; // Add requestId parameter
+  final bool status; 
 
   const MySingleRequestCard({
     Key? key,
@@ -36,6 +37,7 @@ class MySingleRequestCard extends StatefulWidget {
     required this.accepted,
     required this.acceptedSellerEmail,
     required this.acceptedSellerUid,
+    required this.status,
     required this.requestId, // Initialize requestId parameter
   }) : super(key: key);
 
@@ -80,25 +82,9 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 170,
         decoration: BoxDecoration(
-          color: Colors.white70, // Soft blue color for the background
+          color: !widget.status ?  Color.fromARGB(255, 230, 76, 76) : Colors.white70, // Soft blue color for the background
           borderRadius: BorderRadius.circular(20),
-          boxShadow: widget.accepted == "true"
-              ? [
-                  BoxShadow(
-                    color: Colors.green.shade400.withOpacity(0.4),
-                    spreadRadius: 3,
-                    blurRadius: 6,
-                    offset: Offset(0, 4),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.pink.shade400.withOpacity(0.4),
-                    spreadRadius: 3,
-                    blurRadius: 6,
-                    offset: Offset(0, 4),
-                  ),
-                ],
+          boxShadow: _getBoxShadows(),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -179,6 +165,7 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
                   ),
                 ),
                 const SizedBox(height: 50),
+                if(widget.status)...[
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -269,6 +256,7 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
                     ),
                   ],
                 ),
+                
 
                 const SizedBox(height: 20),
                 const Text(
@@ -341,11 +329,91 @@ class _MySingleRequestCardState extends State<MySingleRequestCard> {
                     );
                   },
                 ),
+                ]
+               else ...[
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 3,
+                            blurRadius: 6,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.admin_panel_settings,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'In review with admin',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Your request is currently under review. Please wait for further updates.',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  List<BoxShadow> _getBoxShadows() {
+    if (!widget.status) {
+      return [
+        BoxShadow(
+          color: Colors.red.withOpacity(1),
+          spreadRadius: 3,
+          blurRadius: 6,
+          offset: Offset(0, 4),
+        ),
+      ];
+    }
+
+    return widget.accepted == "true"
+        ? [
+            BoxShadow(
+              color: Colors.green.shade400.withOpacity(0.4),
+              spreadRadius: 3,
+              blurRadius: 6,
+              offset: Offset(0, 4),
+            ),
+          ]
+        : [
+            BoxShadow(
+              color: Colors.pink.shade400.withOpacity(0.4),
+              spreadRadius: 3,
+              blurRadius: 6,
+              offset: Offset(0, 4),
+            ),
+          ];
   }
 }

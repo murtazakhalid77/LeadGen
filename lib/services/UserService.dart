@@ -34,10 +34,10 @@ print(response.statusCode);
     }
 }
 
- Future editUserProfile(String name, String updatedPhone, String email, String imagePath) async {
+ Future editUserProfile(String name, String lastname, String updatePhone, String updatedEmail, String email) async {
   try {
     final response = await http.post(
-      UrlConfig.buildUri('user/updateProfile/$name/$updatedPhone/$email/$imagePath'),
+      UrlConfig.buildUri('user/updateProfile/$name/$lastname/$updatePhone/$updatedEmail/$email'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

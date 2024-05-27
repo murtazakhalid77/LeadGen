@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lead_gen/services/ChatService.dart';
 import 'package:lead_gen/view/Chats/ChatBubble.dart';
 
@@ -37,19 +38,34 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void sendMessage() async {
-    if (_messageController.text.isNotEmpty) {
+void sendMessage() async {
+    String messageText = _messageController.text;
+
+    // Define regular expressions for Pakistani phone number and email
+    final phoneRegex = RegExp(r'^[0-9]{11}$');
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+
+    // Check if message contains a Pakistani phone number or an email
+    if (phoneRegex.hasMatch(messageText) || emailRegex.hasMatch(messageText)) {
+      // Show a toast message
+      Fluttertoast.showToast(
+        msg: "Messages containing phone numbers or emails are not allowed.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
       // Send the message using the ChatService
-      await _chatService.sendMessage(
-          widget.receivedUserId, _messageController.text);
+      if (messageText.isNotEmpty) {
+        await _chatService.sendMessage(widget.receivedUserId, messageText);
 
-      // Clear the text in the message input field
-      _messageController.clear();
-
-  
+        // Clear the text in the message input field
+        _messageController.clear();
+      }
     }
   }
-
   @override
   void dispose() {
     // Dispose the ScrollController

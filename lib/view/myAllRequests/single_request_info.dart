@@ -19,6 +19,8 @@ class MyRequestInfo extends StatelessWidget {
   final String requestId;
   final String acceptedSellerEmail;
   final String acceptedSellerUid;
+  final bool status;
+
   const MyRequestInfo({
     required this.option,
     required this.email,
@@ -31,6 +33,7 @@ class MyRequestInfo extends StatelessWidget {
     required this.categoryName,
     required this.requestId,
      required this.acceptedSellerEmail,
+     required this.status,
       required this.acceptedSellerUid,
   });
 
@@ -82,6 +85,7 @@ class MyRequestInfo extends StatelessWidget {
                           accepted:accepted
                           ,acceptedSellerEmail: acceptedSellerEmail,
                           acceptedSellerUid:acceptedSellerUid,
+                          status: status,
                       )
                           ],
       

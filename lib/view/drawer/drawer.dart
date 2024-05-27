@@ -1,22 +1,19 @@
+
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/view/Chats/all_chats.dart';
 import 'package:lead_gen/view/buyer/HomePage.dart';
-
 import 'package:lead_gen/view/buyer/myProfile.dart';
 import 'package:lead_gen/view/myAllRequests/my_requests.dart';
 import 'package:lead_gen/view/signupAndLogin/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class NavBar extends StatelessWidget {
-  final String userType;
   final User? user;
 
-  NavBar({Key? key, required this.userType, required this.user})
-      : super(key: key);
+  NavBar({Key? key, required this.user}) : super(key: key);
 
-      // Function to clear shared preferences
+  // Function to clear shared preferences
   Future<void> clearSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
@@ -24,13 +21,48 @@ class NavBar extends StatelessWidget {
 
   // Function to log out
   void logout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Logout', style: TextStyle(color: Colors.black)),
+          content: Text('Are you sure you want to logout?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.black,
+              ),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Perform logout action here
+                _performLogout(context);
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.blue.shade100,
+              ),
+              child: Text('Logout'),
+            ),
+          ],
+        );
+      },
+    ); // Clear shared preferences
+  }
+
+  Future<void> _performLogout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+
+    Navigator.of(context).pop();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const LoginScreen(phoneNumber: ''), // Navigate to login screen
-      ),
-      (route) => false, // Remove all previous routes
+      MaterialPageRoute(builder: (context) => LoginScreen(phoneNumber: '')),
+      (route) => false,
     );
-    clearSharedPreferences(); // Clear shared preferences
   }
 
   @override
@@ -44,9 +76,11 @@ class NavBar extends StatelessWidget {
             accountEmail: Text(user!.email),
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
-                
                 child: Image.network(
-                  user!.profilePicPath
+                  user!.profilePicPath,
+                  width: 90, // Ensure width and height are the same
+                  height: 90,
+                  fit: BoxFit.cover,
                 ),
               ),
               backgroundColor: Colors.blue,
@@ -68,16 +102,18 @@ class NavBar extends StatelessWidget {
             textColor: Colors.teal,
             onTap: () {
               Navigator.of(context).pop(); // Close the drawer
-              if (userType == 'buyer') {
+              if (user!.userType == 'BUYER') {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MyHomePage(option: false, email: user!.email), // Navigate to seller home page
+                    builder: (context) => MyHomePage(
+                      option: false,
+                      email: user!.email, // Navigate to seller home page
+                    ),
                   ),
                 );
               }
             },
-            
           ),
           ListTile(
             leading: const Icon(
@@ -86,26 +122,21 @@ class NavBar extends StatelessWidget {
               size: 25,
             ),
             title: const Text(
-              'Requests',
+              'Buyer Request',
               style: TextStyle(fontSize: 18),
             ),
             textColor: Colors.purple,
             onTap: () {
-              print('Requests tapped for $userType');
-              // You can implement different logic based on user type
-              if (userType == 'seller') {
-                // Navigate to seller's requests page
-                Navigator.pushNamed(context, '/seller-request');
-              } else if (userType == 'buyer') {
-                // Navigate to buyer's requests page
+              print('Requests tapped for ${user!.userType}');
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        MyRequests(email: user!.email, option: true,)),
+                  builder: (context) => MyRequests(
+                    email: user!.email,
+                    option: true,
+                  ),
+                ),
               );
-
-              }
             },
           ),
           ListTile(
@@ -126,8 +157,6 @@ class NavBar extends StatelessWidget {
                   builder: (context) => const AllChatsPage(),
                 ),
               );
-              
-              
             },
           ),
           ListTile(
@@ -143,15 +172,16 @@ class NavBar extends StatelessWidget {
             textColor: Colors.indigo,
             onTap: () {
               print(user!.toJson());
-              // Handle Requests tapped based on user type
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(
-                    name: user!.firstName,
+                    name: user!.firstName + " " + user!.lastName,
                     phone: user!.phoneNumber,
                     email: user!.email,
                     profilePicPath: user!.profilePicPath,
+                    cnic: user!.cnic,
+                    userType: user!.userType,
                   ),
                 ),
               );
@@ -170,13 +200,9 @@ class NavBar extends StatelessWidget {
             ),
             textColor: Colors.blue,
             onTap: () {
-              Navigator.of(context).pop(
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(phoneNumber: ''), // goes to login page
-              ),
-            );
+              logout(context); // Show the logout dialog
             },
-          )
+          ),
         ],
       ),
     );

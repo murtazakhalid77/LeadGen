@@ -177,8 +177,8 @@ class HelperService extends ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse['result']; // Assuming the response contains a 'result' field indicating success or failure
+    
+      return true; // Assuming the response contains a 'result' field indicating success or failure
     } else {
       print('Request failed with status: ${response.statusCode}');
       return false; // Return false or handle the failure accordingly

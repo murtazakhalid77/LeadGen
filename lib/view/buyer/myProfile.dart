@@ -12,13 +12,18 @@ class ProfilePage extends StatefulWidget {
   final String? phone;
   final String? profilePicPath;
   final String? email;
+  final String? cnic;
+  final String? userType;
+
 
   const ProfilePage({
     Key? key,
     this.name,
     this.phone,
     this.email,
-    this.profilePicPath
+    this.profilePicPath,
+    this.cnic,
+    this.userType
   }) : super(key: key);
 
   @override
@@ -49,7 +54,9 @@ class _ProfilePageState extends State<ProfilePage> {
           user.uid=loggedInUser.uid;
           user.phoneNumber = widget.phone!;
           user.profilePicPath =widget.profilePicPath!;
-         
+          user.cnic = loggedInUser.cnic;
+          user.userType = loggedInUser.userType;
+          user.lastName = loggedInUser.lastName;
         });
       }
     } catch (error) {
@@ -105,6 +112,10 @@ class _ProfilePageState extends State<ProfilePage> {
               itemProfile('Phone', widget.phone ?? 'N/A', CupertinoIcons.phone),
               const SizedBox(height: 10),
               itemProfile('Email', widget.email ?? 'N/A', CupertinoIcons.mail),
+              const SizedBox(height: 10),
+              itemProfile('CNIC', widget.cnic ?? 'N/A', CupertinoIcons.tag),
+              const SizedBox(height: 10),
+              itemProfile('Type', widget.userType ?? 'N/A', CupertinoIcons.mail),
               const SizedBox(
                 height: 20,
               ),

@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth_user;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,9 +25,11 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   late TextEditingController nameController;
+  late TextEditingController lastNameController;
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late UserService userService;
+  bool isLoading = false;
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -35,6 +39,7 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     print(widget.user.uid);
     nameController = TextEditingController(text: widget.user.firstName);
+    lastNameController = TextEditingController(text: widget.user.lastName);
     phoneController = TextEditingController(text: widget.user.phoneNumber);
     emailController = TextEditingController(text: widget.user.email);
     userService = UserService();
@@ -43,8 +48,11 @@ class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
 
   Future<void> uploadImageAndSaveUser() async {
+    setState(() {
+      isLoading = true;
+    });
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-   
+
     if (_imageFile != null) {
       // Upload image to Firebase Storage
       try {
@@ -54,42 +62,79 @@ class _EditProfileState extends State<EditProfile> {
         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
         String downloadURL = await taskSnapshot.ref.getDownloadURL();
 
-    
-        await fetchUser(nameController.text, phoneController.text,
-            emailController.text, downloadURL);
-          
-                await firestore.collection('users').doc(widget.user.uid).set({
+        await fetchUser(nameController.text, lastNameController.text,
+            phoneController.text, emailController.text, widget.user.email);
+
+        await firestore.collection('users').doc(widget.user.uid).set({
           'imagePath': downloadURL,
-        },SetOptions(merge: true));
+        }, SetOptions(merge: true));
+
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
       } catch (e) {
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
         print('Error uploading image: $e');
         showCustomToast('Error uploading image');
       }
     } else {
+      Timer(Duration(seconds: 5), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
       // Save user data without image
-      await fetchUser(
-          nameController.text, phoneController.text, emailController.text, '');
+      await fetchUser(nameController.text, lastNameController.text,
+          phoneController.text, emailController.text, widget.user.email);
     }
   }
 
-  Future<void> fetchUser(
-      String name, String updatedPhone, String email, String image) async {
+  Future<void> fetchUser(String name, String lastName, String updatedPhone,
+      String updatedEmail, String email) async {
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
-      print("Image Path: $image");
-      var response =
-          await userService.editUserProfile(name, updatedPhone, email, image);
+      setState(() {
+          isLoading = true;
+        });
+      // print("Image Path: $image");
+      var response = await userService.editUserProfile(
+          name, lastName, updatedPhone, updatedEmail, email);
+
+
+    
+ 
+     
       if (response.statusCode == 200) {
+
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => ProfilePage(
-            name: nameController.text,
-            phone: phoneController.text,
-            email: emailController.text,
-          ),
+              name: nameController.text + " " + lastNameController.text,
+              phone: phoneController.text,
+              email: updatedEmail,
+              cnic: widget.user.cnic,
+              userType: widget.user.userType),
         ));
       } else {
+        Timer(Duration(seconds: 5), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
+        print(response.body);
         showCustomToast(response.body);
       }
     } catch (error) {
+      Timer(Duration(seconds: 5), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
       print('Error updating User: $error');
       showCustomToast("error while updating logged In User");
     }
@@ -98,107 +143,121 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-          onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            fontSize: 20,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+            onPressed: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.of(context).pop();
+            },
+          ),
+          title: const Text(
+            'Edit Profile',
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              // -- IMAGE with ICON
-              Stack(
-                children: [
-                  SizedBox(
-                    width: 120,
-                    height: 120,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: _imageFile != null
-                          ? Image.file(File(_imageFile!.path))
-                          : Image.asset('lib/assets/man.png'),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: InkWell(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: ((builder) => UploadPicture()),
-                        );
-                      },
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: Colors.teal,
-                        size: 25,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-
-              // -- Form Fields
-              Form(
-                key: _formKey,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    buildTextFormField(
-                        'Name', nameController, CupertinoIcons.person),
-                    const SizedBox(height: 10),
-                    buildForPhoneNumber(
-                        'Phone', phoneController, CupertinoIcons.phone),
-                    const SizedBox(height: 10),
-                    buildForEmail(
-                        'Email', emailController, CupertinoIcons.mail),
-                    const SizedBox(height: 30),
-                    // -- Form Submit Button
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            uploadImageAndSaveUser();
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueAccent,
-                          padding: const EdgeInsets.all(20),
-                          side: BorderSide.none,
-                          shape: const StadiumBorder(),
-                        ),
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(
-                            color: Colors.white,
+                    // -- IMAGE with ICON
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          height: 120,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: _imageFile != null
+                                ? Image.file(File(_imageFile!.path))
+                                : Image.asset('lib/assets/man.png'),
                           ),
                         ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) => UploadPicture()),
+                              );
+                            },
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.teal,
+                              size: 25,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 50),
+
+                    // -- Form Fields
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          buildTextFormField('First Name', nameController,
+                              CupertinoIcons.person),
+                          const SizedBox(height: 10),
+                          buildTextFormField('Last Name', lastNameController,
+                              CupertinoIcons.person),
+                          const SizedBox(height: 10),
+                          buildForPhoneNumber(
+                              'Phone', phoneController, CupertinoIcons.phone),
+                          const SizedBox(height: 10),
+                          buildForEmail(
+                              'Email', emailController, CupertinoIcons.mail),
+                          const SizedBox(height: 30),
+                          // -- Form Submit Button
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  uploadImageAndSaveUser();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueAccent,
+                                padding: const EdgeInsets.all(20),
+                                side: BorderSide.none,
+                                shape: const StadiumBorder(),
+                              ),
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 5),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+            if (isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.black),
+                ),
+              ),
+          ],
+        ));
   }
 
   Widget UploadPicture() {

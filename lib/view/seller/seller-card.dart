@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:lead_gen/services/ChatService.dart';
 import 'package:lead_gen/view/Chats/person_chat.dart';
 import 'package:lead_gen/view/seller/Seller-Single-Request.dart';
 
-class SellerCard extends StatelessWidget {
+class SellerCard extends StatefulWidget {
   final String requestId;
   final String title;
   final String name;
@@ -36,31 +37,64 @@ class SellerCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  _SellerCardState createState() => _SellerCardState();
+}
+
+class _SellerCardState extends State<SellerCard> {
+  double? bidAmount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialBidAmount();
+  }
+
+  Future<void> _loadInitialBidAmount() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    // Get the current user
+    User? currentUser = firebaseAuth.currentUser;
+
+    if (currentUser != null) {
+      // Get the bid amount for the current user from Firestore
+      DocumentSnapshot bidSnapshot = await firestore
+          .collection('requests')
+          .doc(widget.requestId)
+          .collection('bids')
+          .doc(currentUser.uid)
+          .get();
+
+      if (bidSnapshot.exists) {
+        setState(() {
+          bidAmount = bidSnapshot['amount'] ?? 0;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Convert date string to DateTime and format it
-    final DateTime dateTime = DateTime.parse(date);
+    final DateTime dateTime = DateTime.parse(widget.date);
     final String formattedDate = DateFormat('MMMM d, yyyy').format(dateTime);
 
     return GestureDetector(
-    
       onLongPressStart: (details) {
-
         Navigator.of(context).push(_buildPreviewRoute(context));
       },
       onLongPressEnd: (details) {
         Navigator.of(context).pop();
-      },   
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: isSellerAccepted
+            color: widget.isSellerAccepted
                 ? Colors.green.shade100
-                : Colors
-                    .blue.shade100, // Conditionally set the background color
+                : Colors.blue.shade100, // Conditionally set the background color
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -77,19 +111,19 @@ class SellerCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    name,
+                    widget.name,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
-                  if (isSellerAccepted)
+                  if (widget.isSellerAccepted)
                     IconButton(
                       onPressed: () {
-                        print(buyerEmail);
-                        print(buyerUid);
-                        sendMessage(context, description, buyerEmail, buyerUid);
+                        print(widget.buyerEmail);
+                        print(widget.buyerUid);
+                        sendMessage(context, widget.description, widget.buyerEmail, widget.buyerUid);
                       },
                       icon: Icon(
                         Icons.message,
@@ -97,27 +131,26 @@ class SellerCard extends StatelessWidget {
                       ),
                       iconSize: 24,
                     ),
-                  if (isSellerAccepted)
+                  if (widget.isSellerAccepted)
                     Text(
-                      'Accepted Amount: \$${acceptedAmount.toStringAsFixed(2)}',
+                      'Accepted Amount: \$${widget.acceptedAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors
-                            .green, // Customize the color for the accepted amount
+                        color: Colors.green, // Customize the color for the accepted amount
                       ),
                     ),
                 ],
               ),
               SizedBox(height: 5),
               Text(
-                description,
+                widget.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.black54),
               ),
               SizedBox(height: 5),
               Text(
-                'Location: $locationText',
+                'Location: ${widget.locationText}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.black87),
               ),
@@ -126,12 +159,12 @@ class SellerCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Category: $category',
+                    'Category: ${widget.category}',
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   Text(
-                    'Price: \$${price}', // Display price with currency symbol
+                    'Price: \$${widget.price}', // Display price with currency symbol
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
@@ -144,19 +177,24 @@ class SellerCard extends StatelessWidget {
                 'Date: $formattedDate', // Display formatted date
                 style: TextStyle(color: Colors.black54),
               ),
+              SizedBox(height: 5),
+              Text(
+                'Last Offer: \$${bidAmount?.toStringAsFixed(2)}', // Display the current bid amount
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
               SizedBox(height: 10),
-             
-
-             
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: isSellerAccepted
+                    onPressed: widget.isSellerAccepted
                         ? null
                         : () {
                             _showOfferDialog(
-                                context, requestId, double.parse(price));
+                                context, widget.requestId, double.parse(widget.price));
                           },
                     child: Text(
                       'Offer',
@@ -174,29 +212,6 @@ class SellerCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 10),
-                  // ElevatedButton(
-                  //   onPressed: isSellerAccepted
-                  //       ? null
-                  //       : () {
-                  //           // Handle deny button tap
-                  //         },
-                  //   child: Text(
-                  //     'Deny',
-                  //     style: TextStyle(
-                  //       fontSize: 14,
-                  //       color: Colors.white,
-                  //     ),
-                  //   ),
-                  //   style: ElevatedButton.styleFrom(
-                  //     primary: Colors.blue,
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal: 16, vertical: 8),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(8),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ],
@@ -206,8 +221,7 @@ class SellerCard extends StatelessWidget {
     );
   }
 
- Route _buildPreviewRoute(BuildContext context) {
-  
+  Route _buildPreviewRoute(BuildContext context) {
     return PageRouteBuilder(
       opaque: false,
       pageBuilder: (BuildContext context, _, __) {
@@ -217,12 +231,12 @@ class SellerCard extends StatelessWidget {
             backgroundColor: Colors.black.withOpacity(0.5),
             body: Center(
               child: SellerSingleRequest(
-                firstName: name,
-                description: description,
-                locationText: locationText,
-                isSellerAccepted: isSellerAccepted,
-                requestId:requestId,
-                price:price
+                firstName: widget.name,
+                description: widget.description,
+                locationText: widget.locationText,
+                isSellerAccepted: widget.isSellerAccepted,
+                requestId: widget.requestId,
+                price: widget.price,
               ),
             ),
           ),
@@ -230,15 +244,14 @@ class SellerCard extends StatelessWidget {
       },
     );
   }
-}
+
   void sendMessage(BuildContext context, String requestDescription,
       String receiveUserEmail, String receivedUserId) async {
     String message =
         "Hey, I heard about you needing this: \"$requestDescription\". Can we talk?";
-    ChatService chatService = new ChatService();
-   print(receivedUserId);
+    ChatService chatService = ChatService();
+    print(receivedUserId);
     await chatService.sendMessage(receivedUserId, message);
-   
 
     Navigator.push(
       context,
@@ -252,90 +265,93 @@ class SellerCard extends StatelessWidget {
   }
 
   void _showOfferDialog(BuildContext context, String requestId, double price) {
-  TextEditingController offerController = TextEditingController();
-  double minOffer = price * 0.9; // Minimum 90% of the price
-  double maxOffer = price * 1.1; // Maximum 110% of the price
+    TextEditingController offerController = TextEditingController();
+    double minOffer = price * 0.9; // Minimum 90% of the price
+    double maxOffer = price * 1.1; // Maximum 110% of the price
 
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 10.0,
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Enter Your Offer',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              Text(
-                'Offer must be between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}',
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: offerController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      // Retrieve the bid amount from the offer controller
-                      double? bidAmount = double.tryParse(offerController.text);
-
-                      // If the bid amount is valid and within the range, call addBidToRequest
-                      if (bidAmount != null &&
-                          bidAmount >= minOffer &&
-                          bidAmount <= maxOffer) {
-                        addBidToRequest(requestId, bidAmount);
-                        // Close the dialog
-                        Navigator.of(context).pop();
-                      } else {
-                        // Show an error message if the amount is out of range
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text('Submit'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Close the dialog without any action
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('Cancel'),
-                  ),
-                ],
-              ),
-            ],
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-        ),
-      );
-    },
-  );
-}
+          backgroundColor: Colors.white,
+          elevation: 10.0,
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Enter Your Offer',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Text(
+                  'Offer must be between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}',
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: offerController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Amount',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        // Retrieve the bid amount from the offer controller
+                        double? offerAmount = double.tryParse(offerController.text);
 
+                        // If the bid amount is valid and within the range, call addBidToRequest
+                        if (offerAmount != null &&
+                            offerAmount >= minOffer &&
+                            offerAmount <= maxOffer) {
+                          addBidToRequest(requestId, offerAmount);
+                          // Update the bid amount state
+                          setState(() {
+                            bidAmount = offerAmount;
+                          });
+                          // Close the dialog
+                          Navigator.of(context).pop();
+                        } else {
+                          // Show an error message if the amount is out of range
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  'Please enter an amount between \$${minOffer.toStringAsFixed(2)} and \$${maxOffer.toStringAsFixed(2)}'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text('Submit'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Close the dialog without any action
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> addBidToRequest(String requestId, double amount) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -349,7 +365,6 @@ class SellerCard extends StatelessWidget {
       String userId = currentUser.uid;
 
       try {
-     
         // Add a bid document to the specific request's bids subcollection
         await firestore
             .collection('requests')
@@ -370,3 +385,5 @@ class SellerCard extends StatelessWidget {
       print('User not authenticated');
     }
   }
+}
+

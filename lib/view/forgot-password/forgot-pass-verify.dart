@@ -7,28 +7,26 @@ import 'package:pinput/pinput.dart';
 
 class ForgotPassVerify extends StatefulWidget {
   final String otp;
-  final String phoneNumber;
+  final String password;
+  final String email;
 
- 
- const ForgotPassVerify({Key? key, required this.otp, required this.phoneNumber})
+  const ForgotPassVerify({Key? key, required this.otp, required this.email,required this.password })
       : super(key: key);
   @override
   State<ForgotPassVerify> createState() => _MyForgotPassVerifyState();
 }
 
- final OtpService _otpService = OtpService(); 
-
-
+final OtpService _otpService = OtpService();
 
 class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
-
   bool isPinFilled = false;
   late String pinEnter;
 
   @override
   Widget build(BuildContext context) {
-      String otp= widget.otp;
-        String phoneNumber=widget.phoneNumber;
+    String otp = widget.otp;
+    String email = widget.email;
+    print(otp);
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
@@ -88,7 +86,7 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
                 height: 25,
               ),
               const Text(
-                "Phone Verification",
+                "Email Verification",
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -98,7 +96,7 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
                 height: 10,
               ),
               const Text(
-                "We need to register your phone without getting started!",
+                "We need to register your email without getting started!",
                 style: TextStyle(
                   fontSize: 16,
                 ),
@@ -116,12 +114,9 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
                 showCursor: true,
                 onCompleted: (pin) {
                   setState(() {
-                    isPinFilled =
-                        pin.length == 6;
-                      pinEnter=pin;
+                    isPinFilled = pin.length == 6;
+                    pinEnter = pin;
                   });
-              
-                 
                 },
               ),
               const SizedBox(
@@ -131,45 +126,45 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-  style: ElevatedButton.styleFrom(
-    backgroundColor:
-        isPinFilled ? Colors.blue.shade600 : Colors.grey,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  ),
-  onPressed: isPinFilled
-      ? () {
-          if (pinEnter == otp) {
-
-              Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => ForgotPassword(phoneNumber:phoneNumber), // Replace '123456' with the actual OTP value
-  ),
-);
-            // PIN matches OTP, navigate to '/password'
-          
-          } else {
-            // PIN does not match OTP, show a message
-            Fluttertoast.showToast(
-              msg: 'The PIN you entered is not correct.',
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-            );
-          }
-        }
-      : null, // Disable button if PIN is not completely filled
-  child: const Text("Verify Phone"),
-),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isPinFilled ? Colors.blue.shade600 : Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: isPinFilled
+                      ? () {
+                          if (pinEnter == otp) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ForgotPassword(
+                                    email:
+                                        email, password: widget.password,), // Replace '123456' with the actual OTP value
+                              ),
+                            );
+                            // PIN matches OTP, navigate to '/password'
+                          } else {
+                            // PIN does not match OTP, show a message
+                            Fluttertoast.showToast(
+                              msg: 'The PIN you entered is not correct.',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                            );
+                          }
+                        }
+                      : null, // Disable button if PIN is not completely filled
+                  child: const Text("Verify Phone"),
+                ),
               ),
               Row(
                 children: [
                   TextButton(
                       onPressed: () {
-                      Navigator.pop(context);
+                        Navigator.pop(context);
                       },
                       child: const Text(
                         "Edit Phone ?",
@@ -179,7 +174,7 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
               ),
               TextButton(
                 onPressed: () {
-             //resend mail logic
+                  //resend mail logic
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: const Color.fromARGB(
@@ -187,8 +182,8 @@ class _MyForgotPassVerifyState extends State<ForgotPassVerify> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         10), // Adjust the radius as needed
-                    side:
-                        const BorderSide(color: Colors.blue), // Set the border color
+                    side: const BorderSide(
+                        color: Colors.blue), // Set the border color
                   ),
                   padding: const EdgeInsets.symmetric(
                       horizontal:

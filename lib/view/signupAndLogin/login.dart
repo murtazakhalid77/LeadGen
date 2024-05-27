@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _emailController.text,
           _passwordController.text,
         );
-       
+  
         UserCredential userCredential= await FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
         _firebaseFirestore.collection('users').doc(userCredential.user!.uid).set({
           'uid':userCredential.user!.uid,
@@ -75,13 +75,13 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           // Login failed
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login failed. Please try again.')),
+            SnackBar(content: Text('Wrong credentials')),
           );
         }
       } catch (e) {
         // Handle login error
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text('Wrong credentials')),
         );
       } finally {
         setState(() {
