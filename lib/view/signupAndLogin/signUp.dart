@@ -69,7 +69,6 @@ class _SignUpPageState extends State<SignUpPage> {
         'email': widget.email,
         'profilePic': ''
       });
-      //Todo: here.
       registrationData.uid = userCredential.user!.uid;
 
       var response = await _otpService.registerUser(registrationData);
@@ -117,86 +116,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return await _firebaseMessaging.getToken();
   }
 
-// Future<void> saveFcmToken() async{
-
-// try{
-//   String? token=await getFCMToken();
-//    var response =
-//               await _otpService.locationCreation(location, widget.phoneNumber);
-
-// }
-
-//           if (response.statusCode == 200) {
-//             setState(() {
-//               isLocationSaved =
-//                   true; // Set isLoading to false after the operation completes
-//             });
-//             showCustomToast('The location is saved');
-//           } else {
-//             showCustomToast('The location Cannot be saved');
-//           }
-//         } else {
-//           showCustomToast('No location data available');
-//         }
-//       } catch (e) {
-//         print('Error: $e');
-//         showCustomToast('User registered successfully!');
-//       }
-//     }
-
-// }
-  // Future<void> _getCurrentLocationAndHitAPI() async {
-  //   var permissionStatus = await Permission.location.request();
-
-  //   if (permissionStatus.isGranted) {
-  //     try {
-  //       Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high,
-  //       );
-
-  //       List<Placemark> placemarks = await placemarkFromCoordinates(
-  //         position.latitude,
-  //         position.longitude,
-  //       );
-
-  //       Placemark? currentPlace = placemarks.isNotEmpty ? placemarks[0] : null;
-
-  //       if (currentPlace != null) {
-  //         LocationModel location = LocationModel(
-  //             locality: currentPlace.locality ?? '',
-  //             subLocality: currentPlace.subLocality ?? '',
-  //             street: currentPlace.street ?? '',
-  //             country: currentPlace.country ?? '',
-  //             subAdministrativeArea: currentPlace.subAdministrativeArea ?? '',
-  //             administrativeArea: currentPlace.administrativeArea ?? '',
-  //             deviceId: await getFCMToken());
-
-  //         var response =
-  //             await _otpService.locationCreation(location, widget.phoneNumber);
-
-  //         if (response.statusCode == 200) {
-  //           setState(() {
-  //             isLocationSaved =
-  //                 true; // Set isLoading to false after the operation completes
-  //           });
-  //           showCustomToast('The location is saved');
-  //         } else {
-  //           showCustomToast('The location Cannot be saved');
-  //         }
-  //       } else {
-  //         showCustomToast('No location data available');
-  //       }
-  //     } catch (e) {
-  //       print('Error: $e');
-  //       showCustomToast('User registered successfully!');
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    //final login = Registration(_firstNameController.text, _lastNameController.text,_cnicController.text,_emailController.text);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlue,
@@ -368,9 +289,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const Text(
                       'Enter Your phone Number',
                       style: TextStyle(
-                        //  fontFamily: "UBUNTU",
                         color: Colors.blue,
-                        //  fontWeight: FontWeight.bold,
                         fontSize: 20,
                       ),
                     ),
@@ -394,36 +313,41 @@ class _SignUpPageState extends State<SignUpPage> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        focusColor: Colors.blue.shade100,
-                        hintText:
-                            '03468288115', // Updated hint text to reflect phone number format
-                        hintStyle: const TextStyle(
-                          fontSize: 18,
+                        focusColor: Colors.blue.shade50,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.lightBlue),
                         ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.lightBlue),
+                        ),
+                        hintText: '03XX1234567',
+                        hintStyle: TextStyle(color: Colors.grey[600]),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
 
+                    //Buttons
                     ElevatedButton(
                       onPressed: () async {
-                        setState(() {
-                          isLoading =
-                              true; // Set isLoading to true using setState
-                        });
                         if (_formKey.currentState?.validate() ?? false) {
+                          // If the form is valid, show the loading indicator and proceed with registration
+                          setState(() {
+                            isLoading = true;
+                          });
+
                           FocusManager.instance.primaryFocus?.unfocus();
-                          Registration registrationData =
-                              await _constructRegistrationObject();
+                          Registration registrationData = await _constructRegistrationObject();
                           await _registerUser(registrationData);
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.lightBlue, // Fixed color for the button
+                        backgroundColor: Colors.lightBlue, // Fixed color for the button
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -442,16 +366,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
+
+                    // const SizedBox(height: 20),
                   ],
                 ),
               ),
             ),
             if (isLoading)
-              Container(
-                color: Colors.grey.withOpacity(0.6),
-                child: const Center(
-                  child: CircularProgressIndicator(color: Colors.black),
-                ),
+              Center(
+                child: CircularProgressIndicator(),
               ),
           ],
         ),
