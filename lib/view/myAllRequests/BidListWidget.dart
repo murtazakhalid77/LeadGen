@@ -66,6 +66,7 @@ class _BidListWidgetState extends State<BidListWidget> {
   Widget _buildItem(DocumentSnapshot doc, Animation<double> animation) {
     Map<String, dynamic> bidData = doc.data() as Map<String, dynamic>;
     double? bidAmount = bidData['amount'] as double?;
+    double? buyerBidAmount = bidData['buyerBid'] as double?;
     Timestamp? bidTimestamp = bidData['timestamp'] as Timestamp?;
     bool? accepted = bidData['accepted'] as bool?;
     String userName = bidData['userName'] as String;
@@ -112,6 +113,11 @@ class _BidListWidgetState extends State<BidListWidget> {
                         'Bidder: $userName',
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
+                    if (buyerBidAmount != null)
+                      Text(
+                        'Your Bid: \$${buyerBidAmount.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 14, color: Colors.blue),
+                      ),
                     if (accepted == true)
                       Text(
                         'Status: Accepted',
@@ -151,6 +157,22 @@ class _BidListWidgetState extends State<BidListWidget> {
                       child: Text('Accept Bid'),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
+                        onPrimary: Colors.white,
+                        textStyle: TextStyle(fontSize: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showBuyerBidDialog(context, doc.id);
+                      },
+                      child: Text('Reply to Bid'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
                         onPrimary: Colors.white,
                         textStyle: TextStyle(fontSize: 14),
                         shape: RoundedRectangleBorder(
@@ -246,6 +268,52 @@ class _BidListWidgetState extends State<BidListWidget> {
                 }
               },
               child: Text('Accept'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showBuyerBidDialog(BuildContext context, String bidId) {
+    final TextEditingController _controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Reply to Bid'),
+          content: TextField(
+            controller: _controller,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              labelText: 'Enter your bid amount',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                double? buyerBidAmount = double.tryParse(_controller.text);
+                if (buyerBidAmount != null) {
+                  FirebaseFirestore.instance
+                      .collection('requests')
+                      .doc(widget.requestId)
+                      .collection('bids')
+                      .doc(bidId)
+                      .update({'buyerBid': buyerBidAmount}).then((_) {
+                    Navigator.of(context).pop();
+                  }).catchError((error) {
+                    print('Error updating buyer bid: $error');
+                  });
+                }
+              },
+              child: Text('Submit'),
             ),
           ],
         );

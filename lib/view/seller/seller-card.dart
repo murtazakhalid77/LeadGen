@@ -43,6 +43,7 @@ class SellerCard extends StatefulWidget {
 
 class _SellerCardState extends State<SellerCard> {
   double? bidAmount = 0;
+  double? buyerBidAmount = 0;
 
   @override
   void initState() {
@@ -58,7 +59,7 @@ class _SellerCardState extends State<SellerCard> {
     User? currentUser = firebaseAuth.currentUser;
 
     if (currentUser != null) {
-      // Get the bid amount for the current user from Firestore
+      // Get the bid amount and buyer bid amount for the current user from Firestore
       DocumentSnapshot bidSnapshot = await firestore
           .collection('requests')
           .doc(widget.requestId)
@@ -69,6 +70,7 @@ class _SellerCardState extends State<SellerCard> {
       if (bidSnapshot.exists) {
         setState(() {
           bidAmount = bidSnapshot['amount'] ?? 0;
+          buyerBidAmount = bidSnapshot['buyerBid'] ?? 0; // Fetch the buyerBid amount
         });
       }
     }
@@ -185,6 +187,15 @@ class _SellerCardState extends State<SellerCard> {
                   color: Colors.black87,
                 ),
               ),
+              if (buyerBidAmount != 0)
+                SizedBox(height: 5),
+                Text(
+                  'Buyer Reply: \$${buyerBidAmount?.toStringAsFixed(2)}', // Display the buyer's bid amount
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange, // Customize the color for the buyer bid amount
+                  ),
+                ),
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -374,6 +385,7 @@ class _SellerCardState extends State<SellerCard> {
             .set({
           'userName': currentUser.email,
           'amount': amount,
+          'buyerBid': amount, // Add buyerBid to Firestore
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -386,4 +398,3 @@ class _SellerCardState extends State<SellerCard> {
     }
   }
 }
-
