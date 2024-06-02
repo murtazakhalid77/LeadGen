@@ -67,123 +67,129 @@ class _UserRegistrationSelection extends State<UserRegistrationSelection> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.03,
-                right: 15,
-                left: 15,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Image(
-                    image: AssetImage("lib/assets/logo.png"),
-                  ),
-                  const Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Do you want to become\n   a Buyer or a Seller ?',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+    return WillPopScope(
+      onWillPop: () async {
+        // Returning false will prevent the back button from popping the current route
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.lightBlueAccent,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  right: 15,
+                  left: 15,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Image(
+                      image: AssetImage("lib/assets/logo.png"),
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Do you want to become\n   a Buyer or a Seller ?',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildSelectionButton(
-                        icon: Icons.shopping_cart_rounded,
-                        text: 'Want to become a\n Seller!',
-                        isSelected: _isSellerSelected,
-                        onPressed: () {
-                          setState(() {
-                            _isSellerSelected = !_isSellerSelected;
-                          });
-                        },
-                      ),
-                      _buildSelectionButton(
-                        icon: Icons.search,
-                        text: 'Want to become a \nbuyer',
-                        isSelected: _isBuyerSelected,
-                        onPressed: () {
-                          setState(() {
-                            _isBuyerSelected = !_isBuyerSelected;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[350],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildSelectionButton(
+                          icon: Icons.shopping_cart_rounded,
+                          text: 'Want to become a\n Seller!',
+                          isSelected: _isSellerSelected,
+                          onPressed: () {
+                            setState(() {
+                              _isSellerSelected = !_isSellerSelected;
+                            });
+                          },
+                        ),
+                        _buildSelectionButton(
+                          icon: Icons.search,
+                          text: 'Want to become a \nbuyer',
+                          isSelected: _isBuyerSelected,
+                          onPressed: () {
+                            setState(() {
+                              _isBuyerSelected = !_isBuyerSelected;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                    onPressed: () {
-                      setUserType();
-
-                      // Perform navigation based on conditions
-                      if (_isSellerSelected) {
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[350],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
                         setUserType();
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CategoryRegistration(
-                              email: widget.email,
+    
+                        // Perform navigation based on conditions
+                        if (_isSellerSelected) {
+                          setUserType();
+    
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoryRegistration(
+                                email: widget.email,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        setUserType();
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(
-                              phoneNumber: widget.email,
+                          );
+                        } else {
+                          setUserType();
+    
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(
+                                phoneNumber: widget.email,
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(18),
-                      child: Center(
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.normal,
-                            fontSize: 16,
+                          );
+                        }
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(18),
+                        child: Center(
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (isLoading)
-            Container(
-              color: Colors.grey.withOpacity(0.6),
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
+                  ],
                 ),
               ),
             ),
-        ],
+            if (isLoading)
+              Container(
+                color: Colors.grey.withOpacity(0.6),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

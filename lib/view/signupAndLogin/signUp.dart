@@ -118,265 +118,272 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
-        elevation: 0.2,
-        title: const Text(
-          'More information',
+    return WillPopScope(
+      onWillPop: () async {
+        // Returning false will prevent the back button from popping the current route
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.lightBlue,
+          elevation: 0.2,
+          centerTitle: true,
+          title: const Text(
+            'More information',
+          ),
+     /*     leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+            onPressed: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              Navigator.of(context).pop();
+            },
+          ),*/
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
-          onPressed: () {
-            FocusManager.instance.primaryFocus?.unfocus();
-            Navigator.of(context).pop();
-          },
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: Form(
-        key: _formKey,
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.06,
-                    right: 35,
-                    left: 35),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'First Name',
-                          style: TextStyle(
-                            color: Colors.lightBlue,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(width: 70),
-                        Text('Last Name',
+        backgroundColor: Colors.white,
+        body: Form(
+          key: _formKey,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.06,
+                      right: 35,
+                      left: 35),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'First Name',
                             style: TextStyle(
                               color: Colors.lightBlue,
                               fontSize: 20,
-                            )),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _firstNameController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Enter your First Name';
-                              }
-                              // Check if the input contains only alphabets
-                              if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                                return 'Enter only alphabets';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.lightBlue,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.lightBlue,
-                                ),
-                              ),
-                              hintText: 'First Name',
-                              hintStyle: TextStyle(color: Colors.grey[600]),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _lastNameController,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Enter your Last Name';
-                              }
-                              // Check if the input contains only alphabets
-                              if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
-                                return 'Enter only alphabets';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.lightBlue,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: Colors.lightBlue,
-                                ),
-                              ),
-                              hintText: 'Last Name',
-                              hintStyle: TextStyle(color: Colors.grey[600]),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    //Text CNIC
-                    const Text(
-                      'CNIC',
-                      style: TextStyle(
-                        color: Colors.lightBlue,
-                        fontSize: 20,
+                          SizedBox(width: 70),
+                          Text('Last Name',
+                              style: TextStyle(
+                                color: Colors.lightBlue,
+                                fontSize: 20,
+                              )),
+                        ],
                       ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    //CNIC input
-                    TextFormField(
-                      controller: _cnicController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ], // Allow only digits
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length != 13) {
-                          return 'Enter a valid CNIC with 14 digits';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
+    
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _firstNameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter your First Name';
+                                }
+                                // Check if the input contains only alphabets
+                                if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                  return 'Enter only alphabets';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                                hintText: 'First Name',
+                                hintStyle: TextStyle(color: Colors.grey[600]),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _lastNameController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter your Last Name';
+                                }
+                                // Check if the input contains only alphabets
+                                if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                  return 'Enter only alphabets';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                                hintText: 'Last Name',
+                                hintStyle: TextStyle(color: Colors.grey[600]),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+    
+                      const SizedBox(height: 20),
+    
+                      //Text CNIC
+                      const Text(
+                        'CNIC',
+                        style: TextStyle(
+                          color: Colors.lightBlue,
+                          fontSize: 20,
+                        ),
+                      ),
+    
+                      const SizedBox(height: 10),
+    
+                      //CNIC input
+                      TextFormField(
+                        controller: _cnicController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ], // Allow only digits
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length != 13) {
+                            return 'Enter a valid CNIC with 14 digits';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Colors.lightBlue)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide:
+                                    const BorderSide(color: Colors.lightBlue)),
+                            hintText: '4210183671331932',
+                            hintStyle: TextStyle(color: Colors.grey[600]),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10))),
+                      ),
+    
+                      const SizedBox(height: 20),
+    
+                      //Email Text
+                      const Text(
+                        'Enter Your phone Number',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 20,
+                        ),
+                      ),
+    
+                      const SizedBox(height: 10),
+    
+                      //Email Input
+                      TextFormField(
+                        controller:
+                            _phoneNumberController, // Changed from _emailController
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ], // Allow only digits
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Phone number is empty';
+                          }
+                          if (!RegExp(r'^\d{11}$').hasMatch(value)) {
+                            return 'Enter a valid phone number with 11 digits';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          focusColor: Colors.blue.shade50,
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: Colors.lightBlue)),
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.lightBlue),
+                          ),
                           enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide:
-                                  const BorderSide(color: Colors.lightBlue)),
-                          hintText: '4210183671331932',
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.lightBlue),
+                          ),
+                          hintText: '03XX1234567',
                           hintStyle: TextStyle(color: Colors.grey[600]),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10))),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    //Email Text
-                    const Text(
-                      'Enter Your phone Number',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 20,
-                      ),
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    //Email Input
-                    TextFormField(
-                      controller:
-                          _phoneNumberController, // Changed from _emailController
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ], // Allow only digits
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Phone number is empty';
-                        }
-                        if (!RegExp(r'^\d{11}$').hasMatch(value)) {
-                          return 'Enter a valid phone number with 11 digits';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        focusColor: Colors.blue.shade50,
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.lightBlue),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.lightBlue),
-                        ),
-                        hintText: '03XX1234567',
-                        hintStyle: TextStyle(color: Colors.grey[600]),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
-                    ),
-
-                    const SizedBox(height: 50),
-
-                    //Buttons
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // If the form is valid, show the loading indicator and proceed with registration
-                          setState(() {
-                            isLoading = true;
-                          });
-
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          Registration registrationData = await _constructRegistrationObject();
-                          await _registerUser(registrationData);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.lightBlue, // Fixed color for the button
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+    
+                      const SizedBox(height: 50),
+    
+                      //Buttons
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            // If the form is valid, show the loading indicator and proceed with registration
+                            setState(() {
+                              isLoading = true;
+                            });
+    
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            Registration registrationData = await _constructRegistrationObject();
+                            await _registerUser(registrationData);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.lightBlue, // Fixed color for the button
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(18),
-                        child: Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                        child: const Padding(
+                          padding: EdgeInsets.all(18),
+                          child: Center(
+                            child: Text(
+                              'Register',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-
-                    // const SizedBox(height: 20),
-                  ],
+    
+                      // const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            if (isLoading)
-              Center(
-                child: CircularProgressIndicator(),
-              ),
-          ],
+              if (isLoading)
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+            ],
+          ),
         ),
       ),
     );

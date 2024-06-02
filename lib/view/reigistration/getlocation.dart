@@ -52,28 +52,34 @@ class LocationState extends State<Location> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Location'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Current Address:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
+    return WillPopScope(
+      onWillPop: () async {
+        // Returning false will prevent the back button from popping the current route
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Location'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text(
+                'Current Address:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              _currentAddress,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16.0),
-            ),
-          ],
+              const SizedBox(height: 10),
+              Text(
+                _currentAddress,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16.0),
+              ),
+            ],
+          ),
         ),
       ),
     );
