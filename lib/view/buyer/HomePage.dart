@@ -257,8 +257,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ?.copyWith(color: Colors.white54)),
                           trailing: CircleAvatar(
                             radius: 30,
-                            backgroundImage: NetworkImage(user.profilePicPath ??
-                                'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'),
+                            backgroundImage: NetworkImage(
+                              (user.profilePicPath == null ||
+                                      user.profilePicPath.isEmpty)
+                                  ? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'
+                                  : user.profilePicPath!,
+                            ),
                           ), // Use a local asset as default,
                         ),
                         const SizedBox(height: 30)
