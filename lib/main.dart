@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Lead Gen',
       debugShowCheckedModeBanner: false,
-      home: Password(email: ''),
+      home: SplashScreen( ),
       routes: routes,
     );
   }

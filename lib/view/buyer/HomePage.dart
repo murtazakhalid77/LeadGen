@@ -166,53 +166,60 @@ class _MyHomePageState extends State<MyHomePage> {
             .transparent; // Default color in case of an error or unknown color string
     }
   }
+Future<void> fetchUser() async {
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('email')!;
+    User? loggedInUser = await userService.getLoggedInUser(email);
 
-  Future<void> fetchUser() async {
-    try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String email = prefs.getString('email')!;
-      User? loggedInUser = await userService.getLoggedInUser(email);
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
-      FirebaseFirestore firestore = FirebaseFirestore.instance;
-      firebase_auth.FirebaseAuth firebaseAuth =
-          firebase_auth.FirebaseAuth.instance;
+    if (firebaseAuth.currentUser != null) {
+      // Get the current user's UID
+      String userId = firebaseAuth.currentUser!.uid;
+      String? imagePath;
 
-      if (firebaseAuth.currentUser != null) {
-        // Get the current user's UID
-        String userId = firebaseAuth.currentUser!.uid;
-
-        try {
-          DocumentSnapshot userSnapshot =
-              await firestore.collection('users').doc(userId).get();
-          String? imagePath = userSnapshot['profilePic'] as String?;
-
-          if (loggedInUser != null) {
-            setState(() {
-              user.firstName = loggedInUser.firstName;
-              user.lastName = loggedInUser.lastName;
-              user.location = loggedInUser.location;
-              user.email = email; // Is this assignment necessary?
-              user.phoneNumber = loggedInUser.phoneNumber;
-              user.categories = loggedInUser.categories;
-              user.profilePicPath = (imagePath == null || imagePath.isEmpty)
-                  ? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg'
-                  : imagePath; // Correcting the ternary operator
-              user.cnic = loggedInUser.cnic;
-              user.userType = loggedInUser.userType;
-              print(user.toJson());
-            });
-          }
-          fetchCategories();
-        } catch (error) {
-          print('Error fetching User: $error');
-          showCustomToast("Error while fetching logged in User");
-        }
+      try {
+        DocumentSnapshot userSnapshot = await firestore.collection('users').doc(userId).get();
+        // Extract profilePic or set default
+        imagePath = userSnapshot['profilePic'] as String?;
+        imagePath = (imagePath == null || imagePath.isEmpty) 
+            ? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg' 
+            : imagePath;
+      } catch (error) {
+        // Handle Firestore document fetch error and set default image
+        print('Error fetching User Snapshot: $error');
+        showCustomToast("Error while fetching user profile picture.");
+        imagePath = 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg';
       }
-    } catch (error) {
-      print('Error fetching user: $error');
-      showCustomToast("Error while fetching user");
+
+      if (loggedInUser != null) {
+        setState(() {
+          user.firstName = loggedInUser.firstName;
+          user.lastName = loggedInUser.lastName;
+          user.location = loggedInUser.location;
+          user.email = email; // If necessary, set this here
+          user.phoneNumber = loggedInUser.phoneNumber;
+          user.categories = loggedInUser.categories;
+          user.profilePicPath = imagePath!;
+          user.cnic = loggedInUser.cnic;
+          user.userType = loggedInUser.userType;
+          print(user.toJson());
+        });
+      }
+      fetchCategories();
     }
+  } catch (error) {
+    print('Error fetching user: $error');
+    showCustomToast("Error while fetching user.");
+    // Fallback for user.profilePicPath if there's a top-level error
+    setState(() {
+      user.profilePicPath = 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg';
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
