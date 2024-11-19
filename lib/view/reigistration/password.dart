@@ -53,146 +53,152 @@ class PasswordState extends State<Password> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-            color: Colors.black,
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        // Returning false will prevent the back button from popping the current route
+        return false;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+     /*     leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: Colors.black,
+            ),
+          ),*/
+          elevation: 0,
         ),
-        elevation: 0,
-      ),
-      body: Form(
-        key: _formKey,
-        child: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            body: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.07,
-                    top: MediaQuery.of(context).size.height * 0.25,
-                  ),
-                  child: const Text(
-                    'Create password',
-                    style: TextStyle(
-                      fontFamily: "UBUNTU",
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 33,
-                    ),
-                  ),
-                ),
-                SingleChildScrollView(
-                  child: Container(
+        body: Form(
+          key: _formKey,
+          child: SizedBox(
+            width: double.infinity,
+            height: double.infinity,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Stack(
+                children: [
+                  Container(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.35,
-                      left: 35,
-                      right: 35,
+                      left: MediaQuery.of(context).size.width * 0.07,
+                      top: MediaQuery.of(context).size.height * 0.25,
                     ),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _passwordController,
-                          obscureText: _obscureTextPassword,
-                          onChanged: (value) {
-                            setState(() {
-                              _passwordError = _validatePassword(value);
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Enter Password',
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureTextPassword =
-                                      !_obscureTextPassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscureTextPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            errorText: _passwordError,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureTextConfirmPassword,
-                          onChanged: (value) {
-                            setState(() {
-                              _confirmPasswordError =
-                                  _validateConfirmPassword(value);
-                            });
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Confirm Password',
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _obscureTextConfirmPassword =
-                                      !_obscureTextConfirmPassword;
-                                });
-                              },
-                              icon: Icon(
-                                _obscureTextConfirmPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            errorText: _confirmPasswordError,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              passwordCreation(
-                                  _passwordController.text,
-                                  _confirmPasswordController.text);
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30),
-                          ),
-                          child: const Text(
-                            'Next',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
-                          ),
-                        )
-                      ],
+                    child: const Text(
+                      'Create password',
+                      style: TextStyle(
+                        fontFamily: "UBUNTU",
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 33,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.35,
+                        left: 35,
+                        right: 35,
+                      ),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: _obscureTextPassword,
+                            onChanged: (value) {
+                              setState(() {
+                                _passwordError = _validatePassword(value);
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Enter Password',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureTextPassword =
+                                        !_obscureTextPassword;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureTextPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              errorText: _passwordError,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            obscureText: _obscureTextConfirmPassword,
+                            onChanged: (value) {
+                              setState(() {
+                                _confirmPasswordError =
+                                    _validateConfirmPassword(value);
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Confirm Password',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _obscureTextConfirmPassword =
+                                        !_obscureTextConfirmPassword;
+                                  });
+                                },
+                                icon: Icon(
+                                  _obscureTextConfirmPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              errorText: _confirmPasswordError,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                passwordCreation(
+                                    _passwordController.text,
+                                    _confirmPasswordController.text);
+                              }
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30),
+                            ),
+                            child: const Text(
+                              'Next',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -38,7 +38,7 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
- 
+
     nameController = TextEditingController(text: widget.user.firstName);
     lastNameController = TextEditingController(text: widget.user.lastName);
     phoneController = TextEditingController(text: widget.user.phoneNumber);
@@ -66,9 +66,19 @@ class _EditProfileState extends State<EditProfile> {
         await fetchUser(nameController.text, lastNameController.text,
             phoneController.text, emailController.text, widget.user.email);
 
-        await firestore.collection('users').doc(widget.user.uid).set({
-          'profilePic': profilePicPath,
-        }, SetOptions(merge: true));
+ firebase_auth_user.FirebaseAuth firebaseAuth = firebase_auth_user.FirebaseAuth.instance;
+
+
+      // Get the current user's UID
+      String userId = firebaseAuth.currentUser!.uid;
+        if (userId!= null && userId.isNotEmpty) {
+          await firestore.collection('users').doc(userId).set({
+            'profilePic': profilePicPath,
+          }, SetOptions(merge: true));
+        } else {
+          print('Error: User UID is null or empty');
+          // Handle the error, such as showing a toast or logging
+        }
 
         Timer(Duration(seconds: 5), () {
           setState(() {
@@ -98,32 +108,26 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> fetchUser(String name, String lastName, String updatedPhone,
       String updatedEmail, String email) async {
-        FirebaseFirestore firestore = FirebaseFirestore.instance;
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
       setState(() {
-          isLoading = true;
-        });
+        isLoading = true;
+      });
       // print("Image Path: $image");
       var response = await userService.editUserProfile(
           name, lastName, updatedPhone, updatedEmail, email);
 
-
-    
- 
- 
       if (response.statusCode == 200) {
-
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => ProfilePage(
-              name: nameController.text + " " + lastNameController.text,
-              phone: phoneController.text,
-              email: updatedEmail,
-              profilePicPath: profilePicPath,
-              cnic: widget.user.cnic,
-              userType: widget.user.userType),
-        ));
-
-         Navigator.pop(context);
+        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+        //   builder: (context) => ProfilePage(
+        //       name: nameController.text + " " + lastNameController.text,
+        //       phone: phoneController.text,
+        //       email: updatedEmail,
+        //       profilePicPath: profilePicPath,
+        //       cnic: widget.user.cnic,
+        //       userType: widget.user.userType),
+        // ));
+        Navigator.pop(context, 'refresh');
       } else {
         Timer(Duration(seconds: 5), () {
           setState(() {

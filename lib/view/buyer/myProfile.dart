@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart ' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:lead_gen/model/UserDto.dart';
 import 'package:lead_gen/services/UserService.dart';
@@ -34,8 +35,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late UserService userService;
   late User user;
+   bool _needsRefresh = false;
 
-  @override
+   @override
   void initState() {
     user = User();
     userService = UserService();
@@ -43,32 +45,69 @@ class _ProfilePageState extends State<ProfilePage> {
     fetchUser();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check if this page was popped back to and needs refreshing
+    if (_needsRefresh) {
+      fetchUser();
+      _needsRefresh = false; // Reset the flag
+    }
+  }
+
   Future<void> fetchUser() async {
-    try {
-      // Replace the 'widget' with 'widget.' to access the properties of ProfilePage
-      User? loggedInUser = await userService.getLoggedInUser(widget.email!);
-       FirebaseFirestore firestore = FirebaseFirestore.instance;
-      DocumentSnapshot userSnapshot =
-              await firestore.collection('users').doc(loggedInUser!.uid).get();
-          String? imagePath = userSnapshot['profilePic'] as String?;
+  try {
+
+    User? loggedInUser = await userService.getLoggedInUser(widget.email);
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+
+    if (firebaseAuth.currentUser != null) {
+      // Get the current user's UID
+      String userId = firebaseAuth.currentUser!.uid;
+      String? imagePath;
+
+      try {
+        DocumentSnapshot userSnapshot = await firestore.collection('users').doc(userId).get();
+        // Extract profilePic or set default
+        imagePath = userSnapshot['profilePic'] as String?;
+        imagePath = (imagePath == null || imagePath.isEmpty) 
+            ? 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg' 
+            : imagePath;
+      } catch (error) {
+        // Handle Firestore document fetch error and set default image
+        print('Error fetching User Snapshot: $error');
+        showCustomToast("Error while fetching user profile picture.");
+        imagePath = 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg';
+      }
 
       if (loggedInUser != null) {
         setState(() {
           user.firstName = loggedInUser.firstName;
-          user.email = loggedInUser.email;
-          user.uid=loggedInUser.uid;
-          user.phoneNumber = widget.phone!;
-          user.profilePicPath =imagePath!;
+          user.lastName = loggedInUser.lastName;
+          user.location = loggedInUser.location;
+          user.email = loggedInUser.email; // If necessary, set this here
+          user.phoneNumber = loggedInUser.phoneNumber;
+          user.categories = loggedInUser.categories;
+          user.profilePicPath = imagePath!;
           user.cnic = loggedInUser.cnic;
           user.userType = loggedInUser.userType;
-          user.lastName = loggedInUser.lastName;
+          print(user.toJson());
         });
       }
-    } catch (error) {
-      print('Error fetching User: $error');
-      showCustomToast("error while fetching logged In User");
+     
     }
+  } catch (error) {
+    print('Error fetching user: $error');
+    showCustomToast("Error while fetching user.");
+    // Fallback for user.profilePicPath if there's a top-level error
+    setState(() {
+      user.profilePicPath = 'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w600/2023/10/free-images.jpg';
+    });
   }
+}
+
 
 
   @override

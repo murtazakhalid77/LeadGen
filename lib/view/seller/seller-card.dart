@@ -117,7 +117,7 @@ class _SellerCardState extends State<SellerCard> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.purple.shade400,
                     ),
                   ),
                   if (widget.isSellerAccepted)
@@ -148,13 +148,13 @@ class _SellerCardState extends State<SellerCard> {
                 widget.description,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Colors.black54),
+                style: TextStyle(color: Colors.black),
               ),
               SizedBox(height: 5),
               Text(
                 'Location: ${widget.locationText}',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black87),
+                    fontWeight: FontWeight.w600, color: Colors.black87),
               ),
               SizedBox(height: 5),
               Row(
@@ -169,7 +169,7 @@ class _SellerCardState extends State<SellerCard> {
                     'Price: \$${widget.price}', // Display price with currency symbol
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.brown,
                     ),
                   ),
                 ],
@@ -177,7 +177,7 @@ class _SellerCardState extends State<SellerCard> {
               SizedBox(height: 5),
               Text(
                 'Date: $formattedDate', // Display formatted date
-                style: TextStyle(color: Colors.black54),
+                style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 5),
               Text(
@@ -193,7 +193,7 @@ class _SellerCardState extends State<SellerCard> {
                   'Buyer Reply: \$${buyerBidAmount?.toStringAsFixed(2)}', // Display the buyer's bid amount
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange, // Customize the color for the buyer bid amount
+                    color: Colors.indigo, // Customize the color for the buyer bid amount
                   ),
                 ),
               SizedBox(height: 10),
